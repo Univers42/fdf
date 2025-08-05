@@ -1,0 +1,8 @@
+*.o
+.clangd
+.compile_commands.json
+fdf
+compile_commands.json
+.cache
+.idea
+perf.data

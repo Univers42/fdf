@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:36 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/05 18:28:49 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 01:35:10 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,10 @@ void trackball_update_rotation(int mouse_x, int mouse_y)
 		return;
 	
 	// Convert mouse coordinates to normalized trackball coordinates [-1, 1]
-	float p1x = (2.0f * g_trackball.last_mouse_x - WINDOW_WIDTH) / WINDOW_WIDTH;
-	float p1y = (WINDOW_HEIGHT - 2.0f * g_trackball.last_mouse_y) / WINDOW_HEIGHT;
-	float p2x = (2.0f * mouse_x - WINDOW_WIDTH) / WINDOW_WIDTH;
-	float p2y = (WINDOW_HEIGHT - 2.0f * mouse_y) / WINDOW_HEIGHT;
+	float p1x = (2.0f * g_trackball.last_mouse_x - WIN_WIDTH) / WIN_WIDTH;
+	float p1y = (WIN_HEIGHT - 2.0f * g_trackball.last_mouse_y) / WIN_HEIGHT;
+	float p2x = (2.0f * mouse_x - WIN_WIDTH) / WIN_WIDTH;
+	float p2y = (WIN_HEIGHT - 2.0f * mouse_y) / WIN_HEIGHT;
 	
 	// Calculate rotation quaternion
 	float rotation_quat[4];

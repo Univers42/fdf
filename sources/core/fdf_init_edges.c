@@ -6,11 +6,12 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:13:16 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/05 18:28:13 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 01:46:59 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include <math.h>
 
 static inline void	init_horizontal_edges(t_app *f, int index_start)
 {

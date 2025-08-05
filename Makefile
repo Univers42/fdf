@@ -2,7 +2,7 @@
 
 NAME = fdf
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g3 -O3 -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -g3 -O3
 PROJECT_DIR = $(shell pwd)
 SRC_DIR = $(PROJECT_DIR)/sources
 INCLUDE_DIR=$(PROJECT_DIR)/include

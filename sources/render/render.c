@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:58 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/05 18:28:49 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 01:35:10 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	clear_screen(t_app *f)
 
 	i = 0;
 	value = get_background_color();
-	while (i < WINDOW_WIDTH * WINDOW_HEIGHT)
+	while (i < WIN_WIDTH * WIN_HEIGHT)
 	{
 		((uint32_t *)f->renderer.data)[i] = value;
 		++i;

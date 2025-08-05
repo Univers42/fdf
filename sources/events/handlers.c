@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 16:02:13 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/05 18:28:49 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 01:35:10 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ extern t_trackball_shape_state g_trackball_state;
 static bool g_auto_rotate = false;
 
 // Add mouse tracking variables
-static int g_mouse_x = WINDOW_WIDTH / 2;
-static int g_mouse_y = WINDOW_HEIGHT / 2;
+static int g_mouse_x = WIN_WIDTH / 2;
+static int g_mouse_y = WIN_HEIGHT / 2;
 static float g_camera_speed = 5.0f;
 static bool g_free_roam_mode = true; // Enable by default
 
@@ -46,8 +46,8 @@ static bool g_free_roam_mode = true; // Enable by default
 static void get_mouse_direction(float *dir_x, float *dir_y, float *dir_z)
 {
 	// Convert mouse position to normalized coordinates [-1, 1]
-	float norm_x = (2.0f * g_mouse_x / WINDOW_WIDTH) - 1.0f;
-	float norm_y = 1.0f - (2.0f * g_mouse_y / WINDOW_HEIGHT);
+	float norm_x = (2.0f * g_mouse_x / WIN_WIDTH) - 1.0f;
+	float norm_y = 1.0f - (2.0f * g_mouse_y / WIN_HEIGHT);
 	
 	// Calculate direction vector based on mouse position
 	*dir_x = norm_x;
@@ -426,8 +426,8 @@ int	motion_handler(int x, int y, t_app *fdf)
 	float				ndcx;
 	float				ndcy;
 
-	ndcx = ((float) x - (float) fdf->drag_start[0]) / WINDOW_WIDTH;
-	ndcy = ((float) fdf->drag_start[1] - (float) y) / WINDOW_HEIGHT;
+	ndcx = ((float) x - (float) fdf->drag_start[0]) / WIN_WIDTH;
+	ndcy = ((float) fdf->drag_start[1] - (float) y) / WIN_HEIGHT;
 	proj = &fdf->transformation_stack.projection;
 	if (fdf->input_state == INPUT_STATE_DRAGGING)
 	{

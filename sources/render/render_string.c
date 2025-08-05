@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:27:02 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/05 18:27:03 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 01:34:54 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static inline void	render_scaled_bit(t_draw_char_params *p, int row, int col)
 		{
 			srow = row * SCALE + i + p->y;
 			scol = col * SCALE + j + p->x;
-			p->buf[srow * WINDOW_WIDTH + scol] = p->color;
+			p->buf[srow * WIN_WIDTH + scol] = p->color;
 			++j;
 		}
 		++i;

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:42:54 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/05 18:28:08 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 01:46:24 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,9 @@ static inline bool	init_after_parsing(t_app *fdf)
 	bool	ok;
 	size_t	n;
 
-	// Add bounds checking
 	if (fdf->width <= 0 || fdf->height <= 0)
-	{
-		printf("Error: Invalid map dimensions (%d x %d)\n", fdf->width, fdf->height);
-		return false;
-	}
-
+		return (printf("Error: Invalid map dimensions (%d x %d)\n",
+				fdf->width, fdf->height), false);
 	ok = false;
 	make_transformation_stack(&fdf->transformation_stack);
 	init_transformation_stack(fdf);
@@ -66,9 +62,7 @@ static inline bool	init_after_parsing(t_app *fdf)
 		ok = true;
 	}
 	else
-	{
 		printf("Error: Memory allocation failed\n");
-	}
 	return (ok);
 }
 
@@ -81,8 +75,8 @@ bool	make_fdf(t_app *fdf, char *filename)
 	fdf->mlx = mlx_init();
 	if (fdf->mlx != NULL)
 	{
-		fdf->window = mlx_new_window(fdf->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "FDF");
-		fdf->image = mlx_new_image(fdf->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
+		fdf->window = mlx_new_window(fdf->mlx, WIN_WIDTH, WIN_HEIGHT, "FDF");
+		fdf->image = mlx_new_image(fdf->mlx, WIN_WIDTH, WIN_HEIGHT);
 		ft_strlcpy(fdf->renderer.fps_string, "Fps:     ",
 			sizeof(fdf->renderer.fps_string));
 		fdf->renderer.data = mlx_get_data_addr(fdf->image, &fdf->renderer.bpp,
@@ -95,4 +89,3 @@ bool	make_fdf(t_app *fdf, char *filename)
 	}
 	return (ok);
 }
-

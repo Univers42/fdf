@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:27:24 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/05 18:27:25 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 01:35:10 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void generate_background(t_app *fdf, int theme_index)
 	}
 	
 	// Fill background
-	for (int i = 0; i < WINDOW_WIDTH * WINDOW_HEIGHT; i++)
+	for (int i = 0; i < WIN_WIDTH * WIN_HEIGHT; i++)
 		buffer[i] = bg_color;
 }
 
@@ -82,8 +82,8 @@ void generate_stars(t_app *fdf)
 	// Generate stars with theme-appropriate colors
 	for (int i = 0; i < STAR_COUNT; i++)
 	{
-		star_x = rand() % WINDOW_WIDTH;
-		star_y = rand() % WINDOW_HEIGHT;
+		star_x = rand() % WIN_WIDTH;
+		star_y = rand() % WIN_HEIGHT;
 		
 		// Different star colors based on theme
 		switch (g_current_bg_theme)
@@ -120,10 +120,10 @@ void generate_stars(t_app *fdf)
 		}
 		
 		// Draw star (single pixel)
-		if (star_x >= 0 && star_x < WINDOW_WIDTH && 
-			star_y >= 0 && star_y < WINDOW_HEIGHT)
+		if (star_x >= 0 && star_x < WIN_WIDTH && 
+			star_y >= 0 && star_y < WIN_HEIGHT)
 		{
-			buffer[star_y * WINDOW_WIDTH + star_x] = star_color;
+			buffer[star_y * WIN_WIDTH + star_x] = star_color;
 		}
 	}
 }

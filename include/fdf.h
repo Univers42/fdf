@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/05 18:17:27 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 01:44:03 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@
 # include <stdint.h>
 # include <sys/types.h>
 
-# ifndef WINDOW_WIDTH
-#  define WINDOW_WIDTH 2920
+# ifndef WIN_WIDTH
+#  define WIN_WIDTH 2920
 # endif
 
-# ifndef WINDOW_HEIGHT
-#  define WINDOW_HEIGHT 2000
+# ifndef WIN_HEIGHT
+#  define WIN_HEIGHT 2000
 # endif
 
-# if WINDOW_HEIGHT * WINDOW_WIDTH < 32
+# if WIN_HEIGHT * WIN_WIDTH < 32
 #  error "window height * window width must be greater than 32"
 # endif
 
@@ -167,6 +167,19 @@ typedef struct s_fdf
 	int						drag_start[2];
 	bool					has_color;
 }	t_app;
+
+/**
+ * Struct holding the context for the Bresenham drawing loop.
+ * Used to avoid more than 4 arguments per function (norminette).
+ */
+typedef struct s_bresenham_ctx
+{
+	t_bresenham_state	*bresenham;
+	unsigned int		*screen;
+	int					coord[2];
+	int					limit;
+	int					major_axis;
+}	t_bresenham_ctx;
 
 /*
  * FDF
@@ -400,4 +413,6 @@ void cleanup_z_perspective_control(void);
 int z_perspective_key_press_handler(int keycode, t_app *fdf);
 int z_perspective_key_release_handler(int keycode, t_app *fdf);
 bool is_ctrl_pressed(void);
+void	init_deltas(t_bresenham_state *b);
+void	init_color_delta(t_bresenham_state *b);
 #endif

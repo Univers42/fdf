@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:28:26 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/05 18:28:27 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 01:35:10 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static t_parallax_system g_parallax = {0};
 // Calculate responsive grid size based on screen dimensions
 static int get_responsive_grid_size(int layer)
 {
-	float screen_factor = (float)(WINDOW_WIDTH + WINDOW_HEIGHT) / (1920.0f + 1080.0f);
+	float screen_factor = (float)(WIN_WIDTH + WIN_HEIGHT) / (1920.0f + 1080.0f);
 	int base_size = (int)(PARALLAX_GRID_BASE * screen_factor);
 	return base_size * (layer + 1);
 }
@@ -95,8 +95,8 @@ void init_parallax_system(void)
 	// Initialize particle positions
 	for (int i = 0; i < PARALLAX_PARTICLES; i++)
 	{
-		g_parallax.particle_positions[i][0] = (float)((i * 73 + 17) % WINDOW_WIDTH);
-		g_parallax.particle_positions[i][1] = (float)((i * 137 + 23) % WINDOW_HEIGHT);
+		g_parallax.particle_positions[i][0] = (float)((i * 73 + 17) % WIN_WIDTH);
+		g_parallax.particle_positions[i][1] = (float)((i * 137 + 23) % WIN_HEIGHT);
 	}
 	g_parallax.particles_initialized = true;
 }
@@ -126,7 +126,7 @@ void update_parallax_camera(t_app *fdf)
 	prev_ty = fdf->transformation_stack.ty;
 	
 	// Update layer offsets with bouncing physics
-	float screen_scale = (float)WINDOW_WIDTH / 1920.0f;
+	float screen_scale = (float)WIN_WIDTH / 1920.0f;
 	
 	for (int i = 0; i < PARALLAX_LAYERS; i++)
 	{
@@ -185,8 +185,8 @@ static void draw_thick_line(t_app *fdf, int x1, int y1, int x2, int y2, uint32_t
 		
 		while (1)
 		{
-			if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT)
-				screen[y * WINDOW_WIDTH + x] = color;
+			if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT)
+				screen[y * WIN_WIDTH + x] = color;
 			
 			if (x == x2 && y == y2) break;
 			
@@ -234,7 +234,7 @@ static void draw_grid_layer(t_app *fdf, t_parallax_layer *layer, int layer_index
 	int start_y = (int)layer->offset_y - margin;
 	
 	// Draw vertical lines
-	for (int x = start_x; x < WINDOW_WIDTH + margin; x += layer_grid_size)
+	for (int x = start_x; x < WIN_WIDTH + margin; x += layer_grid_size)
 	{
 		int line_x = x;
 		
@@ -242,18 +242,18 @@ static void draw_grid_layer(t_app *fdf, t_parallax_layer *layer, int layer_index
 		if (layer_index > 0)
 		{
 			float perspective_scale = 1.0f - (layer_index * PARALLAX_PERSPECTIVE_SCALE);
-			line_x = (int)((line_x - WINDOW_WIDTH/2) * perspective_scale + WINDOW_WIDTH/2);
+			line_x = (int)((line_x - WIN_WIDTH/2) * perspective_scale + WIN_WIDTH/2);
 		}
 		
-		if (line_x >= -margin && line_x < WINDOW_WIDTH + margin)
+		if (line_x >= -margin && line_x < WIN_WIDTH + margin)
 		{
 			float thickness = 1.0f + layer_index * 0.5f;  // Thicker for background layers
-			draw_thick_line(fdf, line_x, 0, line_x, WINDOW_HEIGHT, layer->color, thickness);
+			draw_thick_line(fdf, line_x, 0, line_x, WIN_HEIGHT, layer->color, thickness);
 		}
 	}
 	
 	// Draw horizontal lines
-	for (int y = start_y; y < WINDOW_HEIGHT + margin; y += layer_grid_size)
+	for (int y = start_y; y < WIN_HEIGHT + margin; y += layer_grid_size)
 	{
 		int line_y = y;
 		
@@ -261,13 +261,13 @@ static void draw_grid_layer(t_app *fdf, t_parallax_layer *layer, int layer_index
 		if (layer_index > 0)
 		{
 			float perspective_scale = 1.0f - (layer_index * PARALLAX_PERSPECTIVE_SCALE);
-			line_y = (int)((line_y - WINDOW_HEIGHT/2) * perspective_scale + WINDOW_HEIGHT/2);
+			line_y = (int)((line_y - WIN_HEIGHT/2) * perspective_scale + WIN_HEIGHT/2);
 		}
 		
-		if (line_y >= -margin && line_y < WINDOW_HEIGHT + margin)
+		if (line_y >= -margin && line_y < WIN_HEIGHT + margin)
 		{
 			float thickness = 1.0f + layer_index * 0.5f;  // Thicker for background layers
-			draw_thick_line(fdf, 0, line_y, WINDOW_WIDTH, line_y, layer->color, thickness);
+			draw_thick_line(fdf, 0, line_y, WIN_WIDTH, line_y, layer->color, thickness);
 		}
 	}
 }
@@ -285,11 +285,11 @@ static void draw_parallax_particles(t_app *fdf)
 		float particle_speed = 0.5f + (i % 3) * 0.3f;
 		
 		// Screen-aware particle movement
-		float move_range_x = WINDOW_WIDTH * 0.45f;
-		float move_range_y = WINDOW_HEIGHT * 0.45f;
+		float move_range_x = WIN_WIDTH * 0.45f;
+		float move_range_y = WIN_HEIGHT * 0.45f;
 		
-		float px = WINDOW_WIDTH/2 + sinf(g_parallax.particle_phase * particle_speed + i) * move_range_x;
-		float py = WINDOW_HEIGHT/2 + cosf(g_parallax.particle_phase * particle_speed * 0.7f + i) * move_range_y;
+		float px = WIN_WIDTH/2 + sinf(g_parallax.particle_phase * particle_speed + i) * move_range_x;
+		float py = WIN_HEIGHT/2 + cosf(g_parallax.particle_phase * particle_speed * 0.7f + i) * move_range_y;
 		
 		// Add offset based on parallax movement
 		px += g_parallax.layers[0].offset_x * 0.2f;
@@ -301,7 +301,7 @@ static void draw_parallax_particles(t_app *fdf)
 		
 		// Responsive particle size
 		int particle_size = 1 + depth;
-		if (WINDOW_WIDTH > 2560)  // 4K or higher
+		if (WIN_WIDTH > 2560)  // 4K or higher
 			particle_size += 1;
 		
 		// Draw particle with size
@@ -312,8 +312,8 @@ static void draw_parallax_particles(t_app *fdf)
 				int x = (int)px + dx;
 				int y = (int)py + dy;
 				
-				if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT)
-					screen[y * WINDOW_WIDTH + x] = particle_color;
+				if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT)
+					screen[y * WIN_WIDTH + x] = particle_color;
 			}
 		}
 	}
@@ -328,11 +328,11 @@ static void apply_trail_effect(t_app *fdf)
 	uint32_t *buffer = (uint32_t *)fdf->renderer.data;
 	
 	// Blend current frame with background to create fade effect
-	for (int y = 0; y < WINDOW_HEIGHT; y++)
+	for (int y = 0; y < WIN_HEIGHT; y++)
 	{
-		for (int x = 0; x < WINDOW_WIDTH; x++)
+		for (int x = 0; x < WIN_WIDTH; x++)
 		{
-			int pixel = y * WINDOW_WIDTH + x;
+			int pixel = y * WIN_WIDTH + x;
 			uint32_t color = buffer[pixel];
 			
 			// Extract RGB

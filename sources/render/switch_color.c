@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:49 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/05 18:26:50 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 04:08:02 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,64 @@ void palette_sunset(int *arr, int pos, int z_value)
 	);
 }
 
+// Palette 7: Matrix/Neon Green theme
+static const t_color_point matrix_points[] = {
+	{ -200, 0x000000 }, // Black
+	{ -100, 0x001100 }, // Dark green
+	{    0, 0x00FF00 }, // Bright green
+	{  100, 0x66FF66 }, // Light green
+	{  200, 0xFFFFFF }  // White highlights
+};
+
+void palette_matrix(int *arr, int pos, int z_value)
+{
+	arr[pos] = color_from_control_points(
+		matrix_points,
+		sizeof(matrix_points)/sizeof(*matrix_points),
+		z_value
+	);
+}
+
+// Palette 8: Fire/Lava theme
+static const t_color_point fire_points[] = {
+	{ -200, 0x330000 }, // Dark red
+	{ -100, 0x660000 }, // Deep red
+	{    0, 0xFF0000 }, // Red
+	{   50, 0xFF4400 }, // Red-orange
+	{  100, 0xFF8800 }, // Orange
+	{  150, 0xFFCC00 }, // Yellow-orange
+	{  200, 0xFFFF00 }  // Yellow
+};
+
+void palette_fire(int *arr, int pos, int z_value)
+{
+	arr[pos] = color_from_control_points(
+		fire_points,
+		sizeof(fire_points)/sizeof(*fire_points),
+		z_value
+	);
+}
+
+// Palette 9: Ice/Arctic theme
+static const t_color_point ice_points[] = {
+	{ -200, 0x000033 }, // Dark blue
+	{ -100, 0x003366 }, // Deep blue
+	{    0, 0x0066CC }, // Blue
+	{   50, 0x3399FF }, // Light blue
+	{  100, 0x66CCFF }, // Cyan
+	{  150, 0xCCFFFF }, // Light cyan
+	{  200, 0xFFFFFF }  // White
+};
+
+void palette_ice(int *arr, int pos, int z_value)
+{
+	arr[pos] = color_from_control_points(
+		ice_points,
+		sizeof(ice_points)/sizeof(*ice_points),
+		z_value
+	);
+}
+
 // --- Palette functions for control points palettes ---
 
 static void palette_planet(int *arr, int pos, int z_value)
@@ -176,12 +234,15 @@ static void palette_default(int *arr, int pos, int z_value)
 typedef void (*palette_func_t)(int *, int, int);
 
 static palette_func_t g_palettes[] = {
-	palette_planet,             // 2
-	palette_default,            // 3
-	palette_gamma_random_v2,    // 4
-	palette_vibrant,            // 7 (vibrant/rainbow)
-	palette_grayscale,          // 8 (grayscale)
-	palette_sunset              // 9 (sunset)
+	palette_planet,             // 1 - Planet/Ocean theme
+	palette_default,            // 2 - Default
+	palette_gamma_random_v2,    // 3 - Gamma random V2
+	palette_vibrant,            // 4 - Vibrant/Rainbow
+	palette_grayscale,          // 5 - Grayscale
+	palette_sunset,             // 6 - Sunset
+	palette_matrix,             // 7 - Matrix/Neon Green
+	palette_fire,               // 8 - Fire/Lava
+	palette_ice                 // 9 - Ice/Arctic
 };
 
 static int g_palette_count = sizeof(g_palettes)/sizeof(*g_palettes);

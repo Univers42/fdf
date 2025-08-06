@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 01:44:03 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 04:28:08 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <stddef.h>
 # include <stdint.h>
 # include <sys/types.h>
+#include <X11/Xlib.h>
+#include <X11/keysym.h>
 
 # ifndef WIN_WIDTH
 #  define WIN_WIDTH 2920
@@ -127,10 +129,6 @@ typedef struct s_bresenham_state
 
 typedef struct s_renderer
 {
-	struct timespec	last_tick;
-	struct timespec	tick;
-	struct timespec	text_tick;
-	struct timespec	temp;
 	char			fps_string[10];
 	int				fps;
 	char			*data;
@@ -195,11 +193,17 @@ bool		parse_file(t_app *fdf, char *filename);
  * HANDLERS
  */
 int			key_press_handler(int keycode, t_app *fdf);
+int			key_release_handler(int keycode, t_app *fdf);
 int			button_press_handler(int button, int x, int y, t_app *fdf);
 int			button_release_handler(int button, int x, int y, t_app *fdf);
 int			motion_handler(int x, int y, t_app *fdf);
 void		auto_rotate_update(t_app *fdf);
 bool		is_auto_rotate_active(void);
+
+// Event system functions
+void		setup_event_bindings(void);
+void		handle_key_event(int keycode, unsigned int modifiers, t_app *fdf);
+void		event_system_init(t_app *fdf);
 
 /*
  * RENDER
@@ -328,6 +332,7 @@ extern int			hex_to_color(char *color);
 extern void			palette_terrain_2(int *arr, int pos, int z_value);
 extern void			palette_gamma_2(int *arr, int pos, int z_value);
 extern void			pallete_gamma_random_2(int *arr, int pos, int z_value);
+extern void			set_palette_index(int idx, t_app *fdf);
 
 /*
  * TRANSFORMATION FUNCTIONS
@@ -415,4 +420,125 @@ int z_perspective_key_release_handler(int keycode, t_app *fdf);
 bool is_ctrl_pressed(void);
 void	init_deltas(t_bresenham_state *b);
 void	init_color_delta(t_bresenham_state *b);
+
+#define MAX_EVENT 256
+
+typedef enum e_event
+{
+	ARROW_UP    = XK_Up,
+	ARROW_DOWN  = XK_Down,
+	ARROW_LEFT  = XK_Left,
+	ARROW_RIGHT = XK_Right,
+	W           = XK_w,
+	A           = XK_a,
+	S           = XK_s,
+	D           = XK_d,
+	T           = XK_t,
+	I           = XK_i,
+	P           = XK_p,
+	R           = XK_r,
+	ESCAPE      = 65307,  // Use direct keycode instead of XK_Escape
+	L           = XK_l,
+	SPACE_BAR   = XK_space,
+	MOUSE_RIGHT = 0x1001,
+	MOUSE_LEFT  = 0x1002,
+	MOUSE_SCROLL = 0x1003,
+	ONE         = XK_1,
+	TWO         = XK_2,
+	THREE       = XK_3,
+	FOUR        = XK_4,
+	FIVE        = XK_5,
+	SIX         = XK_6,
+	SEVEN       = XK_7,
+	EIGHT       = XK_8,
+	NINE        = XK_9,
+	G			= XK_g,  // Change from XK_G to XK_g (lowercase)
+}				t_event;
+
+// Composite event key for key+modifier combinations
+typedef struct s_event_key
+{
+	int keycode;
+	unsigned int modifiers;
+} t_event_key;
+
+// Handler type for composite key events with keycode context
+typedef void (*t_event_fn)(t_app*, int keycode, void*);
+
+// Unified event binding (for both plain and combo events)
+typedef struct s_event_binding {
+	t_event_key key;
+	t_event_fn handler;
+} t_event_binding;
+
+#define EVENT_BINDINGS_MAX 512
+
+// Event binding registration and lookup
+void register_event_binding(int keycode, unsigned int modifiers, t_event_fn handler);
+t_event_fn find_event_handler(int keycode, unsigned int modifiers);
+
+// Global state declarations
+extern bool g_auto_rotate;
+
+// Movement helper functions (not event handlers)
+void		move_forward(t_app *fdf, float amount);
+void		move_backward(t_app *fdf, float amount);
+void		rotate_up(t_app *fdf, float angle);
+void		rotate_down(t_app *fdf, float angle);
+void		rotate_left(t_app *fdf, float angle);
+void		rotate_right(t_app *fdf, float angle);
+
+//SWITCH EVENTS - Updated signatures with keycode parameter
+void    move_up(t_app *fdf, int keycode, void *data);
+void    move_down(t_app *fdf, int keycode, void *data);
+void    move_left(t_app *fdf, int keycode, void *data);
+void    move_right(t_app *fdf, int keycode, void *data);
+void    rotate_up_handler(t_app *fdf, int keycode, void *data);
+void    rotate_down_handler(t_app *fdf, int keycode, void *data);
+void    rotate_left_handler(t_app *fdf, int keycode, void *data);
+void    rotate_right_handler(t_app *fdf, int keycode, void *data);
+void    zoom_in(t_app *fdf, int keycode, void *data);
+void    zoom_out(t_app *fdf, int keycode, void *data);
+void    projection_iso(t_app *fdf, int keycode, void *data);
+void    projection_fly(t_app *fdf, int keycode, void *data);
+void    ch_shape(t_app *fdf, int keycode, void *data);
+void    exit_prog(t_app *fdf, int keycode, void *data);
+void    reset_state(t_app *fdf, int keycode, void *data);
+void    project_iso(t_app *fdf, int keycode, void *data);
+void    mouse_right(t_app *fdf, int keycode, void *data);
+void    mouse_left(t_app *fdf, int keycode, void *data);
+void    scroll_mouse(t_app *fdf, int keycode, void *data);
+void    z_perspective_ctrl(t_app *fdf, int keycode, void *data);
+void    auto_rotate(t_app *fdf, int keycode, void *data);
+
+// Color palette handlers for keys 1-9
+void    palette_1_handler(t_app *fdf, int keycode, void *data);
+void    palette_2_handler(t_app *fdf, int keycode, void *data);
+void    palette_3_handler(t_app *fdf, int keycode, void *data);
+void    palette_4_handler(t_app *fdf, int keycode, void *data);
+void    palette_5_handler(t_app *fdf, int keycode, void *data);
+void    palette_6_handler(t_app *fdf, int keycode, void *data);
+void    palette_7_handler(t_app *fdf, int keycode, void *data);
+void    palette_8_handler(t_app *fdf, int keycode, void *data);
+void    palette_9_handler(t_app *fdf, int keycode, void *data);
+
+/*
+ * PARTICLE SYSTEM
+ */
+void		transition_start_particles(bool to_particles);
+bool		particles_is_active(void);
+void		particles_cleanup(void);
+void		particles_update(t_app *fdf);
+void		apply_snow_particles(t_app *fdf);
+void		apply_rain_particles(t_app *fdf);
+void		apply_fire_particles(t_app *fdf);
+void		apply_sparks_particles(t_app *fdf);
+void		apply_stars_particles(t_app *fdf);
+void		apply_bubbles_particles(t_app *fdf);
+void		apply_dust_particles(t_app *fdf);
+void		apply_smoke_particles(t_app *fdf);
+
+//SWITCH EVENTS - Updated signatures with keycode parameter
+void    ch_particules(t_app *fdf, int keycode, void *data);
+
 #endif

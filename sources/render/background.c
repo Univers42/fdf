@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:27:24 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 01:35:10 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 04:36:31 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #define STAR_COUNT 200
 #define WHITE 0xFFFFFF
 
-static bool g_stars_enabled = false;
+static bool g_stars_enabled = true; // Enable stars by default
 static int g_current_bg_theme = 0;
 
 // Theme-based background colors (matching your palette themes)
@@ -73,7 +73,7 @@ void generate_stars(t_app *fdf)
 	// Seed random once
 	if (!seeded)
 	{
-		srand((unsigned int)time(NULL));
+		srand((unsigned int)time(NULL) + 12345); // Different seed than particles
 		seeded = true;
 	}
 	
@@ -82,8 +82,9 @@ void generate_stars(t_app *fdf)
 	// Generate stars with theme-appropriate colors
 	for (int i = 0; i < STAR_COUNT; i++)
 	{
-		star_x = rand() % WIN_WIDTH;
-		star_y = rand() % WIN_HEIGHT;
+		// Create more stable star positions
+		star_x = (i * 73 + 17) % WIN_WIDTH;
+		star_y = (i * 137 + 23) % WIN_HEIGHT;
 		
 		// Different star colors based on theme
 		switch (g_current_bg_theme)
@@ -104,13 +105,13 @@ void generate_stars(t_app *fdf)
 				star_color = 0xCCCCCC;
 				break;
 			case 5: // Vibrant - rainbow effect
-				star_color = 0xFF0080 + (rand() % 0x7F7F7F);
+				star_color = 0xFF0080 + ((i * 31) % 0x7F7F7F);
 				break;
 			case 6: // Grayscale - various gray stars
-				star_color = 0x808080 + (rand() % 0x7F7F7F);
+				star_color = 0x808080 + ((i * 17) % 0x7F7F7F);
 				break;
 			case 7: // Sunset - warm colored stars
-				star_color = 0xFFB300 + (rand() % 0x004C00);
+				star_color = 0xFFB300 + ((i * 23) % 0x004C00);
 				break;
 			case 8: // Purple theme - light purple stars
 				star_color = 0xCC99FF;
@@ -119,11 +120,19 @@ void generate_stars(t_app *fdf)
 				star_color = WHITE;
 		}
 		
-		// Draw star (single pixel)
-		if (star_x >= 0 && star_x < WIN_WIDTH && 
-			star_y >= 0 && star_y < WIN_HEIGHT)
+		// Draw star (larger for visibility)
+		for (int sy = 0; sy < 2; sy++)
 		{
-			buffer[star_y * WIN_WIDTH + star_x] = star_color;
+			for (int sx = 0; sx < 2; sx++)
+			{
+				int x = star_x + sx;
+				int y = star_y + sy;
+				
+				if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT)
+				{
+					buffer[y * WIN_WIDTH + x] = star_color;
+				}
+			}
 		}
 	}
 }

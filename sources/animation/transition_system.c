@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:28:19 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/05 18:28:20 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 04:12:29 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,13 +314,13 @@ static void apply_shape_with_transform(t_app *fdf, t_shape_type shape)
 	switch (shape)
 	{
 		case SHAPE_ORIGINAL:
-			// Use normal point transformation
+			// Use normal point transformation - matrix will be applied in transform_points()
 			break;
 		case SHAPE_TORUS:
 			apply_torus_transformation(fdf, 0, 0); // Parameters will be calculated inside
 			break;
 		case SHAPE_SPHERE:
-			// For sphere, we need a dedicated function or use existing logic
+			// For sphere, apply shape transformation
 			for (int y = 0; y < fdf->height; y++)
 			{
 				for (int x = 0; x < fdf->width; x++)
@@ -397,6 +397,7 @@ void	transition_update(t_app *fdf)
 				float final_z = current_z + (target_z - current_z) * smooth_t;
 				
 				// Apply transformation matrix to the interpolated position
+				// This is where auto-rotation gets applied!
 				float sp[4], *dp;
 				sp[0] = final_x;
 				sp[1] = final_y;
@@ -416,6 +417,7 @@ void	transition_update(t_app *fdf)
 		}
 	}
 	// If transition is complete and we're not in original shape, maintain current shape
+	// This is the key part - shapes must use the transformation matrix!
 	else if (g_transition.current_shape != SHAPE_ORIGINAL)
 	{
 		apply_shape_with_transform(fdf, g_transition.current_shape);

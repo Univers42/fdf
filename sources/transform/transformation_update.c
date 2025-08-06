@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:15 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/05 18:26:16 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 04:02:32 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,20 +121,11 @@ static inline void	recompute_final_transformation(t_transformation_stack *t)
 
 void	transformation_stack_update(t_transformation_stack *t)
 {
-	bool	should_update;
-	size_t	i;
-
+	// Force update all matrices when any transformation occurs
 	update_rotations(t);
 	update_translation(t);
 	update_projection(t);
-	should_update = false;
-	i = 0;
-	while (i < M_COUNT)
-	{
-		should_update |= t->dirty[i];
-		t->dirty[i] = false;
-		++i;
-	}
-	if (should_update)
-		recompute_final_transformation(t);
+	
+	// Always recompute the final transformation matrix
+	recompute_final_transformation(t);
 }

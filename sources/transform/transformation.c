@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/05 18:26:26 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 04:02:33 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <math.h>
 #include <stddef.h>
 #include "fdf.h"
+#include <stdio.h>
 
 void	make_transformation_stack(t_transformation_stack *t)
 {
@@ -45,11 +46,16 @@ void	transformation_stack_translate(
 	t_transformation_stack *t,
 	float dx, float dy, float dz
 ) {
-	(void)dz;
 	t->dirty[M_TB] = true;
 	t->tx += dx;
 	t->ty += dy;
 	t->tz += dz;
+	
+	// Force immediate matrix update
+	identity_matrix4(t->matrices[M_TB]);
+	t->matrices[M_TB][3] = t->tx;
+	t->matrices[M_TB][7] = t->ty;
+	t->matrices[M_TB][11] = t->tz;
 }
 
 void	transformation_stack_pan( t_transformation_stack *t, float dx, float dy)

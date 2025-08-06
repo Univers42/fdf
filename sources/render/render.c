@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:58 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 01:35:10 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 04:36:30 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ int	fdf_render(t_app *f)
 	{
 		transform_points(f);
 	}
-	// Note: trackball rotation is now applied within transition_update for shapes
 	
 	// Apply shadow effects before rendering
 	update_shadow_effects(f);
@@ -99,6 +98,9 @@ int	fdf_render(t_app *f)
 	
 	// FOURTH: Draw the wireframe model with transparency preservation
 	fdf_draw_lines(f);
+	
+	// FIFTH: Update and render particles LAST (on top of everything)
+	particles_update(f);
 	
 	if (mlx_put_image_to_window(f->mlx, f->window, f->image, 0, 0) == -1)
 		return (-1);

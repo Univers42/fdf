@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 16:02:13 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 05:08:35 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 12:46:42 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,19 +101,64 @@ void toggle_parallax_effect(void);
 bool is_parallax_active(void);
 
 
+// Global modifier state tracking
+static struct {
+	bool ctrl_pressed;
+	bool shift_pressed;
+	bool alt_pressed;
+} g_modifier_state = {false, false, false};
+
 int	key_press_handler(const int keycode, t_app *fdf)
 {
-	// Simple approach: try the new event system without modifier detection first
-	handle_key_event(keycode, 0, fdf);  // 0 = no modifiers for now
+	// Track modifier keys
+	if (keycode == XK_Control_L || keycode == XK_Control_R)
+	{
+		g_modifier_state.ctrl_pressed = true;
+		return 0;
+	}
+	if (keycode == XK_Shift_L || keycode == XK_Shift_R)
+	{
+		g_modifier_state.shift_pressed = true;
+		return 0;
+	}
+	if (keycode == XK_Alt_L || keycode == XK_Alt_R)
+	{
+		g_modifier_state.alt_pressed = true;
+		return 0;
+	}
+	
+	// Build modifier mask manually
+	unsigned int modifiers = 0;
+	if (g_modifier_state.ctrl_pressed) modifiers |= ControlMask;
+	if (g_modifier_state.shift_pressed) modifiers |= ShiftMask;
+	if (g_modifier_state.alt_pressed) modifiers |= Mod1Mask;
+	
+	// Use the event system with detected modifiers
+	handle_key_event(keycode, modifiers, fdf);
 	
 	return (0);
 }
 
-
-
 int	key_release_handler(int keycode, t_app *fdf)
 {
 	t_core_handlers_state *state = get_core_handlers_state();
+	
+	// Track modifier key releases
+	if (keycode == XK_Control_L || keycode == XK_Control_R)
+	{
+		g_modifier_state.ctrl_pressed = false;
+		return 0;
+	}
+	if (keycode == XK_Shift_L || keycode == XK_Shift_R)
+	{
+		g_modifier_state.shift_pressed = false;
+		return 0;
+	}
+	if (keycode == XK_Alt_L || keycode == XK_Alt_R)
+	{
+		g_modifier_state.alt_pressed = false;
+		return 0;
+	}
 	
 	// Reset camera speed when modifier keys are released
 	if (keycode == XK_Shift_L || keycode == XK_Shift_R || 

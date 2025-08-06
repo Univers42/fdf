@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 02:11:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 12:31:21 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 12:46:42 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ void handle_key_event(int keycode, unsigned int modifiers, t_app *fdf)
 	static int debug_counter = 0;
 	if (++debug_counter % 20 == 0) // Only print occasionally to avoid spam
 	{
-		printf("Key event: keycode=%d\n", keycode);
+		printf("Key event: keycode=%d, modifiers=%u\n", keycode, modifiers);
 	}
 	
 	t_event_fn fn = find_event_handler(keycode, modifiers);
@@ -211,11 +211,30 @@ void handle_key_event(int keycode, unsigned int modifiers, t_app *fdf)
 		return;
 	}
 	
+	// Special handling for Ctrl+Arrow combinations
+	bool ctrl_pressed = (modifiers & ControlMask) != 0;
+	
+	if (ctrl_pressed)
+	{
+		// Handle Ctrl+Arrow combinations for z-perspective
+		if (keycode == ARROW_UP || keycode == 65362)
+		{
+			increase_z_perspective(fdf);
+			printf("Z-perspective increased (Ctrl+Up)\n");
+			return;
+		}
+		else if (keycode == ARROW_DOWN || keycode == 65364)
+		{
+			reduce_z_perspective(fdf);
+			printf("Z-perspective reduced (Ctrl+Down)\n");
+			return;
+		}
+	}
+	
 	// Special handling for common key combinations that might not be caught
-	// Check for common Ctrl combinations by keycode patterns
+	// Check for regular arrow keys (without Ctrl)
 	if (keycode == ARROW_UP || keycode == 65362)
 	{
-		// For now, assume it's regular rotation unless we detect otherwise
 		rotate_up_handler(fdf, keycode, NULL);
 	}
 	else if (keycode == ARROW_DOWN || keycode == 65364)

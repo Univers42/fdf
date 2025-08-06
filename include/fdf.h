@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 11:40:21 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 12:31:19 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@
 
 # if WIN_HEIGHT * WIN_WIDTH < 32
 #  error "window height * window width must be greater than 32"
+#  undef WIN_HEIGHT
+#  undef WIN_WIDTH
+#  define WIN_HEIGHT 32
+#  define WIN_WIDTH 32
 # endif
 
 typedef struct s_draw_char_params
@@ -410,6 +414,9 @@ typedef enum e_event
 	NINE        = XK_9,
 	G           = XK_g,
 	H           = XK_h,
+	Z_KEY			= XK_z,
+	B			= XK_b,
+	V			= XK_v
 }				t_event;
 
 // Composite event key for key+modifier combinations
@@ -518,21 +525,31 @@ void		set_object_effect_intensity(float intensity);
 //SWITCH EVENTS - Updated signatures with keycode parameter
 void    ch_effect(t_app *fdf, int keycode, void *data);
 
-void    palette_7_handler(t_app *fdf, int keycode, void *data);
-void    palette_8_handler(t_app *fdf, int keycode, void *data);
-void    palette_9_handler(t_app *fdf, int keycode, void *data);
+/*
+ * ULTIMATE DANCING SYSTEM - Make your 3D objects dance!
+ */
+void		dance_system_update(t_app *fdf);
+void		dance_system_toggle(void);
+bool		dance_system_is_active(void);
+void		dance_system_cleanup(void);
+void		dance_system_set_rhythm(float multiplier);
+void		dance_system_toggle_auto_sequence(void);
+
+//SWITCH EVENTS - Updated signatures with keycode parameter
+void    dance_toggle_handler(t_app *fdf, int keycode, void *data);
 
 /*
- * PARTICLE SYSTEM
+ * ULTIMATE DYNAMIC BACKGROUND SYSTEM - Spectacular animated backgrounds!
  */
-void		transition_start_particles(bool to_particles);
-bool		particles_is_active(void);
-void		particles_cleanup(void);
-void		particles_update(t_app *fdf);
-void		apply_snow_particles(t_app *fdf);
-void		apply_rain_particles(t_app *fdf);
-void		apply_fire_particles(t_app *fdf);
-void		apply_sparks_particles(t_app *fdf);
+void		dynamic_background_update(t_app *fdf);
+void		dynamic_background_toggle(void);
+bool		dynamic_background_is_active(void);
+void		dynamic_background_set_speed(float speed);
+void		dynamic_background_cleanup(void);
+
+//SWITCH EVENTS - Updated signatures with keycode parameter
+void    dynamic_background_toggle_handler(t_app *fdf, int keycode, void *data);
+
 void		apply_stars_particles(t_app *fdf);
 void		apply_bubbles_particles(t_app *fdf);
 void		apply_dust_particles(t_app *fdf);
@@ -540,14 +557,6 @@ void		apply_smoke_particles(t_app *fdf);
 
 //SWITCH EVENTS - Updated signatures with keycode parameter
 void    ch_particules(t_app *fdf, int keycode, void *data);
-
-/*
- * EFFECTS SYSTEM
- */
-void		transition_start_effects(bool to_effects);
-bool		effects_is_active(void);
-void		effects_cleanup(void);
-void		effects_update(t_app *fdf);
 
 //SWITCH EVENTS - Updated signatures with keycode parameter
 void    ch_effect(t_app *fdf, int keycode, void *data);
@@ -560,5 +569,18 @@ bool		object_effects_is_active(void);
 void		object_effects_cleanup(void);
 void		object_effects_update(t_app *fdf);
 void		set_object_effect_intensity(float intensity);
+
+/*
+ * ULTIMATE TEXTURE SYSTEM - Apply realistic textures to 3D objects!
+ */
+void		texture_system_update(t_app *fdf);
+void		texture_system_toggle(void);
+bool		texture_system_is_active(void);
+void		texture_system_set_scale(float scale);
+void		texture_system_set_speed(float speed);
+void		texture_system_cleanup(void);
+
+//SWITCH EVENTS - Updated signatures with keycode parameter
+void    texture_toggle_handler(t_app *fdf, int keycode, void *data);
 
 #endif

@@ -1,14 +1,12 @@
+#include "fdf.h"
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <stdbool.h>
-#include "fdf.h"
 
 #define OBJECT_EFFECT_COUNT 10
-#define WAVE_FREQUENCY 0.1f
-#define PULSE_SPEED 0.05f
-#define TWIST_RATE 0.02f
+#define WAVE_FREQUENCY 0.05f
 
 typedef enum e_object_effect_type {
 	OBJ_EFFECT_NONE = 0,
@@ -55,6 +53,7 @@ static void store_original_object_points(t_app *fdf)
 		g_obj_effects.original_points[i] = fdf->points[i];
 	
 	g_obj_effects.initialized = true;
+	printf("Stored %d original points\n", g_obj_effects.total_points);
 }
 
 // Apply vertex wave effect - creates rippling waves across the surface
@@ -303,7 +302,7 @@ static void apply_vertex_scatter_effect(t_app *fdf)
 	
 	for (int y = 0; y < fdf->height; y++)
 	{
-		for (int x = 0; x < fdf->width; x++) // Fix: close the loop properly
+		for (int x = 0; x < fdf->width; x++)
 		{
 			int index = y * fdf->width + x;
 			
@@ -373,8 +372,8 @@ void object_effects_update(t_app *fdf)
 	static int debug_counter = 0;
 	if (++debug_counter % 300 == 0) // Every 5 seconds at 60fps
 	{
-		printf("Object Effect: %s (intensity: %.1f)\n", 
-			   effect_names[g_obj_effects.current_effect], g_obj_effects.intensity);
+		printf("Object Effect: %s (intensity: %.1f) - modifying %d points\n", 
+			   effect_names[g_obj_effects.current_effect], g_obj_effects.intensity, g_obj_effects.total_points);
 	}
 }
 

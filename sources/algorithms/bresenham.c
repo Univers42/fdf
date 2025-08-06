@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:43:21 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 01:44:39 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 11:48:27 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,10 @@ void	draw_line_bresenham(
  */
 static inline void	bresenham_draw_pixel(t_bresenham_ctx *ctx, uint32_t color)
 {
-	uint32_t	bg_color;
-
 	if (ctx->coord[0] >= 0 && ctx->coord[0] < WIN_WIDTH
 		&& ctx->coord[1] >= 0 && ctx->coord[1] < WIN_HEIGHT)
 	{
-		bg_color = ctx->screen[ctx->coord[1] * WIN_WIDTH + ctx->coord[0]];
-		if (bg_color == 0x00000000 || !is_parallax_active())
-			ctx->screen[ctx->coord[1] * WIN_WIDTH + ctx->coord[0]] = color;
+		ctx->screen[ctx->coord[1] * WIN_WIDTH + ctx->coord[0]] = color;
 	}
 }
 

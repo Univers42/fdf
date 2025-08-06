@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 02:11:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 05:01:23 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 12:31:21 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 #define MAX_KEYCODE 70000  // Increased to handle X11 keycodes
 #define MODIFIER_COMBO_COUNT 8 // 3 bits: Shift, Ctrl, Alt
+
+// Function declarations at the top
+void toggle_effects(t_app *fdf, int keycode, void *data);
 
 // Special keycode mapping for common X11 keys that are out of normal range
 typedef struct s_keycode_map {
@@ -168,11 +171,20 @@ void setup_event_bindings(void)
 	register_event_binding(SEVEN, 0, palette_7_handler);
 	register_event_binding(EIGHT, 0, palette_8_handler);
 	register_event_binding(NINE, 0, palette_9_handler);
-	
+	register_event_binding(H, 0, toggle_effects);  // This should now work
 	// Particle system (lowercase g)
 	register_event_binding(G, 0, ch_particules);
 	
-	printf("FDF Event System: WASD movement, Arrow rotation, Ctrl+Arrow Z-perspective, T shapes, I/P projection, Space auto-rotate, 1-9 color palettes, G particles, ESC exit\n");
+	// Dancing system (Z key)
+	register_event_binding(Z_KEY, 0, dance_toggle_handler);
+	
+	// Dynamic background system (B key)
+	register_event_binding(B, 0, dynamic_background_toggle_handler);
+	
+	// Texture system (V key)
+	register_event_binding(V, 0, texture_toggle_handler);
+	
+	printf("FDF Event System: WASD movement, Arrow rotation, Ctrl+Arrow Z-perspective, T shapes, I/P projection, Space auto-rotate, 1-9 color palettes, G particles, H effects, Z DANCE, B dynamic backgrounds, V textures, ESC exit\n");
 }
 
 // Event system initialization function
@@ -229,4 +241,13 @@ void handle_key_event(int keycode, unsigned int modifiers, t_app *fdf)
 		reduce_z_perspective(fdf);
 		printf("Z-perspective reduced (-)\n");
 	}
+}
+
+// Add the missing toggle_effects function
+void toggle_effects(t_app *fdf, int keycode, void *data)
+{
+	(void)fdf;
+	(void)keycode; (void)data;
+	transition_start_object_effects(false); // This cycles through object effects
+	printf("Object effects toggled with H key\n");
 }

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 02:19:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 05:01:24 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 12:31:20 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,14 @@ void ch_particules(t_app *fdf, int keycode, void *data)
 	printf("Particle system activated\n");
 }
 
+// Object effects system handler (replaces screen effects)
+void ch_effect(t_app *fdf, int keycode, void *data)
+{
+	(void)keycode; (void)data; (void)fdf;
+	transition_start_object_effects(false); // This cycles through object effects
+	printf("Object effects system activated\n");
+}
+
 // Z-perspective control with keycode awareness
 void z_perspective_ctrl(t_app *fdf, int keycode, void *data)
 {
@@ -370,4 +378,25 @@ void palette_9_handler(t_app *fdf, int keycode, void *data)
 	(void)keycode; (void)data;
 	set_palette_index(8, fdf);
 	printf("Color Palette 9: Ice/Arctic\n");
+}
+
+// Dancing system handler
+void dance_toggle_handler(t_app *fdf, int keycode, void *data)
+{
+	(void)fdf; (void)keycode; (void)data;
+	dance_system_toggle();
+}
+
+// Dynamic background system handler
+void dynamic_background_toggle_handler(t_app *fdf, int keycode, void *data)
+{
+	(void)fdf; (void)keycode; (void)data;
+	dynamic_background_toggle();
+}
+
+// Texture system handler
+void texture_toggle_handler(t_app *fdf, int keycode, void *data)
+{
+	(void)fdf; (void)keycode; (void)data;
+	texture_system_toggle();
 }

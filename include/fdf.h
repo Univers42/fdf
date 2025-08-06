@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 04:28:08 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 11:40:21 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,17 +229,8 @@ void		matrix4_scalar_multiply(float *m, float scalar);
 void		matrix4_rotate_x_abs(float *m, float rads);
 void		matrix4_rotate_y_abs(float *m, float rads);
 void		matrix4_rotate_z_abs(float *m, float rads);
-void		matrix4_translate(
-				float *m,
-				float delta_x,
-				float delta_y,
-				float delta_z
-				);
-void		matrix4_dot_product(
-				float *m,
-				float *a,
-				float *out
-				);
+void		matrix4_translate(float *m, float delta_x, float delta_y, float delta_z);
+void		matrix4_dot_product(float *m, float *a, float *out);
 
 /*
  * TRANSFORMATION STACK
@@ -258,60 +249,25 @@ void		transformation_stack_isometric(t_transformation_stack *t);
 void		transformation_stack_parallel(t_transformation_stack *t);
 
 void		transformation_stack_update(t_transformation_stack *t);
-void		transformation_stack_ortho(
-				t_transformation_stack *t,
-				float x,
-				float y,
-				float z
-				);
+void		transformation_stack_ortho(t_transformation_stack *t, float x, float y, float z);
 void		transformation_stack_zoom(t_transformation_stack *t, int direction);
-void		transformation_stack_translate(
-				t_transformation_stack *t,
-				float dx,
-				float dy,
-				float dz
-				);
-void		transformation_stack_pan(
-				t_transformation_stack *t,
-				float dx,
-				float dy
-				);
-void		transformation_stack_origin(
-				t_transformation_stack *t,
-				float dx,
-				float dy,
-				float dz
-				);
-void		center_model(
-				t_transformation_stack *t,
-				float width,
-				float height,
-				float depth
-				);
+void		transformation_stack_translate(t_transformation_stack *t, float dx, float dy, float dz);
+void		transformation_stack_pan(t_transformation_stack *t, float dx, float dy);
+void		transformation_stack_origin(t_transformation_stack *t, float dx, float dy, float dz);
+void		center_model(t_transformation_stack *t, float width, float height, float depth);
 
 /*
  * PROJECTION CTL
  */
-void		make_projection_ctl(
-				t_projection_ctl *p,
-				float width,
-				float height,
-				float depth
-				);
+void		make_projection_ctl(t_projection_ctl *p, float width, float height, float depth);
 void		projection_reset_params(t_projection_ctl *p);
 
 /*
  * BRESENHAM
  */
 void		bresenham_init(t_bresenham_state *b, t_app *fdf, int i);
-void		draw_line_y_major(
-				t_bresenham_state *bresenham,
-				unsigned int *screen
-				);
-void		draw_line_x_major(
-				t_bresenham_state *bresenham,
-				unsigned int *screen
-				);
+void		draw_line_y_major(t_bresenham_state *bresenham, unsigned int *screen);
+void		draw_line_x_major(t_bresenham_state *bresenham, unsigned int *screen);
 
 /*
  * UTIL
@@ -323,10 +279,10 @@ uint32_t	pack_color(t_bresenham_state *b, int step);
 uint8_t		*get_glyph(char c);
 int			ft_abs(int n);
 
-void	init_mlx_handlers(t_app *f);
+void		init_mlx_handlers(t_app *f);
 
 /*
- * Color palette helpers (for render/color.c)
+ * Color palette helpers
  */
 extern int			hex_to_color(char *color);
 extern void			palette_terrain_2(int *arr, int pos, int z_value);
@@ -406,20 +362,20 @@ int			get_shadow_mode(void);
 /*
  * Z-Perspective Control functions
  */
-void init_z_perspective_control(t_app *fdf);
-void reduce_z_perspective(t_app *fdf);
-void increase_z_perspective(t_app *fdf);
-void reset_z_perspective(t_app *fdf);
-void set_z_perspective_mode(t_app *fdf, int mode);
-float get_z_perspective_scale(void);
-void cleanup_z_perspective_control(void);
+void		init_z_perspective_control(t_app *fdf);
+void		reduce_z_perspective(t_app *fdf);
+void		increase_z_perspective(t_app *fdf);
+void		reset_z_perspective(t_app *fdf);
+void		set_z_perspective_mode(t_app *fdf, int mode);
+float		get_z_perspective_scale(void);
+void		cleanup_z_perspective_control(void);
 
 // Enhanced event handlers
-int z_perspective_key_press_handler(int keycode, t_app *fdf);
-int z_perspective_key_release_handler(int keycode, t_app *fdf);
-bool is_ctrl_pressed(void);
-void	init_deltas(t_bresenham_state *b);
-void	init_color_delta(t_bresenham_state *b);
+int			z_perspective_key_press_handler(int keycode, t_app *fdf);
+int			z_perspective_key_release_handler(int keycode, t_app *fdf);
+bool		is_ctrl_pressed(void);
+void		init_deltas(t_bresenham_state *b);
+void		init_color_delta(t_bresenham_state *b);
 
 #define MAX_EVENT 256
 
@@ -437,7 +393,7 @@ typedef enum e_event
 	I           = XK_i,
 	P           = XK_p,
 	R           = XK_r,
-	ESCAPE      = 65307,  // Use direct keycode instead of XK_Escape
+	ESCAPE      = 65307,
 	L           = XK_l,
 	SPACE_BAR   = XK_space,
 	MOUSE_RIGHT = 0x1001,
@@ -452,7 +408,8 @@ typedef enum e_event
 	SEVEN       = XK_7,
 	EIGHT       = XK_8,
 	NINE        = XK_9,
-	G			= XK_g,  // Change from XK_G to XK_g (lowercase)
+	G           = XK_g,
+	H           = XK_h,
 }				t_event;
 
 // Composite event key for key+modifier combinations
@@ -540,5 +497,68 @@ void		apply_smoke_particles(t_app *fdf);
 
 //SWITCH EVENTS - Updated signatures with keycode parameter
 void    ch_particules(t_app *fdf, int keycode, void *data);
+
+/*
+ * EFFECTS SYSTEM
+ */
+void		transition_start_effects(bool to_effects);
+bool		effects_is_active(void);
+void		effects_cleanup(void);
+void		effects_update(t_app *fdf);
+
+/*
+ * OBJECT EFFECTS SYSTEM - Effects that modify the 3D object itself
+ */
+void		transition_start_object_effects(bool to_effects);
+bool		object_effects_is_active(void);
+void		object_effects_cleanup(void);
+void		object_effects_update(t_app *fdf);
+void		set_object_effect_intensity(float intensity);
+
+//SWITCH EVENTS - Updated signatures with keycode parameter
+void    ch_effect(t_app *fdf, int keycode, void *data);
+
+void    palette_7_handler(t_app *fdf, int keycode, void *data);
+void    palette_8_handler(t_app *fdf, int keycode, void *data);
+void    palette_9_handler(t_app *fdf, int keycode, void *data);
+
+/*
+ * PARTICLE SYSTEM
+ */
+void		transition_start_particles(bool to_particles);
+bool		particles_is_active(void);
+void		particles_cleanup(void);
+void		particles_update(t_app *fdf);
+void		apply_snow_particles(t_app *fdf);
+void		apply_rain_particles(t_app *fdf);
+void		apply_fire_particles(t_app *fdf);
+void		apply_sparks_particles(t_app *fdf);
+void		apply_stars_particles(t_app *fdf);
+void		apply_bubbles_particles(t_app *fdf);
+void		apply_dust_particles(t_app *fdf);
+void		apply_smoke_particles(t_app *fdf);
+
+//SWITCH EVENTS - Updated signatures with keycode parameter
+void    ch_particules(t_app *fdf, int keycode, void *data);
+
+/*
+ * EFFECTS SYSTEM
+ */
+void		transition_start_effects(bool to_effects);
+bool		effects_is_active(void);
+void		effects_cleanup(void);
+void		effects_update(t_app *fdf);
+
+//SWITCH EVENTS - Updated signatures with keycode parameter
+void    ch_effect(t_app *fdf, int keycode, void *data);
+
+/*
+ * OBJECT EFFECTS SYSTEM - Effects that modify the 3D object itself
+ */
+void		transition_start_object_effects(bool to_effects);
+bool		object_effects_is_active(void);
+void		object_effects_cleanup(void);
+void		object_effects_update(t_app *fdf);
+void		set_object_effect_intensity(float intensity);
 
 #endif

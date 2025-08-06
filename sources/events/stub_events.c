@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 02:19:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 12:31:20 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 17:54:30 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -383,7 +383,7 @@ void palette_9_handler(t_app *fdf, int keycode, void *data)
 // Dancing system handler
 void dance_toggle_handler(t_app *fdf, int keycode, void *data)
 {
-	(void)fdf; (void)keycode; (void)data;
+	((void)fdf, (void)keycode, (void)data);
 	dance_system_toggle();
 }
 
@@ -391,7 +391,8 @@ void dance_toggle_handler(t_app *fdf, int keycode, void *data)
 void dynamic_background_toggle_handler(t_app *fdf, int keycode, void *data)
 {
 	(void)fdf; (void)keycode; (void)data;
-	dynamic_background_toggle();
+	return ;
+	//dynamic_background_toggle();
 }
 
 // Texture system handler

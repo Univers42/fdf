@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 02:11:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 12:46:42 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 17:48:07 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void setup_event_bindings(void)
 	register_event_binding(D, 0, move_right);   // D = right
 	
 	// Rotation keys - Arrow keys (without Ctrl)
-	register_event_binding(ARROW_UP, 0, rotate_up_handler);
+	register_event_binding(ARROW_UP, ControlMask | ShiftMask, rotate_up_handler);
 	register_event_binding(ARROW_DOWN, 0, rotate_down_handler);
 	register_event_binding(ARROW_LEFT, 0, rotate_left_handler);
 	register_event_binding(ARROW_RIGHT, 0, rotate_right_handler);

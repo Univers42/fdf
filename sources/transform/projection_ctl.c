@@ -6,13 +6,18 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 04:36:15 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 01:35:10 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:14:54 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "fdf.h"
 
+/**
+ * Increase margin for extreme zoom capability
+ * Increased from 2.0f to 10.0f
+ * Even larger Z range for depth travel
+ */
 void	make_projection_ctl(
 	t_projection_ctl *p,
 	float width,
@@ -25,14 +30,10 @@ void	make_projection_ctl(
 	float	with_margin;
 
 	box = fmaxf(fmaxf(width, height), depth);
-	
-	// Increase margin for extreme zoom capability
-	with_margin = box * 10.0f;  // Increased from 2.0f to 10.0f
-	
+	with_margin = box * 10.0f;
 	p->box[0] = with_margin;
 	p->box[1] = with_margin;
-	p->box[2] = with_margin * 2.0f;  // Even larger Z range for depth travel
-	
+	p->box[2] = with_margin * 2.0f;
 	window_ratio = WIN_WIDTH / (float)WIN_HEIGHT;
 	object_ratio = p->box[0] / p->box[1];
 	if (object_ratio < window_ratio)

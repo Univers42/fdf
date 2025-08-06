@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 19:45:31 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/05 18:28:05 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:26:46 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include <mlx.h>
 #include "fdf.h"
-#include "libft/libft.h"
+#include "libft.h"
 
 int	main(int argc, char **argv)
 {
@@ -23,10 +23,8 @@ int	main(int argc, char **argv)
 	t_app	fdf;
 
 	if (argc != 2)
-	{
-		ft_fprintf(STDERR_FILENO, "Usage: fdf FILE \n");
-		return (EXIT_FAILURE);
-	}
+		return (ft_fprintf(STDERR_FILENO, "Usage: fdf FILE \n"),
+			EXIT_FAILURE);
 	fdf = (t_app){0};
 	if (make_fdf(&fdf, argv[1]))
 	{
@@ -35,6 +33,5 @@ int	main(int argc, char **argv)
 	}
 	else
 		exit_code = EXIT_FAILURE;
-	fdf_destroy_contents(&fdf);
-	return (exit_code);
+	return (fdf_destroy_contents(&fdf), exit_code);
 }

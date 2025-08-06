@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 12:49:21 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 21:27:42 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,59 @@ typedef struct s_bresenham_ctx
 	int					limit;
 	int					major_axis;
 }	t_bresenham_ctx;
+
+typedef struct s_meta_shape
+{
+	float		max_radius;
+	float		height_limit;
+	struct {
+		float	x;
+		float	y;
+		float	z;
+	}			shape;
+	struct {
+		int		x;
+		int		y;
+	}			coord;
+	struct {
+		float	u;
+		float	v;
+	}s_vec;
+	struct {
+		int	width;
+		int	height;
+		int	face;
+		int	tot_point;
+	}s_face;
+	struct {
+		int	idx;
+		int	x;
+		int	y;
+	}s_loc;
+	struct 
+	{
+		float	x;
+		float	y;
+	}s_scale;
+	struct
+	{
+		float one;
+		float two;
+		float three;
+		float	z;
+			
+	}s_wave;
+	int			index;
+	float		angle;
+	float		radius;
+	float		radius_base;
+	float		phase;
+	float		height;
+	float		sp[4];
+	float		*dp;
+	int			total_points;
+	float		dist_center;
+}	t_meta_shape;
 
 /*
  * FDF

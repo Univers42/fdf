@@ -26,7 +26,7 @@ CFLAGS += $(INCLUDE_FLAGS)
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT_A) $(MLX_A)
+$(NAME): $(LIBFT_A) $(MLX_A) $(OBJS) 
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_A) $(MLX_A) -lX11 -lXext -lm
 
 $(LIBFT_A) $(MLX_A):

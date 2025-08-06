@@ -6,86 +6,81 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:25:31 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/05 18:25:32 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 21:04:15 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-void apply_cube_transformation(t_app *fdf)
+void	apply_cube_transformation(t_app *fdf)
 {
-	float cube_size = fminf(fdf->width, fdf->height) / 4.0f;
-	int total_points = fdf->width * fdf->height;
-	int points_per_face = total_points / 6;
-	
-	for (int y = 0; y < fdf->height; y++)
+	t_meta_shape	s;
+
+	s.max_radius = fminf(fdf->width, fdf->height) / 4.0f;
+	s.total_points = fdf->width * fdf->height;
+	s.s_face.tot_point = s.total_points / 6;
+	s.s_face.width = fdf->width / 3;
+	s.s_face.height = fdf->height / 2;
+	if (s.s_face.width == 0)
+		s.s_face.width = 1;
+	if (s.s_face.height == 0)
+		s.s_face.height = 1;
+	s.coord.y = -1;
+	while (++s.coord.y < fdf->height)
 	{
-		for (int x = 0; x < fdf->width; x++)
+		s.coord.x = -1;
+		while (++s.coord.x < fdf->width)
 		{
-			int index = y * fdf->width + x;
-			
-			// Determine which face this point belongs to
-			int face = index / points_per_face;
-			if (face >= 6) face = 5; // Clamp to last face
-			
-			// Calculate local coordinates within the face
-			int local_idx = index % points_per_face;
-			int face_width = fdf->width / 3;  // Divide width among faces
-			int face_height = fdf->height / 2; // Divide height between top and bottom
-			
-			if (face_width == 0) face_width = 1;
-			if (face_height == 0) face_height = 1;
-			
-			int local_x = local_idx % face_width;
-			int local_y = local_idx / face_width;
-			
-			// Normalize to [-1, 1] range
-			float u = (local_x / (float)(face_width - 1)) * 2.0f - 1.0f;
-			float v = (local_y / (float)(face_height - 1)) * 2.0f - 1.0f;
-			
-			float cube_x, cube_y, cube_z;
-			
-			// Map to cube faces with proper coordinates
-			switch (face)
+			s.index = s.coord.y * fdf->width + s.coord.x;
+			s.s_face.face = s.index / s.s_face.tot_point;
+			if (s.s_face.face >= 6)
+				s.s_face.face = 5;
+			s.s_loc.idx = s.index % s.s_face.tot_point;
+			s.s_loc.x = s.s_loc.idx % s.s_face.width;
+			s.s_loc.y = s.s_loc.idx / s.s_face.width;
+			s.s_vec.u = (s.s_loc.x / (float)(s.s_face.width - 1)) * 2.0f - 1.0f;
+			s.s_vec.v = (s.s_loc.y / (float)(s.s_face.height - 1)) * 2.0f - 1.0f;
+			switch (s.s_face.face)
 			{
-				case 0: // Front face (Z = +1)
-					cube_x = u * cube_size;
-					cube_y = v * cube_size;
-					cube_z = cube_size + fdf->points[index] * 0.05f;
+				case 0:
+					s.shape.x = s.s_vec.u * s.max_radius;
+					s.shape.y = s.s_vec.v * s.max_radius;
+					s.shape.z = s.max_radius + fdf->points[s.index] * 0.05f;
 					break;
-				case 1: // Back face (Z = -1)
-					cube_x = -u * cube_size;  // Flip X for back face
-					cube_y = v * cube_size;
-					cube_z = -cube_size + fdf->points[index] * 0.05f;
+				case 1:
+					s.shape.x = -s.s_vec.u * s.max_radius;
+					s.shape.y = s.s_vec.v * s.max_radius;
+					s.shape.z = -s.max_radius + fdf->points[s.index] * 0.05f;
 					break;
-				case 2: // Right face (X = +1)
-					cube_x = cube_size + fdf->points[index] * 0.05f;
-					cube_y = v * cube_size;
-					cube_z = -u * cube_size;
+				case 2:
+					s.shape.x = s.max_radius + fdf->points[s.index] * 0.05f;
+					s.shape.y = s.s_vec.v * s.max_radius;
+					s.shape.z = -s.s_vec.u * s.max_radius;
 					break;
-				case 3: // Left face (X = -1)
-					cube_x = -cube_size + fdf->points[index] * 0.05f;
-					cube_y = v * cube_size;
-					cube_z = u * cube_size;
+				case 3:
+					s.shape.x = -s.max_radius + fdf->points[s.index] * 0.05f;
+					s.shape.y = s.s_vec.v * s.max_radius;
+					s.shape.z = s.s_vec.u * s.max_radius;
 					break;
-				case 4: // Top face (Y = +1)
-					cube_x = u * cube_size;
-					cube_y = cube_size + fdf->points[index] * 0.05f;
-					cube_z = -v * cube_size;
+				case 4:
+					s.shape.x = s.s_vec.u * s.max_radius;
+					s.shape.y = s.max_radius + fdf->points[s.index] * 0.05f;
+					s.shape.z = -s.s_vec.v * s.max_radius;
 					break;
-				case 5: // Bottom face (Y = -1)
+				case 5:
 				default:
-					cube_x = u * cube_size;
-					cube_y = -cube_size + fdf->points[index] * 0.05f;
-					cube_z = v * cube_size;
+					s.shape.x = s.s_vec.u * s.max_radius;
+					s.shape.y = -s.max_radius + fdf->points[s.index] * 0.05f;
+					s.shape.z = s.s_vec.v * s.max_radius;
 					break;
 			}
-			
-			// Apply transformation matrix
-			float sp[4] = {cube_x, cube_y, cube_z, 1};
-			float *dp = (float *)&fdf->transformed_points[index];
-			matrix4_dot_product(fdf->transformation_stack.combined, sp, dp);
+			s.sp[0] = s.shape.x;
+			s.sp[1] = s.shape.y;
+			s.sp[2] = s.shape.z;
+			s.sp[3] = 1;
+			s.dp = (float *)&fdf->transformed_points[s.index];
+			matrix4_dot_product(fdf->transformation_stack.combined, s.sp, s.dp);
 		}
 	}
 }

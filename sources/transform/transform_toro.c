@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:25:49 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 04:12:28 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/06 21:28:22 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,39 +15,34 @@
 
 void	apply_torus_transformation(t_app *fdf, float major_radius, float minor_radius)
 {
-	int		x, y, index;
-	float	u, v;
-	float	torus_x, torus_y, torus_z;
+	t_meta_shape	s;
 
 	// Calculate appropriate radii if not provided
 	if (major_radius == 0 || minor_radius == 0)
 	{
-		major_radius = fminf(fdf->width, fdf->height) / 3.0f;
+		s.max_radius = fminf(fdf->width, fdf->height) / 3.0f;
+		major_radius = s.max_radius;
 		minor_radius = major_radius / 4.0f;
 	}
-
-	for (y = 0; y < fdf->height; y++)
+	s.coord.y = -1;
+	while (++s.coord.y < fdf->height)
 	{
-		for (x = 0; x < fdf->width; x++)
+		s.coord.x = -1;
+		while (++s.coord.x < fdf->width)
 		{
-			index = y * fdf->width + x;
-			
-			// Map grid coordinates to torus parameters
-			u = (2.0f * M_PI * x) / fdf->width;
-			v = (2.0f * M_PI * y) / fdf->height;
-			
-			// Torus parametric equations
-			torus_x = (major_radius + minor_radius * cosf(v)) * cosf(u);
-			torus_y = (major_radius + minor_radius * cosf(v)) * sinf(u);
-			torus_z = minor_radius * sinf(v);
-			
-			// Add original terrain as texture detail
-			torus_z += fdf->points[index] * 0.1f;
-			
-			// Apply transformation matrix - this is where auto-rotation happens!
-			float sp[4] = {torus_x, torus_y, torus_z, 1};
-			float *dp = (float *)&fdf->transformed_points[index];
-			matrix4_dot_product(fdf->transformation_stack.combined, sp, dp);
+			s.index = s.coord.y * fdf->width + s.coord.x;
+			s.s_vec.u = (2.0f * M_PI * s.coord.x) / fdf->width;
+			s.s_vec.v = (2.0f * M_PI * s.coord.y) / fdf->height;
+			s.shape.x = (major_radius + minor_radius * cosf(s.s_vec.v)) * cosf(s.s_vec.u);
+			s.shape.y = (major_radius + minor_radius * cosf(s.s_vec.v)) * sinf(s.s_vec.u);
+			s.shape.z = minor_radius * sinf(s.s_vec.v);
+			s.shape.z += fdf->points[s.index] * 0.1f;
+			s.sp[0] = s.shape.x;
+			s.sp[1] = s.shape.y;
+			s.sp[2] = s.shape.z;
+			s.sp[3] = 1;
+			s.dp = (float *)&fdf->transformed_points[s.index];
+			matrix4_dot_product(fdf->transformation_stack.combined, s.sp, s.dp);
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:33:56 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 19:01:41 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 00:16:54 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,14 @@ Can adapt the all the macro using this command when compiling in terminal
 #define MIN_Z_LIMIT 0.0f
 #define CONVERGENCE_THRESHOLD 500.0f
 #define CONVERGENCE_FACTOR 0.7f
+
+#define ROTATE_FACTOR 0.03f
+#define MOVE_FACTOR   2.0f
+#define AUTO_ROTATE_SPEED 0.01f // Slower auto-rotation
+
+#define MAX_KEYCODE 70000  // Increased to handle X11 keycodes
+#define MODIFIER_COMBO_COUNT 8 // 3 bits: Shift, Ctrl, Alt
+
 /**
 	* ENUMS
  */

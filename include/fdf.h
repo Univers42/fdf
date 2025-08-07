@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/07 23:13:27 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 00:30:47 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ extern  t_object_effects_system g_obj_effects;
 extern t_particle_transition g_particle_system ;
 extern t_dynamic_bg_system g_dynamic_bg;
 extern t_texture_system g_texture;
-
+extern t_trackball_shape_state g_trackball_state;
 /*
  * FDF
  */
@@ -49,7 +49,7 @@ int			button_press_handler(int button, int x, int y, t_app *fdf);
 int			button_release_handler(int button, int x, int y, t_app *fdf);
 int			motion_handler(int x, int y, t_app *fdf);
 void		auto_rotate_update(t_app *fdf);
-bool		is_auto_rotate_active(void);
+bool		is_auto_rotate_active(t_app *fdf);
 
 // Event system functions
 void		setup_event_bindings(void);
@@ -241,7 +241,6 @@ void register_event_binding(int keycode, unsigned int modifiers, t_event_fn hand
 t_event_fn find_event_handler(int keycode, unsigned int modifiers);
 
 // Global state declarations
-extern bool g_auto_rotate;
 
 // Movement helper functions (not event handlers)
 void		move_forward(t_app *fdf, float amount);
@@ -250,6 +249,8 @@ void		rotate_up(t_app *fdf, float angle);
 void		rotate_down(t_app *fdf, float angle);
 void		rotate_left(t_app *fdf, float angle);
 void		rotate_right(t_app *fdf, float angle);
+void		move_left_internal(t_app *fdf, float amount);
+void		move_right_internal(t_app *fdf, float amount);
 
 //SWITCH EVENTS - Updated signatures with keycode parameter
 void    move_up(t_app *fdf, int keycode, void *data);
@@ -469,4 +470,25 @@ float	get_target_scale(int mode);
 void	update_z_perspective(t_app *fdf, float scale_change);
 float	calculate_wobble_component(float freq, float multiplier,
 								float scale);
+float	calculate_wobble_axis(float freq, float *multipliers,
+								float *scales);
+float	gcamera_speed(float set);
+
+t_modifier_state		*gmod_state(t_modifier_state *set);
+t_event_handler_table	*get_event_handler_table(void);
+int						map_keycode(int keycode);
+t_keycode_map			*gkeycode(void);
+void	init_mlx_handlers(t_app *f);
+void	setup_event_bindings(void);
+void	handle_key_event(int keycode, unsigned int modifiers, t_app *fdf);
+void	toggle_effects(t_app *fdf, int keycode, void *data);
+void	register_event_binding(int keycode, unsigned int modifiers,
+		t_event_fn handler);
+t_event_fn	find_event_handler(int keycode, unsigned int modifiers);
+int	modifier_index(unsigned int mods);
+void	setup_movement_bindings(void);
+void	setup_control_bindings(void);
+void	setup_palette_bindings(void);
+void	setup_feature_toggle_bindings(void);
+
 #endif

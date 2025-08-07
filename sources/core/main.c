@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 19:45:31 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 20:26:46 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:56:45 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	main(int argc, char **argv)
 		return (ft_fprintf(STDERR_FILENO, "Usage: fdf FILE \n"),
 			EXIT_FAILURE);
 	fdf = (t_app){0};
+	fdf.auto_rotate = false;
 	if (make_fdf(&fdf, argv[1]))
 	{
 		exit_code = EXIT_SUCCESS;

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:53:43 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 00:12:51 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,6 +227,7 @@ typedef struct s_fdf
 	t_input_state			input_state;
 	int						drag_start[2];
 	bool					has_color;
+	bool					auto_rotate;
 }							t_app;
 
 /**
@@ -351,5 +352,43 @@ typedef struct s_wobble_point_params
 	float	freq;
 	float	intensity;
 }			t_wobble_point_params;
+
+// --- Add these lines for global trackball state access ---
+typedef struct s_trackball_shape_state {
+	float current_rotation[4];
+	float rotation_matrix[16];
+	bool is_active;
+} t_trackball_shape_state;
+
+// Core handlers state singleton
+typedef struct s_core_handlers_state {
+	bool	auto_rotate;
+	int		mouse_x;
+	int		mouse_y;
+	float	camera_speed;
+	bool	free_roam_mode;
+	bool	initialized;
+} t_core_handlers_state;
+
+// Global modifier state tracking
+typedef struct s_modifier_state {
+	bool	ctrl_pressed;
+	bool	shift_pressed;
+	bool	alt_pressed;
+}	t_modifier_state;
+
+
+// Special keycode mapping for common X11 keys that are out of normal range
+typedef struct s_keycode_map {
+	int x11_keycode;
+	int mapped_keycode;
+} t_keycode_map;
+
+// Event handler table singleton
+typedef struct s_event_handler_table {
+	t_event_fn handler_table[MAX_KEYCODE][MODIFIER_COMBO_COUNT];
+	bool initialized;
+} t_event_handler_table;
+
 
 #endif

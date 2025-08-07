@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:43:21 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 11:48:27 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:21:24 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 
 static void			bresenham_draw_loop(t_bresenham_ctx *ctx);
 void				draw_line_bresenham(
-							t_bresenham_state *bresenham,
-							unsigned int *screen,
-							int major_axis
-							);
+						t_bresenham_state *bresenham,
+						unsigned int *screen,
+						int major_axis
+						);
 
 /**
  * draw_line_x_major - Draws a line where X is the major axis.
@@ -105,14 +105,14 @@ static void	bresenham_draw_loop(t_bresenham_ctx *ctx)
 	{
 		bresenham_draw_pixel(ctx, color);
 		ctx->coord[ctx->major_axis] += ctx->bresenham->step[ctx->major_axis];
-		ctx->bresenham->error_count += \
-		2 * ctx->bresenham->delta[1 - ctx->major_axis];
+		ctx->bresenham->error_count
+			+= 2 * ctx->bresenham->delta[1 - ctx->major_axis];
 		if (ctx->bresenham->error_count > 0)
 		{
-			ctx->coord[1 - ctx->major_axis] += \
-			ctx->bresenham->step[1 - ctx->major_axis];
-			ctx->bresenham->error_count -= \
-			2 * ctx->bresenham->delta[ctx->major_axis];
+			ctx->coord[1 - ctx->major_axis]
+				+= ctx->bresenham->step[1 - ctx->major_axis];
+			ctx->bresenham->error_count
+				-= 2 * ctx->bresenham->delta[ctx->major_axis];
 		}
 		color = pack_color(ctx->bresenham, step);
 	}

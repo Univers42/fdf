@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 22:40:23 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 00:21:50 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 00:33:44 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ t_z_perspective	gzperspective(t_z_perspective *set)
 
 t_core_handlers_state	*get_core_handlers_state(void)
 {
-	static t_core_handlers_state instance = {0};
-	
+	static t_core_handlers_state	instance = {0};
+
 	if (!instance.initialized)
 	{
 		instance.auto_rotate = false;
@@ -41,7 +41,7 @@ t_core_handlers_state	*get_core_handlers_state(void)
 		instance.free_roam_mode = true;
 		instance.initialized = true;
 	}
-	return &instance;
+	return (&instance);
 }
 
 t_keycode_map	*gkeycode(void)

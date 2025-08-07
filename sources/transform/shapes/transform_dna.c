@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:25:35 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 18:25:15 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	transform_dna_point(t_app *fdf, t_meta_shape *s, float radius_base)
 	s->sp[2] = s->shape.z;
 	s->sp[3] = 1;
 	s->dp = (float *)&fdf->transformed_points[index];
-	matrix4_dot_product(fdf->transformation_stack.combined, s->sp, s->dp);
+	matrix4_dot_product(fdf->trans_stack.combined, s->sp, s->dp);
 }
 
 void	apply_dna_transformation(t_app *fdf)

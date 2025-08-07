@@ -6,32 +6,35 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:40 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 14:15:22 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:57:59 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-// Apply height oscillation effect - oscillates based on original height
-void apply_height_oscillation_effect(t_app *fdf)
+void	apply_height_oscillation_effect(t_app *fdf)
 {
+	int		y;
+	int		x;
+	int		index;
+	float	oscillation;
+
 	if (!g_obj_effects.original_points)
-		return;
-	
-	for (int y = 0; y < fdf->height; y++)
+		return ;
+	y = 0;
+	while (y < fdf->height)
 	{
-		for (int x = 0; x < fdf->width; x++)
+		x = 0;
+		while (x < fdf->width)
 		{
-			int index = y * fdf->width + x;
-			
-			float original_z = g_obj_effects.original_points[index];
-			
-			// Oscillation based on original height
-			float height_factor = original_z / 100.0f; // Normalize
-			float oscillation = sinf(g_obj_effects.time_accumulator * 3.0f + height_factor) * 15.0f;
-			
-			fdf->points[index] = original_z + oscillation * g_obj_effects.intensity;
+			index = y * fdf->width + x;
+			oscillation = sinf(g_obj_effects.time_accumulator * 3.0f
+					+ (g_obj_effects.original_points[index] / 100.0f)) * 15.0f;
+			fdf->points[index] = g_obj_effects.original_points[index]
+				+ oscillation * g_obj_effects.intensity;
+			x++;
 		}
+		y++;
 	}
 }

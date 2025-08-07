@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:33:56 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 15:55:51 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 19:01:41 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,12 @@ Can adapt the all the macro using this command when compiling in terminal
 
 #define MAX_EVENT 256
 #define EVENT_BINDINGS_MAX 512
+
+#define Z_SCALE_STEP 0.1f
+#define MAX_Z_LIMIT 500.0f
+#define MIN_Z_LIMIT 0.0f
+#define CONVERGENCE_THRESHOLD 500.0f
+#define CONVERGENCE_FACTOR 0.7f
 /**
 	* ENUMS
  */

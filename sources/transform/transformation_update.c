@@ -6,17 +6,16 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:15 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 04:02:32 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include <assert.h>
 #include <stddef.h>
 #include "fdf.h"
 #include "libft/libft.h"
 
-static inline void	update_rotations(t_transformation_stack *t)
+static inline void	update_rotations(t_trans_stack *t)
 {
 	if (t->dirty[M_VIEW_ROTATE_X])
 		matrix4_rotate_x_abs(t->matrices[M_VIEW_ROTATE_X], t->px);
@@ -32,7 +31,7 @@ static inline void	update_rotations(t_transformation_stack *t)
 		matrix4_rotate_z_abs(t->matrices[M_ROTATION_Z], t->rz);
 }
 
-static inline void	update_translation(t_transformation_stack *t)
+static inline void	update_translation(t_trans_stack *t)
 {
 	if (t->dirty[M_TB])
 	{
@@ -48,7 +47,7 @@ static inline void	update_translation(t_transformation_stack *t)
 	}
 }
 
-static inline void	update_projection(t_transformation_stack *t)
+static inline void	update_projection(t_trans_stack *t)
 {
 	t_projection_ctl	*p;
 
@@ -59,34 +58,7 @@ static inline void	update_projection(t_transformation_stack *t)
 	p->r = p->box[0] / 2 * p->zoom_factor + p->pan_x;
 	p->t = -p->box[1] / 2 * p->zoom_factor + p->pan_y;
 	p->b = p->box[1] / 2 * p->zoom_factor + p->pan_y;
-	
-	// Dynamic near/far planes for infinite travel capability
-	if (p->zoom_factor < 0.001f)  // Extremely zoomed out
-	{
-		p->n = 0.00001f;
-		p->f = p->box[2] * 10000.0f;
-	}
-	else if (p->zoom_factor < 0.1f)  // Very zoomed out
-	{
-		p->n = 0.0001f;
-		p->f = p->box[2] * 1000.0f;
-	}
-	else if (p->zoom_factor > 1000.0f)  // Extremely zoomed in
-	{
-		p->n = 0.000001f;
-		p->f = p->box[2] * 0.1f;
-	}
-	else if (p->zoom_factor > 10.0f)  // Very zoomed in
-	{
-		p->n = 0.00001f;
-		p->f = p->box[2] * 1.0f;
-	}
-	else  // Normal zoom
-	{
-		p->n = 0.01f;
-		p->f = p->box[2] * 2.0f;
-	}
-	
+	check_projection(p);
 	identity_matrix4(t->matrices[M_PROJECTION]);
 	t->matrices[M_PROJECTION][0] = 2.0f / (p->r - p->l);
 	t->matrices[M_PROJECTION][5] = 2.0f / (p->t - p->b);
@@ -96,7 +68,7 @@ static inline void	update_projection(t_transformation_stack *t)
 	t->matrices[M_PROJECTION][11] = -(p->f + p->n) / (p->f - p->n);
 }
 
-static inline void	recompute_final_transformation(t_transformation_stack *t)
+static inline void	recompute_final_transformation(t_trans_stack *t)
 {
 	float	*pingpong[2];
 	size_t	i;
@@ -119,13 +91,10 @@ static inline void	recompute_final_transformation(t_transformation_stack *t)
 	ft_memset(t->dirty, 0, sizeof(t->dirty));
 }
 
-void	transformation_stack_update(t_transformation_stack *t)
+void	trans_stack_update(t_trans_stack *t)
 {
-	// Force update all matrices when any transformation occurs
 	update_rotations(t);
 	update_translation(t);
 	update_projection(t);
-	
-	// Always recompute the final transformation matrix
 	recompute_final_transformation(t);
 }

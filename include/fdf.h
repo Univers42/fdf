@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/07 18:54:22 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:13:27 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ extern t_texture_system g_texture;
 bool		make_fdf(t_app *fdf, char *filename);
 void		fdf_destroy_contents(t_app *fdf);
 int			fdf_render(t_app *f);
-void		fdf_init_edges(t_app *f);
-void		fdf_draw_lines(t_app *f);
+void		fdf_init_edges(t_app *fdf);
+void		fdf_draw_lines(t_app *fdf);
 bool		parse_file(t_app *fdf, char *filename);
 
 /*
@@ -86,26 +86,26 @@ void		matrix4_dot_product(float *m, float *a, float *out);
 /*
  * TRANSFORMATION STACK
  */
-void		make_transformation_stack(t_transformation_stack *t);
+void		make_trans_stack(t_trans_stack *t);
 
-void		transformation_stack_rotate_x(t_transformation_stack *t, float dx);
-void		transformation_stack_rotate_y(t_transformation_stack *t, float dy);
-void		transformation_stack_rotate_z(t_transformation_stack *t, float dz);
+void		trans_stack_rotate_x(t_trans_stack *t, float dx);
+void		trans_stack_rotate_y(t_trans_stack *t, float dy);
+void		trans_stack_rotate_z(t_trans_stack *t, float dz);
 
-void		transformation_stack_rview_x(t_transformation_stack *t, float dx);
-void		transformation_stack_rview_x2(t_transformation_stack *t, float dx);
-void		transformation_stack_rview_z(t_transformation_stack *t, float dz);
+void		trans_stack_rview_x(t_trans_stack *t, float dx);
+void		trans_stack_rview_x2(t_trans_stack *t, float dx);
+void		trans_stack_rview_z(t_trans_stack *t, float dz);
 
-void		transformation_stack_isometric(t_transformation_stack *t);
-void		transformation_stack_parallel(t_transformation_stack *t);
+void		trans_stack_isometric(t_trans_stack *t);
+void		trans_stack_parallel(t_trans_stack *t);
 
-void		transformation_stack_update(t_transformation_stack *t);
-void		transformation_stack_ortho(t_transformation_stack *t, float x, float y, float z);
-void		transformation_stack_zoom(t_transformation_stack *t, int direction);
-void		transformation_stack_translate(t_transformation_stack *t, float dx, float dy, float dz);
-void		transformation_stack_pan(t_transformation_stack *t, float dx, float dy);
-void		transformation_stack_origin(t_transformation_stack *t, float dx, float dy, float dz);
-void		center_model(t_transformation_stack *t, float width, float height, float depth);
+void		trans_stack_update(t_trans_stack *t);
+void		trans_stack_ortho(t_trans_stack *t, float x, float y, float z);
+void		trans_stack_zoom(t_trans_stack *t, int direction);
+void		trans_stack_translate(t_trans_stack *t, float dx, float dy, float dz);
+void		trans_stack_pan(t_trans_stack *t, float dx, float dy);
+void		trans_stack_origin(t_trans_stack *t, float dx, float dy, float dz);
+void		center_model(t_trans_stack *t, float width, float height, float depth);
 
 /*
  * PROJECTION CTL
@@ -174,6 +174,7 @@ void		animate_parallax_grid(void);
 bool		is_parallax_active(void);
 void		init_parallax_system(void);
 
+void	check_projection(t_projection_ctl *p);
 /*
  * BACKGROUND AND EFFECTS
  */
@@ -450,4 +451,22 @@ void apply_stripes_texture(t_app *fdf);
 void    store_original_texture_colors(t_app *fdf);
 void apply_wood_grain_texture(t_app *fdf);
 
+/**
+singletons
+*/
+
+t_z_perspective	gzperspective(t_z_perspective *set);
+/**
+z_point
+*/
+void	set_z_perspective_mode(t_app *fdf, int mode);
+float	get_z_perspective_scale(void);
+void	reduce_z_perspective(t_app *fdf);
+void	increase_z_perspective(t_app *fdf);
+void	reset_z_perspective(t_app *fdf);
+void	update_z_points(t_app *fdf, t_z_perspective *ctrl);
+float	get_target_scale(int mode);
+void	update_z_perspective(t_app *fdf, float scale_change);
+float	calculate_wobble_component(float freq, float multiplier,
+								float scale);
 #endif

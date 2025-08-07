@@ -6,45 +6,63 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:06:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 14:15:16 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:13:22 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-
-// Apply CRAZY expand/contract dance move - object breathes WILDLY
-void apply_dance_expand_contract(t_app *fdf)
+float	calculate_wobble_component(float freq, float multiplier,
+								float scale)
 {
-	float pulse_freq = 6.0f * g_dance.rhythm_multiplier; // Much faster breathing!
-	float scale_amplitude = 0.8f; // HUGE breathing effect
-	float scale_factor = 1.0f + sinf(g_dance.time_accumulator * pulse_freq) * scale_amplitude * g_dance.move_intensity;
-	
-	// EXTREME scaling with pulsation
-	for (int y = 0; y < fdf->height; y++)
+	float	component;
+
+	component = sinf(g_dance.time_accumulator * freq * multiplier) * scale;
+	return (component);
+}
+
+static void	apply_expand_to_points(t_app *fdf, float scale_factor)
+{
+	int		y;
+	int		x;
+	int		index;
+	float	dist_factor;
+	float	local_scale;
+
+	y = 0;
+	while (y < fdf->height)
 	{
-		for (int x = 0; x < fdf->width; x++)
+		x = 0;
+		while (x < fdf->width)
 		{
-			int index = y * fdf->width + x;
-			float original_z = g_dance.original_points[index];
-			
-			// Distance-based scaling for more dramatic effect
-			float center_x = fdf->width / 2.0f;
-			float center_y = fdf->height / 2.0f;
-			float dx = (x - center_x) / center_x;
-			float dy = (y - center_y) / center_y;
-			float dist_factor = sqrtf(dx * dx + dy * dy);
-			
-			// Different scaling based on distance
-			float local_scale = scale_factor * (1.0f + dist_factor * 0.5f);
-			
-			fdf->points[index] = original_z * local_scale;
+			index = y * fdf->width + x;
+			dist_factor = sqrtf(powf((x - fdf->width / 2.0f)
+						/ (fdf->width / 2.0f), 2)
+					+ powf((y - fdf->height / 2.0f)
+						/ (fdf->height / 2.0f), 2));
+			local_scale = scale_factor * (1.0f + dist_factor * 0.5f);
+			fdf->points[index] = g_dance.original_points[index] * local_scale;
+			x++;
 		}
+		y++;
 	}
-	
-	// Add rotation during breathing for extra effect
-	float breath_rotation = sinf(g_dance.time_accumulator * pulse_freq) * 0.05f;
-	transformation_stack_rotate_y(&fdf->transformation_stack, breath_rotation);
-	transformation_stack_rotate_x(&fdf->transformation_stack, breath_rotation * 0.7f);
+}
+
+void	apply_dance_expand_contract(t_app *fdf)
+{
+	float	pulse_freq;
+	float	scale_amplitude;
+	float	scale_factor;
+	float	breath_rotation;
+
+	pulse_freq = 6.0f * g_dance.rhythm_multiplier;
+	scale_amplitude = 0.8f;
+	scale_factor = 1.0f + sinf(g_dance.time_accumulator * pulse_freq)
+		* scale_amplitude * g_dance.move_intensity;
+	apply_expand_to_points(fdf, scale_factor);
+	breath_rotation = sinf(g_dance.time_accumulator * pulse_freq) * 0.05f;
+	trans_stack_rotate_y(&fdf->trans_stack, breath_rotation);
+	trans_stack_rotate_x(&fdf->trans_stack,
+		breath_rotation * 0.7f);
 }

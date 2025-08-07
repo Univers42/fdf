@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:25:31 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 18:15:15 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	apply_cube_transform(t_app *fdf, t_meta_shape *s)
 	s->sp[2] = s->shape.z;
 	s->sp[3] = 1;
 	s->dp = (float *)&fdf->transformed_points[s->index];
-	matrix4_dot_product(fdf->transformation_stack.combined, s->sp, s->dp);
+	matrix4_dot_product(fdf->trans_stack.combined, s->sp, s->dp);
 }
 
 static void	transform_cube_point(t_app *fdf, t_meta_shape *s)

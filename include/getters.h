@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:27:06 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 16:19:46 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,27 +19,27 @@
     * Singletons
 */
 
-inline t_projection_ctl    ctrl_projection(t_transformation_stack *self)
+inline t_projection_ctl    ctrl_projection(t_trans_stack *self)
 {
     return (self->projection);
 }
 
-inline t_point3    r(t_transformation_stack *self)
+inline t_point3    r(t_trans_stack *self)
 {
     return (self->r);
 }
 
-inline t_point3    o(t_transformation_stack *self)
+inline t_point3    o(t_trans_stack *self)
 {
     return (self->o);
 }
 
-inline t_point3    t(t_transformation_stack *self)
+inline t_point3    t(t_trans_stack *self)
 {
     return (self->t);
 }
 
-inline t_point3    p(t_transformation_stack *self)
+inline t_point3    p(t_trans_stack *self)
 {
     return (self->p);
 }
@@ -55,7 +55,7 @@ inline  t_bresenham_state   (t_fdf *fdf)
     return (fdf->bresenham_state);
 }
 
-inline t_transformation_stack trans_stack(t_fdf *fdf)
+inline t_trans_stack trans_stack(t_fdf *fdf)
 {
     return (fdf->transformation->stack);
 }

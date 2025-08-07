@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:53:43 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 17:39:12 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ typedef struct s_projection_ctl
 }					t_projection_ctl;
 
 //!to replace with the below structure but little by little
-typedef struct s_transformation_stack
+typedef struct s_trans_stack
 {
 	float				matrices[M_COUNT][16];
 	float				temp[16];
@@ -162,9 +162,9 @@ typedef struct s_transformation_stack
 	float				ox;
 	float				oy;
 	float				oz;
-}						t_transformation_stack;
+}						t_trans_stack;
 
-//typedef struct	s_transformation_stack
+//typedef struct	s_trans_stack
 //{
 //	float	matrices[M_COUNT][16];
 //	float	temp[16];
@@ -223,7 +223,7 @@ typedef struct s_fdf
 	size_t					n_edges;
 	t_renderer				renderer;
 	t_bresenham_state		bresenham_state;
-	t_transformation_stack	transformation_stack;
+	t_trans_stack	trans_stack;
 	t_input_state			input_state;
 	int						drag_start[2];
 	bool					has_color;
@@ -321,14 +321,35 @@ typedef struct s_event_binding
 
 typedef struct s_particle_transition
 {
-	int					frame;
-	int					max_frames;
-	bool				active;
-	t_particle_type		current_type;
-	t_particle_type		target_type;
-	t_particle			particles[MAX_PARTICLES];
-	bool				initialized;
-	float				time_accumulator;
-}						t_particle_transition;
+	int				frame;
+	int				max_frames;
+	bool			active;
+	t_particle_type	current_type;
+	t_particle_type	target_type;
+	t_particle		particles[MAX_PARTICLES];
+	bool			initialized;
+	float			time_accumulator;
+}					t_particle_transition;
+
+
+
+typedef struct s_z_perspective
+{
+	float	scale_factor;
+	float	original_max_z;
+	float	original_min_z;
+	bool	initialized;
+	float	*original_z_values;
+	int		total_points;
+}			t_z_perspective;
+
+typedef struct s_wobble_point_params
+{
+	int		index;
+	float	norm_x;
+	float	norm_y;
+	float	freq;
+	float	intensity;
+}			t_wobble_point_params;
 
 #endif

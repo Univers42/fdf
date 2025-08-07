@@ -89,7 +89,7 @@ void object_effects_update(t_app *fdf)
 	if (++debug_counter % 300 == 0) // Every 5 seconds at 60fps
 	{
 		printf("Object Effect: %s (intensity: %.1f) - modifying %d points\n", 
-			   effect_names[g_obj_effects.current_effect], g_obj_effects.intensity, g_obj_effects.total_points);
+			effect_names[g_obj_effects.current_effect], g_obj_effects.intensity, g_obj_effects.total_points);
 	}
 }
 

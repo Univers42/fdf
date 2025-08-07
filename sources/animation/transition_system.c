@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:28:19 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 17:27:22 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,7 +331,7 @@ static void apply_shape_with_transform(t_app *fdf, t_shape_type shape)
 					
 					float sp[4] = {shape_x, shape_y, shape_z, 1};
 					float *dp = (float *)&fdf->transformed_points[index];
-					matrix4_dot_product(fdf->transformation_stack.combined, sp, dp);
+					matrix4_dot_product(fdf->trans_stack.combined, sp, dp);
 				}
 			}
 			break;
@@ -404,7 +404,7 @@ void	transition_update(t_app *fdf)
 				sp[2] = final_z;
 				sp[3] = 1;
 				dp = (float *)&fdf->transformed_points[index];
-				matrix4_dot_product(fdf->transformation_stack.combined, sp, dp);
+				matrix4_dot_product(fdf->trans_stack.combined, sp, dp);
 			}
 		}
 		

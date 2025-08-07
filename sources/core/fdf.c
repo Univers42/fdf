@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:42:54 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 01:46:24 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,22 @@
 #include <X11/X.h>
 #include "libft/libft.h"
 
-static inline void	init_transformation_stack(t_app *fdf)
+static inline void	init_trans_stack(t_app *fdf)
 {
 	t_projection_ctl	*projection;
 
-	fdf->transformation_stack.dirty[M_PROJECTION] = true;
-	projection = &fdf->transformation_stack.projection;
-	transformation_stack_origin(&fdf->transformation_stack,
+	fdf->trans_stack.dirty[M_PROJECTION] = true;
+	projection = &fdf->trans_stack.projection;
+	trans_stack_origin(&fdf->trans_stack,
 		-((float)fdf->width / 2), -((float)fdf->height / 2),
 		-(float)(fdf->min_z + fdf->max_z) / 2.0f);
-	transformation_stack_isometric(&fdf->transformation_stack);
+	trans_stack_isometric(&fdf->trans_stack);
 	make_projection_ctl(projection, (float) fdf->width, (float) fdf->height,
 		(float)(fdf->max_z - fdf->min_z));
-	transformation_stack_translate(&fdf->transformation_stack, 0, 0,
+	trans_stack_translate(&fdf->trans_stack, 0, 0,
 		-projection->box[2] / 2.0f);
-	transformation_stack_update(&fdf->transformation_stack);
-	center_model(&fdf->transformation_stack, fdf->width, fdf->height,
+	trans_stack_update(&fdf->trans_stack);
+	center_model(&fdf->trans_stack, fdf->width, fdf->height,
 		(float)(fdf->max_z - fdf->min_z));
 }
 
@@ -47,8 +47,8 @@ static inline bool	init_after_parsing(t_app *fdf)
 		return (printf("Error: Invalid map dimensions (%d x %d)\n",
 				fdf->width, fdf->height), false);
 	ok = false;
-	make_transformation_stack(&fdf->transformation_stack);
-	init_transformation_stack(fdf);
+	make_trans_stack(&fdf->trans_stack);
+	init_trans_stack(fdf);
 	fdf->n_edges = (fdf->width - 1) * fdf->height
 		+ (fdf->height - 1) * fdf->width;
 	n = sizeof(int [fdf->n_edges][2]);

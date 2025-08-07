@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:36 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 01:35:10 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,11 +122,11 @@ void apply_trackball_to_transform_stack(t_app *fdf)
 	
 	// Apply trackball rotation by modifying the transformation matrix directly
 	float temp_matrix[16];
-	matrix4_multiply(fdf->transformation_stack.combined, rotation_matrix, temp_matrix);
+	matrix4_multiply(fdf->trans_stack.combined, rotation_matrix, temp_matrix);
 	
 	// Copy result back
 	for (int i = 0; i < 16; i++)
-		fdf->transformation_stack.combined[i] = temp_matrix[i];
+		fdf->trans_stack.combined[i] = temp_matrix[i];
 }
 
 // Apply automatic trackball rotation for shapes (space bar)

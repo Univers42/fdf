@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 02:19:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 12:39:53 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,57 +18,57 @@
 // Move the model forward (along Y axis)
 void	move_forward(t_app *fdf, float amount)
 {
-	transformation_stack_translate(&fdf->transformation_stack, 0, -amount, 0);
-	fdf->transformation_stack.dirty[M_TB] = true;
+	trans_stack_translate(&fdf->trans_stack, 0, -amount, 0);
+	fdf->trans_stack.dirty[M_TB] = true;
 }
 
 // Move the model backward (along Y axis)
 void	move_backward(t_app *fdf, float amount)
 {
-	transformation_stack_translate(&fdf->transformation_stack, 0, amount, 0);
-	fdf->transformation_stack.dirty[M_TB] = true;
+	trans_stack_translate(&fdf->trans_stack, 0, amount, 0);
+	fdf->trans_stack.dirty[M_TB] = true;
 }
 
 // Move the model left (along X axis) - internal helper
 static void	move_left_internal(t_app *fdf, float amount)
 {
-	transformation_stack_translate(&fdf->transformation_stack, -amount, 0, 0);
-	fdf->transformation_stack.dirty[M_TB] = true;
+	trans_stack_translate(&fdf->trans_stack, -amount, 0, 0);
+	fdf->trans_stack.dirty[M_TB] = true;
 }
 
 // Move the model right (along X axis) - internal helper
 static void	move_right_internal(t_app *fdf, float amount)
 {
-	transformation_stack_translate(&fdf->transformation_stack, amount, 0, 0);
-	fdf->transformation_stack.dirty[M_TB] = true;
+	trans_stack_translate(&fdf->trans_stack, amount, 0, 0);
+	fdf->trans_stack.dirty[M_TB] = true;
 }
 
 // Rotate the model up (around X axis)
 void	rotate_up(t_app *fdf, float angle)
 {
-	transformation_stack_rotate_x(&fdf->transformation_stack, -angle);
-	fdf->transformation_stack.dirty[M_ROTATION_X] = true;
+	trans_stack_rotate_x(&fdf->trans_stack, -angle);
+	fdf->trans_stack.dirty[M_ROTATION_X] = true;
 }
 
 // Rotate the model down (around X axis)
 void	rotate_down(t_app *fdf, float angle)
 {
-	transformation_stack_rotate_x(&fdf->transformation_stack, angle);
-	fdf->transformation_stack.dirty[M_ROTATION_X] = true;
+	trans_stack_rotate_x(&fdf->trans_stack, angle);
+	fdf->trans_stack.dirty[M_ROTATION_X] = true;
 }
 
 // Rotate the model left (around Y axis)
 void	rotate_left(t_app *fdf, float angle)
 {
-	transformation_stack_rotate_y(&fdf->transformation_stack, -angle);
-	fdf->transformation_stack.dirty[M_ROTATION_Y] = true;
+	trans_stack_rotate_y(&fdf->trans_stack, -angle);
+	fdf->trans_stack.dirty[M_ROTATION_Y] = true;
 }
 
 // Rotate the model right (around Y axis)
 void	rotate_right(t_app *fdf, float angle)
 {
-	transformation_stack_rotate_y(&fdf->transformation_stack, angle);
-	fdf->transformation_stack.dirty[M_ROTATION_Y] = true;
+	trans_stack_rotate_y(&fdf->trans_stack, angle);
+	fdf->trans_stack.dirty[M_ROTATION_Y] = true;
 }
 
 // Movement handlers with proper amounts
@@ -76,106 +76,106 @@ void move_up(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
 	printf("BEFORE: tx=%.2f, ty=%.2f, tz=%.2f\n", 
-		   fdf->transformation_stack.tx, fdf->transformation_stack.ty, fdf->transformation_stack.tz);
+		   fdf->trans_stack.tx, fdf->trans_stack.ty, fdf->trans_stack.tz);
 	
 	move_forward(fdf, 5.0f);  // Larger amount to see change
-	transformation_stack_update(&fdf->transformation_stack);
+	trans_stack_update(&fdf->trans_stack);
 	
 	printf("AFTER: tx=%.2f, ty=%.2f, tz=%.2f\n", 
-		   fdf->transformation_stack.tx, fdf->transformation_stack.ty, fdf->transformation_stack.tz);
+		   fdf->trans_stack.tx, fdf->trans_stack.ty, fdf->trans_stack.tz);
 	printf("Matrix [3]=%.2f, [7]=%.2f, [11]=%.2f\n",
-		   fdf->transformation_stack.matrices[M_TB][3],
-		   fdf->transformation_stack.matrices[M_TB][7],
-		   fdf->transformation_stack.matrices[M_TB][11]);
+		   fdf->trans_stack.matrices[M_TB][3],
+		   fdf->trans_stack.matrices[M_TB][7],
+		   fdf->trans_stack.matrices[M_TB][11]);
 }
 
 void move_down(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
 	move_backward(fdf, 5.0f);
-	transformation_stack_update(&fdf->transformation_stack);
+	trans_stack_update(&fdf->trans_stack);
 }
 
 void move_left(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
 	move_left_internal(fdf, 5.0f);
-	transformation_stack_update(&fdf->transformation_stack);
+	trans_stack_update(&fdf->trans_stack);
 }
 
 void move_right(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
 	move_right_internal(fdf, 5.0f);
-	transformation_stack_update(&fdf->transformation_stack);
+	trans_stack_update(&fdf->trans_stack);
 }
 
 // Add rotation event handlers for arrow keys with proper amounts
 void rotate_up_handler(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
-	printf("ROTATE: Before rx=%.4f\n", fdf->transformation_stack.rx);
+	printf("ROTATE: Before rx=%.4f\n", fdf->trans_stack.rx);
 	
 	rotate_up(fdf, 0.1f);  // Larger rotation to see change
-	transformation_stack_update(&fdf->transformation_stack);
+	trans_stack_update(&fdf->trans_stack);
 	
-	printf("ROTATE: After rx=%.4f\n", fdf->transformation_stack.rx);
+	printf("ROTATE: After rx=%.4f\n", fdf->trans_stack.rx);
 }
 
 void rotate_down_handler(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
 	rotate_down(fdf, 0.1f);
-	transformation_stack_update(&fdf->transformation_stack);
+	trans_stack_update(&fdf->trans_stack);
 }
 
 void rotate_left_handler(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
 	rotate_left(fdf, 0.1f);
-	transformation_stack_update(&fdf->transformation_stack);
+	trans_stack_update(&fdf->trans_stack);
 }
 
 void rotate_right_handler(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
 	rotate_right(fdf, 0.1f);
-	transformation_stack_update(&fdf->transformation_stack);
+	trans_stack_update(&fdf->trans_stack);
 }
 
 // Zoom handlers
 void zoom_in(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
-	transformation_stack_zoom(&fdf->transformation_stack, -1);
+	trans_stack_zoom(&fdf->trans_stack, -1);
 }
 
 void zoom_out(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
-	transformation_stack_zoom(&fdf->transformation_stack, +1);
+	trans_stack_zoom(&fdf->trans_stack, +1);
 }
 
 // Projection handlers
 void projection_iso(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
-	transformation_stack_isometric(&fdf->transformation_stack);
-	projection_reset_params(&fdf->transformation_stack.projection);
-	fdf->transformation_stack.dirty[M_PROJECTION] = true;
-	transformation_stack_update(&fdf->transformation_stack);
-	center_model(&fdf->transformation_stack, (float)fdf->width,
+	trans_stack_isometric(&fdf->trans_stack);
+	projection_reset_params(&fdf->trans_stack.projection);
+	fdf->trans_stack.dirty[M_PROJECTION] = true;
+	trans_stack_update(&fdf->trans_stack);
+	center_model(&fdf->trans_stack, (float)fdf->width,
 		(float)fdf->height, (float)(fdf->max_z - fdf->min_z));
 }
 
 void projection_fly(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode; (void)data;
-	transformation_stack_parallel(&fdf->transformation_stack);
-	projection_reset_params(&fdf->transformation_stack.projection);
-	fdf->transformation_stack.dirty[M_PROJECTION] = true;
-	transformation_stack_update(&fdf->transformation_stack);
-	center_model(&fdf->transformation_stack, (float)fdf->width,
+	trans_stack_parallel(&fdf->trans_stack);
+	projection_reset_params(&fdf->trans_stack.projection);
+	fdf->trans_stack.dirty[M_PROJECTION] = true;
+	trans_stack_update(&fdf->trans_stack);
+	center_model(&fdf->trans_stack, (float)fdf->width,
 		(float)fdf->height, (float)(fdf->max_z - fdf->min_z));
 }
 
@@ -245,22 +245,22 @@ void reset_state(t_app *fdf, int keycode, void *data)
 	reset_trackball_rotation();
 	
 	// Reset transformation stack
-	make_transformation_stack(&fdf->transformation_stack);
-	transformation_stack_origin(&fdf->transformation_stack,
+	make_trans_stack(&fdf->trans_stack);
+	trans_stack_origin(&fdf->trans_stack,
 		-((float)fdf->width / 2), -((float)fdf->height / 2),
 		-(float)(fdf->min_z + fdf->max_z) / 2.0f);
-	transformation_stack_isometric(&fdf->transformation_stack);
+	trans_stack_isometric(&fdf->trans_stack);
 	
 	// Reset projection
-	t_projection_ctl *projection = &fdf->transformation_stack.projection;
+	t_projection_ctl *projection = &fdf->trans_stack.projection;
 	make_projection_ctl(projection, (float)fdf->width, (float)fdf->height,
 		(float)(fdf->max_z - fdf->min_z));
-	transformation_stack_translate(&fdf->transformation_stack, 0, 0,
+	trans_stack_translate(&fdf->trans_stack, 0, 0,
 		-projection->box[2] / 2.0f);
 	projection_reset_params(projection);
-	fdf->transformation_stack.dirty[M_PROJECTION] = true;
-	transformation_stack_update(&fdf->transformation_stack);
-	center_model(&fdf->transformation_stack, (float)fdf->width,
+	fdf->trans_stack.dirty[M_PROJECTION] = true;
+	trans_stack_update(&fdf->trans_stack);
+	center_model(&fdf->trans_stack, (float)fdf->width,
 		(float)fdf->height, (float)(fdf->max_z - fdf->min_z));
 	
 	// Reset z-perspective

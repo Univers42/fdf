@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:12:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 14:19:47 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:42:35 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,19 @@ void texture_system_cleanup(void)
 	g_texture.time_accumulator = 0.0f;
 	
 	printf("🎨 Texture system cleaned up\n");
+}
+
+void	cleanup_z_perspective_control(void)
+{
+	t_z_perspective	ctrl;
+
+	ctrl = gzperspective(NULL);
+	if (ctrl.original_z_values)
+	{
+		free(ctrl.original_z_values);
+		ctrl.original_z_values = NULL;
+	}
+	ctrl.initialized = false;
+	ctrl.scale_factor = 1.0f;
+	gzperspective(&ctrl);
 }

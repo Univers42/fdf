@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 16:02:13 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 12:46:42 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,19 +185,19 @@ int	motion_handler(int x, int y, t_app *fdf)
 
 	ndcx = ((float) x - (float) fdf->drag_start[0]) / WIN_WIDTH;
 	ndcy = ((float) fdf->drag_start[1] - (float) y) / WIN_HEIGHT;
-	proj = &fdf->transformation_stack.projection;
+	proj = &fdf->trans_stack.projection;
 	if (fdf->input_state == INPUT_STATE_DRAGGING)
 	{
-		transformation_stack_pan(&fdf->transformation_stack,
+		trans_stack_pan(&fdf->trans_stack,
 			ndcx * (proj->l - proj->r), ndcy * (proj->b - proj->t));
 		fdf->drag_start[0] = x;
 		fdf->drag_start[1] = y;
 	}
 	else if (fdf->input_state == INPUT_STATE_ROTATING)
 	{
-		transformation_stack_rotate_x(&fdf->transformation_stack,
+		trans_stack_rotate_x(&fdf->trans_stack,
 			ndcy * (proj->b - proj->t) * ROTATE_FACTOR);
-		transformation_stack_rotate_y(&fdf->transformation_stack,
+		trans_stack_rotate_y(&fdf->trans_stack,
 			ndcx * (proj->r - proj->l) * ROTATE_FACTOR);
 		fdf->drag_start[0] = x;
 		fdf->drag_start[1] = y;
@@ -211,12 +211,12 @@ int	button_press_handler(int button, int x, int y, t_app *fdf)
 	if (button == Button4)
 	{
 		for (int i = 0; i < (int)g_camera_speed; i++)
-			transformation_stack_zoom(&fdf->transformation_stack, -1);
+			trans_stack_zoom(&fdf->trans_stack, -1);
 	}
 	else if (button == Button5)
 	{
 		for (int i = 0; i < (int)g_camera_speed; i++)
-			transformation_stack_zoom(&fdf->transformation_stack, +1);
+			trans_stack_zoom(&fdf->trans_stack, +1);
 	}
 	else if (button == Button1 && fdf->input_state == INPUT_STATE_IDLE)
 	{
@@ -261,26 +261,26 @@ void	auto_rotate_update(t_app *fdf)
 	{
 		// For transformed shapes: apply rotation to the transformation matrix
 		// This affects how the shapes are transformed, not just the final points
-		transformation_stack_rotate_y(&fdf->transformation_stack, rotation_speed);
+		trans_stack_rotate_y(&fdf->trans_stack, rotation_speed);
 		
 		// Add subtle multi-axis rotation for visual interest
 		float subtle_x = sinf(rotation_angle * 0.3f) * 0.002f;
 		float subtle_z = cosf(rotation_angle * 0.7f) * 0.001f;
 		
-		transformation_stack_rotate_x(&fdf->transformation_stack, subtle_x);
-		transformation_stack_rotate_z(&fdf->transformation_stack, subtle_z);
+		trans_stack_rotate_x(&fdf->trans_stack, subtle_x);
+		trans_stack_rotate_z(&fdf->trans_stack, subtle_z);
 	}
 	else
 	{
 		// For default map: use the same matrix rotations
-		transformation_stack_rotate_y(&fdf->transformation_stack, rotation_speed);
+		trans_stack_rotate_y(&fdf->trans_stack, rotation_speed);
 		
 		// Add very subtle oscillation on other axes
 		float subtle_x = sinf(rotation_angle * 0.3f) * 0.002f;
 		float subtle_z = cosf(rotation_angle * 0.7f) * 0.001f;
 		
-		transformation_stack_rotate_x(&fdf->transformation_stack, subtle_x);
-		transformation_stack_rotate_z(&fdf->transformation_stack, subtle_z);
+		trans_stack_rotate_x(&fdf->trans_stack, subtle_x);
+		trans_stack_rotate_z(&fdf->trans_stack, subtle_z);
 	}
 }
 

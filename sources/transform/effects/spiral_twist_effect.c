@@ -6,39 +6,45 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:15 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 14:15:47 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:08:33 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-// Apply spiral twist effect - twists the geometry
-void apply_spiral_twist_effect(t_app *fdf)
+static void	apply_twist_to_points(t_app *fdf, float twist_strength)
 {
-	if (!g_obj_effects.original_points)
-		return;
-	
-	float twist_strength = 2.0f * g_obj_effects.intensity;
-	
-	for (int y = 0; y < fdf->height; y++)
+	int		y;
+	int		x;
+	int		index;
+	float	twist_effect;
+
+	y = 0;
+	while (y < fdf->height)
 	{
-		for (int x = 0; x < fdf->width; x++)
+		x = 0;
+		while (x < fdf->width)
 		{
-			int index = y * fdf->width + x;
-			
-			// Calculate twist based on distance from center and time
-			float center_x = fdf->width / 2.0f;
-			float center_y = fdf->height / 2.0f;
-			float dx = x - center_x;
-			float dy = y - center_y;
-			float distance = sqrtf(dx * dx + dy * dy);
-			
-			// Create spiral twist
-			float twist_angle = distance * 0.1f + g_obj_effects.time_accumulator * twist_strength;
-			float twist_effect = sinf(twist_angle) * 30.0f;
-			
-			fdf->points[index] = g_obj_effects.original_points[index] + twist_effect;
+			index = y * fdf->width + x;
+			twist_effect = sinf((sqrtf(powf(x - fdf->width / 2.0f, 2)
+							+ powf(y - fdf->height / 2.0f, 2)) * 0.1f
+						+ g_obj_effects.time_accumulator) * twist_strength);
+			twist_effect *= 30.0f;
+			fdf->points[index] = g_obj_effects.original_points[index]
+				+ twist_effect;
+			x++;
 		}
+		y++;
 	}
+}
+
+void	apply_spiral_twist_effect(t_app *fdf)
+{
+	float	twist_strength;
+
+	if (!g_obj_effects.original_points)
+		return ;
+	twist_strength = 2.0f * g_obj_effects.intensity;
+	apply_twist_to_points(fdf, twist_strength);
 }

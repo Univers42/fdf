@@ -6,17 +6,16 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 04:02:33 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include <math.h>
 #include <stddef.h>
 #include "fdf.h"
 #include <stdio.h>
 
-void	make_transformation_stack(t_transformation_stack *t)
+void	make_trans_stack(t_trans_stack *t)
 {
 	size_t	i;
 
@@ -42,31 +41,29 @@ void	make_transformation_stack(t_transformation_stack *t)
 	}
 }
 
-void	transformation_stack_translate(
-	t_transformation_stack *t,
+void	trans_stack_translate(
+	t_trans_stack *t,
 	float dx, float dy, float dz
 ) {
 	t->dirty[M_TB] = true;
 	t->tx += dx;
 	t->ty += dy;
 	t->tz += dz;
-	
-	// Force immediate matrix update
 	identity_matrix4(t->matrices[M_TB]);
 	t->matrices[M_TB][3] = t->tx;
 	t->matrices[M_TB][7] = t->ty;
 	t->matrices[M_TB][11] = t->tz;
 }
 
-void	transformation_stack_pan( t_transformation_stack *t, float dx, float dy)
+void	trans_stack_pan( t_trans_stack *t, float dx, float dy)
 {
 	t->dirty[M_PROJECTION] = true;
 	t->projection.pan_x += dx;
 	t->projection.pan_y += dy;
 }
 
-void	transformation_stack_origin(
-	t_transformation_stack *t,
+void	trans_stack_origin(
+	t_trans_stack *t,
 	float dx, float dy, float dz
 ) {
 	t->dirty[M_ORIGIN] = true;
@@ -75,17 +72,13 @@ void	transformation_stack_origin(
 	t->oz += dz;
 }
 
-void	transformation_stack_zoom(t_transformation_stack *t, int direction)
+void	trans_stack_zoom(t_trans_stack *t, int direction)
 {
 	double	val;
 
 	t->dirty[M_PROJECTION] = true;
 	val = exp((double)direction * 0.1);
-	
-	// Apply zoom without any limits - infinite zoom!
 	t->projection.zoom_factor *= (float)val;
-	
-	// Prevent zoom factor from becoming exactly zero
 	if (t->projection.zoom_factor <= 0.0f)
 		t->projection.zoom_factor = 0.000001f;
 }

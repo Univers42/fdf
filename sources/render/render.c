@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:58 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 12:31:20 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	transform_points(t_app *f)
 			sp[2] = f->points[flat_index];
 			sp[3] = 1;
 			dp = (float *) &f->transformed_points[flat_index];
-			matrix4_dot_product(f->transformation_stack.combined, sp, dp);
+			matrix4_dot_product(f->trans_stack.combined, sp, dp);
 			++i[1];
 		}
 		++i[0];
@@ -66,7 +66,7 @@ void	transition_update(t_app *f);
 int	fdf_render(t_app *f)
 {
 	auto_rotate_update(f);
-	transformation_stack_update(&f->transformation_stack);
+	trans_stack_update(&f->trans_stack);
 	
 	// Update transition system
 	transition_update(f);

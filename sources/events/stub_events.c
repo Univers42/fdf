@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 02:19:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 17:54:30 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 12:39:53 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -391,8 +391,7 @@ void dance_toggle_handler(t_app *fdf, int keycode, void *data)
 void dynamic_background_toggle_handler(t_app *fdf, int keycode, void *data)
 {
 	(void)fdf; (void)keycode; (void)data;
-	return ;
-	//dynamic_background_toggle();
+	dynamic_background_toggle();
 }
 
 // Texture system handler

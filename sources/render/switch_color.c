@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:49 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 04:08:02 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 13:46:08 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,6 @@ typedef struct s_color_point {
 	uint32_t color;
 } t_color_point;
 
-// Linear interpolation between two colors
-static uint32_t lerp_color(uint32_t c1, uint32_t c2, float t)
-{
-	uint8_t r1 = (c1 >> 16) & 0xff, g1 = (c1 >> 8) & 0xff, b1 = c1 & 0xff;
-	uint8_t r2 = (c2 >> 16) & 0xff, g2 = (c2 >> 8) & 0xff, b2 = c2 & 0xff;
-	uint8_t r = r1 + (uint8_t)((r2 - r1) * t);
-	uint8_t g = g1 + (uint8_t)((g2 - g1) * t);
-	uint8_t b = b1 + (uint8_t)((b2 - b1) * t);
-	return (r << 16) | (g << 8) | b;
-}
 
 // Find the color for a given z using control points
 static uint32_t color_from_control_points(const t_color_point *points, int n, int z)

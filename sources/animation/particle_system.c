@@ -4,44 +4,19 @@
 #include <stdio.h>
 #include <time.h>
 
-#define PARTICLE_TRANSITION_FRAMES 45
-#define PARTICLE_COUNT 9
-#define MAX_PARTICLES 150
-#define PARTICLE_LIFETIME 300
-
-typedef enum e_particle_type {
-	PARTICLE_NONE = 0,
-	PARTICLE_SNOW = 1,
-	PARTICLE_RAIN = 2,
-	PARTICLE_FIRE = 3,
-	PARTICLE_SPARKS = 4,
-	PARTICLE_STARS = 5,
-	PARTICLE_BUBBLES = 6,
-	PARTICLE_DUST = 7,
-	PARTICLE_SMOKE = 8
-} t_particle_type;
-
-typedef struct s_particle {
-	float		x, y, z;
-	float		vx, vy, vz;
-	float		size;
-	uint32_t	color;
-	int			lifetime;
-	bool		active;
-} t_particle;
-
-typedef struct s_particle_transition {
-	int					frame;
-	int					max_frames;
-	bool				active;
-	t_particle_type		current_type;
-	t_particle_type		target_type;
-	t_particle			particles[MAX_PARTICLES];
-	bool				initialized;
-	float				time_accumulator;
-} t_particle_transition;
-
-static t_particle_transition g_particle_system = {0, PARTICLE_TRANSITION_FRAMES, false, PARTICLE_NONE, PARTICLE_NONE, {{0}}, false, 0.0f};
+t_particle_transition g_particle_system = {
+	0, // frame
+	PARTICLE_TRANSITION_FRAMES, // max_frames
+	false, // active
+	PARTICLE_NONE, // current_type
+	PARTICLE_NONE, // target_type
+	// particles
+	{
+		{ .x = 0, .y = 0, .z = 0, .vx = 0, .vy = 0, .vz = 0, .size = 0, .color = 0, .lifetime = 0, .active = false }
+	},
+	false, // initialized
+	0.0f // time_accumulator
+};
 
 // Initialize a single particle based on type
 static void init_particle(t_particle *p, t_particle_type type, t_app *fdf)
@@ -59,94 +34,35 @@ static void init_particle(t_particle *p, t_particle_type type, t_app *fdf)
 	switch (type)
 	{
 		case PARTICLE_SNOW:
-			p->x = (float)(rand() % WIN_WIDTH);
-			p->y = -10.0f;
-			p->z = (float)(rand() % 100 - 50);
-			p->vx = (rand() % 20 - 10) * 0.1f;
-			p->vy = 2.0f + (rand() % 20) * 0.1f;
-			p->vz = 0.0f;
-			p->size = 3.0f + (rand() % 3);
-			p->color = 0xFFFFFF;
+			particle_snow(p);
 			break;
 			
 		case PARTICLE_RAIN:
-			p->x = (float)(rand() % WIN_WIDTH);
-			p->y = -10.0f;
-			p->z = (float)(rand() % 100 - 50);
-			p->vx = (rand() % 40 - 20) * 0.2f;
-			p->vy = 5.0f + (rand() % 30) * 0.2f;
-			p->vz = 0.0f;
-			p->size = 2.0f;
-			p->color = 0x4080FF;
+			particle_rain(p);
 			break;
 			
 		case PARTICLE_FIRE:
-			p->x = (float)(WIN_WIDTH / 2 + rand() % 200 - 100);
-			p->y = (float)(WIN_HEIGHT - 50);
-			p->z = (float)(rand() % 50);
-			p->vx = (rand() % 40 - 20) * 0.3f;
-			p->vy = -(3.0f + (rand() % 30) * 0.2f);
-			p->vz = (rand() % 20 - 10) * 0.1f;
-			p->size = 4.0f + (rand() % 4);
-			p->color = (rand() % 2) ? 0xFF4400 : 0xFF8800;
+			particle_fire(p);
 			break;
 			
 		case PARTICLE_SPARKS:
-			p->x = (float)(WIN_WIDTH / 2 + rand() % 100 - 50);
-			p->y = (float)(WIN_HEIGHT / 2 + rand() % 100 - 50);
-			p->z = (float)(rand() % 100 - 50);
-			p->vx = (rand() % 100 - 50) * 0.6f;
-			p->vy = (rand() % 100 - 50) * 0.6f;
-			p->vz = (rand() % 40 - 20) * 0.2f;
-			p->size = 2.0f + (rand() % 3);
-			p->color = 0xFFFF00;
-			p->lifetime = 80 + (rand() % 40);
+			particle_sparks(p);
 			break;
 			
 		case PARTICLE_STARS:
-			p->x = (float)(rand() % WIN_WIDTH);
-			p->y = (float)(rand() % WIN_HEIGHT);
-			p->z = (float)(rand() % 200 - 100);
-			p->vx = (rand() % 10 - 5) * 0.1f;
-			p->vy = (rand() % 10 - 5) * 0.1f;
-			p->vz = 0.0f;
-			p->size = 2.0f + (rand() % 3);
-			p->color = 0xFFFFFF;
-			p->lifetime = 400 + (rand() % 200);
+			particle_stars(p);
 			break;
 			
 		case PARTICLE_BUBBLES:
-			p->x = (float)(rand() % WIN_WIDTH);
-			p->y = (float)(WIN_HEIGHT + 10);
-			p->z = (float)(rand() % 100 - 50);
-			p->vx = (rand() % 20 - 10) * 0.2f;
-			p->vy = -(1.0f + (rand() % 20) * 0.1f);
-			p->vz = 0.0f;
-			p->size = 3.0f + (rand() % 5);
-			p->color = 0x80FFFF;
+			particle_bubbles(p);
 			break;
 			
 		case PARTICLE_DUST:
-			p->x = (float)(rand() % WIN_WIDTH);
-			p->y = (float)(rand() % WIN_HEIGHT);
-			p->z = (float)(rand() % 50 - 25);
-			p->vx = (rand() % 30 - 15) * 0.1f;
-			p->vy = (rand() % 30 - 15) * 0.1f;
-			p->vz = (rand() % 10 - 5) * 0.05f;
-			p->size = 1.0f;
-			p->color = 0x8B7355;
-			p->lifetime = 500 + (rand() % 200);
+			particle_dust(p);
 			break;
 			
 		case PARTICLE_SMOKE:
-			p->x = (float)(WIN_WIDTH / 2 + rand() % 100 - 50);
-			p->y = (float)(WIN_HEIGHT - 50 + rand() % 50);
-			p->z = (float)(rand() % 100 - 50);
-			p->vx = (rand() % 40 - 20) * 0.2f;
-			p->vy = -(1.0f + (rand() % 20) * 0.1f);
-			p->vz = (rand() % 20 - 10) * 0.1f;
-			p->size = 4.0f + (rand() % 6);
-			p->color = 0x404040;
+			particle_smoke(p);
 			break;
 			
 		default:
@@ -374,26 +290,3 @@ bool particles_is_active(void)
 	return g_particle_system.active || g_particle_system.current_type != PARTICLE_NONE;
 }
 
-// Cleanup particle system
-void particles_cleanup(void)
-{
-	for (int i = 0; i < MAX_PARTICLES; i++)
-		g_particle_system.particles[i].active = false;
-		
-	g_particle_system.initialized = false;
-	g_particle_system.active = false;
-	g_particle_system.frame = 0;
-	g_particle_system.current_type = PARTICLE_NONE;
-	g_particle_system.target_type = PARTICLE_NONE;
-	g_particle_system.time_accumulator = 0.0f;
-}
-
-// Placeholder functions for consistency (unused but declared in header)
-void apply_snow_particles(t_app *fdf) { (void)fdf; }
-void apply_rain_particles(t_app *fdf) { (void)fdf; }
-void apply_fire_particles(t_app *fdf) { (void)fdf; }
-void apply_sparks_particles(t_app *fdf) { (void)fdf; }
-void apply_stars_particles(t_app *fdf) { (void)fdf; }
-void apply_bubbles_particles(t_app *fdf) { (void)fdf; }
-void apply_dust_particles(t_app *fdf) { (void)fdf; }
-void apply_smoke_particles(t_app *fdf) { (void)fdf; }

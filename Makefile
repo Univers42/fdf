@@ -9,7 +9,7 @@ INCLUDE_DIR=$(PROJECT_DIR)/include
 OBJ_DIR = $(PROJECT_DIR)/object
 
 # Use wildcard to include all .c files in sources and its subdirectories
-SRCS = $(wildcard $(SRC_DIR)/**/*.c) $(wildcard $(SRC_DIR)/*.c)
+SRCS = $(shell find $(SRC_DIR) -type f -name '*.c')
 OBJS = $(patsubst $(SRC_DIR)/%, $(OBJ_DIR)/%, $(SRCS:.c=.o))
 
 LIBFT_DIR = $(INCLUDE_DIR)/libft

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/06 21:27:42 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/07 18:54:22 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,225 +16,19 @@
 # include <stdbool.h>
 # include <stddef.h>
 # include <stdint.h>
+# include <stdio.h>
+# include <stdlib.h>
 # include <sys/types.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
+#include "config.h"
+#include "ds.h"
 
-# ifndef WIN_WIDTH
-#  define WIN_WIDTH 2920
-# endif
-
-# ifndef WIN_HEIGHT
-#  define WIN_HEIGHT 2000
-# endif
-
-# if WIN_HEIGHT * WIN_WIDTH < 32
-#  error "window height * window width must be greater than 32"
-#  undef WIN_HEIGHT
-#  undef WIN_WIDTH
-#  define WIN_HEIGHT 32
-#  define WIN_WIDTH 32
-# endif
-
-typedef struct s_draw_char_params
-{
-	uint32_t	*buf;
-	uint32_t	color;
-	int			x;
-	int			y;
-}	t_draw_char_params;
-
-typedef struct s_parser
-{
-	char			*buf;
-	ssize_t			bytes_read;
-	size_t			values_read;
-	size_t			arr_capacity;
-	uint32_t		color;
-	int				x;
-	int				y;
-	int				z;
-	int				min_z;
-	int				max_z;
-	bool			z_set;
-	bool			width_set;
-}	t_parser;
-
-typedef struct s_point4
-{
-	float	x;
-	float	y;
-	float	z;
-	float	w;
-}	t_point4;
-
-typedef enum e_matrices
-{
-	M_PROJECTION,
-	M_VIEW_ROTATE_X2,
-	M_TB,
-	M_ROTATION_Z,
-	M_ROTATION_X,
-	M_ROTATION_Y,
-	M_VIEW_ROTATE_X,
-	M_VIEW_ROTATE_Z,
-	M_ORIGIN,
-	M_COUNT,
-}	t_matrices;
-
-typedef struct s_projection_ctl
-{
-	float			box[3];
-	float			zoom_factor;
-	float			pan_x;
-	float			pan_y;
-	float			l;
-	float			r;
-	float			t;
-	float			b;
-	float			f;
-	float			n;
-}	t_projection_ctl;
-
-typedef struct s_transformation_stack
-{
-	float				matrices[M_COUNT][16];
-	float				temp[16];
-	float				combined[16];
-	bool				dirty[M_COUNT];
-	t_projection_ctl	projection;
-	float				px;
-	float				px2;
-	float				pz;
-	float				rx;
-	float				ry;
-	float				rz;
-	float				tx;
-	float				ty;
-	float				tz;
-	float				ox;
-	float				oy;
-	float				oz;
-}	t_transformation_stack;
-
-typedef struct s_bresenham_state
-{
-	int				delta[3];
-	int				step[3];
-	int				p1[3];
-	int				p2[3];
-	int				error_count;
-	uint32_t		color1;
-	uint32_t		color2;
-	float			color_r_delta;
-	float			color_g_delta;
-	float			color_b_delta;
-}	t_bresenham_state;
-
-typedef struct s_renderer
-{
-	char			fps_string[10];
-	int				fps;
-	char			*data;
-	int				bpp;
-	int				size_line;
-	int				is_big_endian;
-}	t_renderer;
-
-typedef enum e_input_state
-{
-	INPUT_STATE_IDLE,
-	INPUT_STATE_DRAGGING,
-	INPUT_STATE_ROTATING,
-}	t_input_state;
-
-typedef struct s_fdf
-{
-	uint32_t				*color;
-	float					*points;
-	t_point4				*transformed_points;
-	int						(*edges)[2];
-	int						width;
-	int						height;
-	int						min_z;
-	int						max_z;
-	size_t					n_edges;
-	void					*mlx;
-	void					*window;
-	void					*image;
-	t_renderer				renderer;
-	t_bresenham_state		bresenham_state;
-	t_transformation_stack	transformation_stack;
-	t_input_state			input_state;
-	int						drag_start[2];
-	bool					has_color;
-}	t_app;
-
-/**
- * Struct holding the context for the Bresenham drawing loop.
- * Used to avoid more than 4 arguments per function (norminette).
- */
-typedef struct s_bresenham_ctx
-{
-	t_bresenham_state	*bresenham;
-	unsigned int		*screen;
-	int					coord[2];
-	int					limit;
-	int					major_axis;
-}	t_bresenham_ctx;
-
-typedef struct s_meta_shape
-{
-	float		max_radius;
-	float		height_limit;
-	struct {
-		float	x;
-		float	y;
-		float	z;
-	}			shape;
-	struct {
-		int		x;
-		int		y;
-	}			coord;
-	struct {
-		float	u;
-		float	v;
-	}s_vec;
-	struct {
-		int	width;
-		int	height;
-		int	face;
-		int	tot_point;
-	}s_face;
-	struct {
-		int	idx;
-		int	x;
-		int	y;
-	}s_loc;
-	struct 
-	{
-		float	x;
-		float	y;
-	}s_scale;
-	struct
-	{
-		float one;
-		float two;
-		float three;
-		float	z;
-			
-	}s_wave;
-	int			index;
-	float		angle;
-	float		radius;
-	float		radius_base;
-	float		phase;
-	float		height;
-	float		sp[4];
-	float		*dp;
-	int			total_points;
-	float		dist_center;
-}	t_meta_shape;
+extern t_dance_system g_dance;
+extern  t_object_effects_system g_obj_effects;
+extern t_particle_transition g_particle_system ;
+extern t_dynamic_bg_system g_dynamic_bg;
+extern t_texture_system g_texture;
 
 /*
  * FDF
@@ -335,7 +129,6 @@ bool		ft_realloc(void **ptr, size_t *cap, size_t start);
 uint32_t	pack_color(t_bresenham_state *b, int step);
 uint8_t		*get_glyph(char c);
 int			ft_abs(int n);
-
 void		init_mlx_handlers(t_app *f);
 
 /*
@@ -363,7 +156,15 @@ void		transition_update(t_app *fdf);
 void		transition_start_torus(bool to_torus);
 bool		transition_is_active(void);
 void		transition_cleanup(void);
+void		apply_cube_face_0_1(t_meta_shape *s, t_app *fdf);
+void		apply_cube_face_2_3(t_meta_shape *s, t_app *fdf);
+void		apply_cube_face_4_5(t_meta_shape *s, t_app *fdf);
+float	get_dna_norm_y(t_app *fdf, t_meta_shape *s);
+int	get_dna_index(t_app *fdf, t_meta_shape *s);
+float	calc_heart_upper_lobes(float norm_x, float norm_y);
+float	get_tube_angle(int x, int width);
 
+float	get_tube_radius(t_app *fdf, t_meta_shape *s, float max_radius);
 /*
  * ANIMATION EFFECTS
  */
@@ -433,62 +234,6 @@ int			z_perspective_key_release_handler(int keycode, t_app *fdf);
 bool		is_ctrl_pressed(void);
 void		init_deltas(t_bresenham_state *b);
 void		init_color_delta(t_bresenham_state *b);
-
-#define MAX_EVENT 256
-
-typedef enum e_event
-{
-	ARROW_UP    = XK_Up,
-	ARROW_DOWN  = XK_Down,
-	ARROW_LEFT  = XK_Left,
-	ARROW_RIGHT = XK_Right,
-	W           = XK_w,
-	A           = XK_a,
-	S           = XK_s,
-	D           = XK_d,
-	T           = XK_t,
-	I           = XK_i,
-	P           = XK_p,
-	R           = XK_r,
-	ESCAPE      = 65307,
-	L           = XK_l,
-	SPACE_BAR   = XK_space,
-	MOUSE_RIGHT = 0x1001,
-	MOUSE_LEFT  = 0x1002,
-	MOUSE_SCROLL = 0x1003,
-	ONE         = XK_1,
-	TWO         = XK_2,
-	THREE       = XK_3,
-	FOUR        = XK_4,
-	FIVE        = XK_5,
-	SIX         = XK_6,
-	SEVEN       = XK_7,
-	EIGHT       = XK_8,
-	NINE        = XK_9,
-	G           = XK_g,
-	H           = XK_h,
-	Z_KEY			= XK_z,
-	B			= XK_b,
-	V			= XK_v
-}				t_event;
-
-// Composite event key for key+modifier combinations
-typedef struct s_event_key
-{
-	int keycode;
-	unsigned int modifiers;
-} t_event_key;
-
-// Handler type for composite key events with keycode context
-typedef void (*t_event_fn)(t_app*, int keycode, void*);
-
-// Unified event binding (for both plain and combo events)
-typedef struct s_event_binding {
-	t_event_key key;
-	t_event_fn handler;
-} t_event_binding;
-
-#define EVENT_BINDINGS_MAX 512
 
 // Event binding registration and lookup
 void register_event_binding(int keycode, unsigned int modifiers, t_event_fn handler);
@@ -635,5 +380,74 @@ void		texture_system_cleanup(void);
 
 //SWITCH EVENTS - Updated signatures with keycode parameter
 void    texture_toggle_handler(t_app *fdf, int keycode, void *data);
+
+/*
+ * PARTICLES
+ */
+
+void    particle_snow(t_particle *p);
+void	particle_rain(t_particle *p);
+void	particle_fire(t_particle *p);
+void	particle_sparks(t_particle *p);
+void	particle_stars(t_particle *p);
+void	particle_bubbles(t_particle *p);
+void	particle_dust(t_particle *p);
+void	particle_smoke(t_particle *p);
+
+/*
+	* BACKGROUND
+*/
+void	apply_matrix_rain_bg(uint32_t *buffer);
+void    apply_vibrant_gradient_bg(uint32_t *buffer);
+void	apply_epileptic_flash_bg(uint32_t *buffer);
+void	apply_water_ripples_bg(uint32_t *buffer);
+void	apply_fire_plasma_bg(uint32_t *buffer);
+void	apply_aurora_waves_bg(uint32_t *buffer);
+void	apply_cosmic_nebula_bg(uint32_t *buffer);
+void	apply_electric_storm_bg(uint32_t *buffer);
+void	apply_liquid_metal_bg(uint32_t *buffer);
+void	apply_rainbow_vortex_bg(uint32_t *buffer);
+void apply_dramatic_clouds_bg(uint32_t *buffer);
+uint32_t lerp_color(uint32_t c1, uint32_t c2, float t);
+
+/**
+ * EFFECTS
+*/
+void    apply_vertex_wave_effect(t_app *fdf);
+// Apply geometric pulse effect - makes the entire object pulse in size
+void apply_geometric_pulse_effect(t_app *fdf);
+void apply_vertex_explosion_effect(t_app *fdf);
+void apply_spiral_twist_effect(t_app *fdf);
+void apply_depth_distortion_effect(t_app *fdf);
+// Apply vertex magnet effect - attracts vertices to moving points
+void apply_vertex_magnet_effect(t_app *fdf);
+void apply_geometric_fold_effect(t_app *fdf);
+void apply_vertex_scatter_effect(t_app *fdf);
+void apply_height_oscillation_effect(t_app *fdf);
+void apply_dance_spin(t_app *fdf);
+void apply_dance_bounce(t_app *fdf);
+void apply_dance_wave_motion(t_app *fdf);
+void apply_dance_twist(t_app *fdf);
+void apply_dance_expand_contract(t_app *fdf);
+void apply_dance_figure_eight(t_app *fdf);
+void apply_dance_wobble(t_app *fdf);
+
+
+/**
+*	TEXTURES
+*/
+void apply_circuit_board_texture(t_app *fdf);
+uint32_t    blend_colors(uint32_t base_color, uint32_t texture_color, float blend_factor);
+void    apply_brick_texture(t_app *fdf);
+void apply_carbon_fiber_texture(t_app *fdf);
+void apply_checkerboard_texture(t_app *fdf);
+void apply_hexagon_texture(t_app *fdf);
+void apply_marble_texture(t_app *fdf);
+void apply_metal_brushed_texture(t_app *fdf);
+void apply_plasma_texture(t_app *fdf);
+void apply_scales_texture(t_app *fdf);
+void apply_stripes_texture(t_app *fdf);
+void    store_original_texture_colors(t_app *fdf);
+void apply_wood_grain_texture(t_app *fdf);
 
 #endif

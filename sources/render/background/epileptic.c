@@ -5,49 +5,66 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 13:21:05 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 13:27:48 by dlesieur         ###   ########.fr       */
+/*   Created: 2025/08/08 19:53:51 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/08 19:55:18 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-extern t_dynamic_bg_system g_dynamic_bg;
-
-// Apply epileptic flash background - WARNING: SEIZURE TRIGGER
-void apply_epileptic_flash_bg(uint32_t *buffer)
+static uint32_t	flash_palette(float v)
 {
-	float time = g_dynamic_bg.time_accumulator;
-	
-	// Fast flashing colors
-	float flash_freq = 20.0f; // Very fast flashing
-	float flash_phase = sinf(time * flash_freq);
-	
-	for (int y = 0; y < WIN_HEIGHT; y++)
-	{
-		for (int x = 0; x < WIN_WIDTH; x++)
-		{
-			int index = y * WIN_WIDTH + x;
-			
-			float norm_x = (float)x / WIN_WIDTH;
-			float norm_y = (float)y / WIN_HEIGHT;
-			
-			// Multiple flashing patterns
-			float pattern1 = sinf((norm_x * 10.0f + time * 25.0f) * M_PI);
-			float pattern2 = cosf((norm_y * 8.0f + time * 30.0f) * M_PI);
-			float pattern3 = sinf(((norm_x + norm_y) * 15.0f + time * 40.0f) * M_PI);
-			
-			// Combine patterns
-			float flash_intensity = (pattern1 + pattern2 + pattern3 + flash_phase) / 4.0f;
-			flash_intensity = (flash_intensity + 1.0f) / 2.0f;
-			
-			// High contrast flashing colors
-			uint32_t colors[] = {0x000000, 0xFFFFFF, 0xFF0000, 0x00FF00, 0x0000FF, 0xFFFF00, 0xFF00FF, 0x00FFFF};
-			int color_idx = (int)(flash_intensity * 7.0f) % 8;
-			
-			buffer[index] = colors[color_idx];
-		}
-	}
+	static const uint32_t	c[] = {
+		0x000000, 0xFFFFFF, 0xFF0000, 0x00FF00,
+		0x0000FF, 0xFFFF00, 0xFF00FF, 0x00FFFF
+	};
+	int						i;
+
+	if (v < 0)
+		v = 0;
+	if (v > 1)
+		v = 1;
+	i = (int)(v * 7.0f);
+	if (i > 7)
+		i = 7;
+	return (c[i]);
 }
 
+static uint32_t	epileptic_pixel(int x, int y, float t)
+{
+	t_fpoint2	n;
+	float		p1;
+	float		p2;
+	float		p3;
+	float		val;
+
+	n.x = (float)x / WIN_WIDTH;
+	n.y = (float)y / WIN_HEIGHT;
+	p1 = sinf((n.x * 10.0f + t * 25.0f) * M_PI);
+	p2 = cosf((n.y * 8.0f + t * 30.0f) * M_PI);
+	p3 = sinf(((n.x + n.y) * 15.0f + t * 40.0f) * M_PI);
+	val = (p1 + p2 + p3 + sinf(t * 20.0f)) / 4.0f;
+	val = (val + 1.0f) / 2.0f;
+	return (flash_palette(val));
+}
+
+void	apply_epileptic_flash_bg(uint32_t *b)
+{
+	int		y;
+	int		x;
+	float	t;
+
+	t = g_dynamic_bg.time_accumulator;
+	y = 0;
+	while (y < WIN_HEIGHT)
+	{
+		x = 0;
+		while (x < WIN_WIDTH)
+		{
+			b[y * WIN_WIDTH + x] = epileptic_pixel(x, y, t);
+			++x;
+		}
+		++y;
+	}
+}

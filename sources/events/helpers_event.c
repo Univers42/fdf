@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 00:05:21 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 00:26:25 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 23:53:02 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "mlx.h"
 #include <stdio.h>
 #include <math.h>
+#include "theme.h"
 
 t_modifier_state	*gmod_state(t_modifier_state *set)
 {
@@ -48,8 +49,9 @@ void	init_mlx_handlers(t_app *f)
 	mlx_hook(f->window, ButtonRelease, ButtonReleaseMask,
 		button_release_handler, f);
 	mlx_hook(f->window, MotionNotify, PointerMotionMask, motion_handler, f);
+	init_palette_system(f);
 	mlx_loop_hook(f->mlx, fdf_render, f);
-	printf("Centralized event system initialized with O(1) access\n");
+	ft_printf("Centralized event system initialized with O(1) access\n");
 }
 
 int	key_press_handler(const int keycode, t_app *fdf)

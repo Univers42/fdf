@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:27:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:40:48 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 17:16:23 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,55 @@ static inline bool	parse_buffered(t_parser *p, t_app *fdf, int fd)
 	return (true);
 }
 
+static inline uint32_t	blend_rgb(uint32_t a, uint32_t b, float t)
+{
+	uint8_t	ar = (a >> 16) & 0xFF, ag = (a >> 8) & 0xFF, ab = a & 0xFF;
+	uint8_t	br = (b >> 16) & 0xFF, bg = (b >> 8) & 0xFF, bb = b & 0xFF;
+	uint8_t	r = ar + (uint8_t)((br - ar) * t);
+	uint8_t	g = ag + (uint8_t)((bg - ag) * t);
+	uint8_t	bc = ab + (uint8_t)((bb - ab) * t);
+	return (r << 16) | (g << 8) | bc;
+}
+
+static void	apply_default_height_palette(t_app *fdf)
+{
+	int			total;
+	int			i;
+	float		range;
+	uint32_t	c_low, c_mid, c_high;
+
+	if (fdf->color == NULL || fdf->points == NULL)
+		return ;
+	/* Heuristic: if at least one non-white color exists, skip auto palette */
+	total = fdf->width * fdf->height;
+	i = 0;
+	while (i < total)
+	{
+		if (fdf->color[i] != 0xFFFFFF)
+			return ;
+		++i;
+	}
+	range = (float)(fdf->max_z - fdf->min_z);
+	if (range == 0)
+		range = 1.0f;
+	c_low = 0x0000FF;
+	c_mid = 0x00FF00;
+	c_high = 0xFF0000;
+	i = 0;
+	while (i < total)
+	{
+		float z = fdf->points[i];
+		float t = (z - fdf->min_z) / range;
+		uint32_t c;
+		if (t < 0.5f)
+			c = blend_rgb(c_low, c_mid, t / 0.5f);
+		else
+			c = blend_rgb(c_mid, c_high, (t - 0.5f) / 0.5f);
+		fdf->color[i] = c;
+		++i;
+	}
+}
+
 bool	parse_file(t_app *fdf, char *filename)
 {
 	bool		ok;
@@ -105,5 +154,7 @@ bool	parse_file(t_app *fdf, char *filename)
 	else
 		perror("open: ");
 	free(parser.buf);
+	if (ok)
+		apply_default_height_palette(fdf);
 	return (ok);
 }

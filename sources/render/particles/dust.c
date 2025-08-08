@@ -6,16 +6,16 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:03:10 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 13:04:20 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 17:42:11 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <stdlib.h>
 
-void    particle_dust(t_particle *p)
+void	particle_dust(t_particle *p)
 {
-    p->x = (float)(rand() % WIN_WIDTH);
+	p->x = (float)(rand() % WIN_WIDTH);
 	p->y = (float)(rand() % WIN_HEIGHT);
 	p->z = (float)(rand() % 50 - 25);
 	p->vx = (rand() % 30 - 15) * 0.1f;

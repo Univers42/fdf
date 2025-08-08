@@ -6,45 +6,73 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:49:35 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 16:57:38 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 19:27:44 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-
-// Plasma texture - animated energy field
-void apply_plasma_texture(t_app *fdf)
+static uint32_t	plasma_color(float t)
 {
-	for (int y = 0; y < fdf->height; y++)
+	if (t < 0.33f)
+		return (blend_colors(0x0000FF, 0x00FFFF, t * 3.0f));
+	if (t < 0.66f)
+		return (blend_colors(0x00FFFF, 0xFFFF00,
+				(t - 0.33f) * 3.0f));
+	return (blend_colors(0xFFFF00, 0xFF0000,
+			(t - 0.66f) * 3.0f));
+}
+
+static void	plasma_waves(t_plasma_vars *v)
+{
+	v->p1 = sinf((v->nx * 8.0f
+				+ g_texture.time_accumulator * 2.0f) * M_PI);
+	v->p2 = sinf((v->ny * 6.0f
+				+ g_texture.time_accumulator * 1.5f) * M_PI);
+	v->p3 = sinf(((v->nx + v->ny) * 10.0f
+				+ g_texture.time_accumulator * 3.0f) * M_PI);
+	v->p4 = sinf((sqrtf(v->nx * v->nx + v->ny * v->ny) * 12.0f
+				- g_texture.time_accumulator * 4.0f) * M_PI);
+	v->intensity = (v->p1 + v->p2 + v->p3 + v->p4) / 4.0f;
+	v->intensity = (v->intensity + 1.0f) / 2.0f;
+}
+
+static uint32_t	plasma_pixel(int x, int y, t_app *fdf)
+{
+	t_plasma_vars	v;
+
+	v.nx = (float)x / fdf->width;
+	v.ny = (float)y / fdf->height;
+	plasma_waves(&v);
+	return (plasma_color(v.intensity));
+}
+
+static void	plasma_row(t_app *fdf, int y)
+{
+	int			x;
+	int			idx;
+	uint32_t	tc;
+
+	x = 0;
+	while (x < fdf->width)
 	{
-		for (int x = 0; x < fdf->width; x++)
-		{
-			int index = y * fdf->width + x;
-			
-			float norm_x = (float)x / fdf->width;
-			float norm_y = (float)y / fdf->height;
-			
-			// Multiple plasma waves
-			float plasma1 = sinf((norm_x * 8.0f + g_texture.time_accumulator * 2.0f) * M_PI);
-			float plasma2 = sinf((norm_y * 6.0f + g_texture.time_accumulator * 1.5f) * M_PI);
-			float plasma3 = sinf(((norm_x + norm_y) * 10.0f + g_texture.time_accumulator * 3.0f) * M_PI);
-			float plasma4 = sinf((sqrtf(norm_x * norm_x + norm_y * norm_y) * 12.0f - g_texture.time_accumulator * 4.0f) * M_PI);
-			
-			float plasma_intensity = (plasma1 + plasma2 + plasma3 + plasma4) / 4.0f;
-			plasma_intensity = (plasma_intensity + 1.0f) / 2.0f; // Normalize to [0,1]
-			
-			// Plasma colors - blue to red spectrum
-			uint32_t texture_color;
-			if (plasma_intensity < 0.33f)
-				texture_color = blend_colors(0x0000FF, 0x00FFFF, plasma_intensity * 3.0f); // Blue to cyan
-			else if (plasma_intensity < 0.66f)
-				texture_color = blend_colors(0x00FFFF, 0xFFFF00, (plasma_intensity - 0.33f) * 3.0f); // Cyan to yellow
-			else
-				texture_color = blend_colors(0xFFFF00, 0xFF0000, (plasma_intensity - 0.66f) * 3.0f); // Yellow to red
-			
-			fdf->color[index] = blend_colors(g_texture.original_colors[index], texture_color, 0.8f);
-		}
+		idx = y * fdf->width + x;
+		tc = plasma_pixel(x, y, fdf);
+		fdf->color[idx] = blend_colors(g_texture.original_colors[idx],
+				tc, 0.8f);
+		++x;
+	}
+}
+
+void	apply_plasma_texture(t_app *fdf)
+{
+	int	y;
+
+	y = 0;
+	while (y < fdf->height)
+	{
+		plasma_row(fdf, y);
+		++y;
 	}
 }

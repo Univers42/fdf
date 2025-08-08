@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 01:46:41 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 01:47:39 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 16:51:27 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 void	bresenham_init(
 	t_bresenham_state *b, t_app *fdf, int i
 ) {
-	t_point4	*p1;
-	t_point4	*p2;
+	t_fpoint4	*p1;
+	t_fpoint4	*p2;
 
 	p1 = &fdf->transformed_points[fdf->edges[i][0]];
 	p2 = &fdf->transformed_points[fdf->edges[i][1]];

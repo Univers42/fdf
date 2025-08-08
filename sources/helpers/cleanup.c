@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:12:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 00:36:22 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 19:31:30 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	dance_system_cleanup(void)
 	g_dance.move_frame = 0;
 	g_dance.hold_frame = 0;
 	g_dance.transitioning = false;
-	printf("🕺 Dance system cleaned up - time to rest! 🕺\n");
+	ft_printf("🕺 Dance system cleaned up - time to rest! 🕺\n");
 }
 
 // Cleanup dynamic background system
@@ -44,7 +44,7 @@ void	dynamic_background_cleanup(void)
 	g_dynamic_bg.current_bg = DYNAMIC_BG_STATIC;
 	g_dynamic_bg.time_accumulator = 0.0f;
 	g_dynamic_bg.frame_counter = 0;
-	printf("🎨 Dynamic background system cleaned up\n");
+	ft_printf("🎨 Dynamic background system cleaned up\n");
 }
 
 // Cleanup object effects system
@@ -59,7 +59,7 @@ void	object_effects_cleanup(void)
 	g_obj_effects.current_effect = OBJ_EFFECT_NONE;
 	g_obj_effects.time_accumulator = 0.0f;
 	g_obj_effects.intensity = 1.0f;
-	printf("Object effects system cleaned up\n");
+	ft_printf("Object effects system cleaned up\n");
 }
 
 // Cleanup particle system
@@ -89,5 +89,5 @@ void	texture_system_cleanup(void)
 	g_texture.initialized = false;
 	g_texture.current_texture = TEXTURE_NONE;
 	g_texture.time_accumulator = 0.0f;
-	printf("🎨 Texture system cleaned up\n");
+	ft_printf("🎨 Texture system cleaned up\n");
 }

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 12:57:11 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 13:11:03 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 17:42:23 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #include <stdio.h>
 #include <time.h>
 
-void    particle_bubbles(t_particle *p)
+void	particle_bubbles(t_particle *p)
 {
-    p->x = (float)(rand() % WIN_WIDTH);
+	p->x = (float)(rand() % WIN_WIDTH);
 	p->y = (float)(WIN_HEIGHT + 10);
 	p->z = (float)(rand() % 100 - 50);
 	p->vx = (rand() % 20 - 10) * 0.2f;

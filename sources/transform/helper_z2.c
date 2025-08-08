@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 22:42:12 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 22:46:13 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 19:31:30 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,5 @@ void	set_z_perspective_mode(t_app *fdf, int mode)
 	ctrl.scale_factor = target_scale;
 	update_z_points(fdf, &ctrl);
 	gzperspective(&ctrl);
-	printf("Z-Perspective mode %d set (scale: %.1f)\n", mode, target_scale);
+	ft_printf("Z-Perspective mode %d set (scale: %.1f)\n", mode, target_scale);
 }

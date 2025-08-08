@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 23:29:14 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:34:47 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 19:31:30 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	mouse_right(t_app *fdf, int keycode, void *data)
 	(void)fdf;
 	(void)keycode;
 	(void)data;
-	printf("Right mouse button event\n");
+	ft_printf("Right mouse button event\n");
 }
 
 void	mouse_left(t_app *fdf, int keycode, void *data)
@@ -28,7 +28,7 @@ void	mouse_left(t_app *fdf, int keycode, void *data)
 	(void)fdf;
 	(void)keycode;
 	(void)data;
-	printf("Left mouse button event\n");
+	ft_printf("Left mouse button event\n");
 }
 
 void	scroll_mouse(t_app *fdf, int keycode, void *data)
@@ -36,5 +36,5 @@ void	scroll_mouse(t_app *fdf, int keycode, void *data)
 	(void)fdf;
 	(void)keycode;
 	(void)data;
-	printf("Mouse scroll event\n");
+	ft_printf("Mouse scroll event\n");
 }

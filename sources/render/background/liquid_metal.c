@@ -5,54 +5,59 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 13:21:12 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 13:25:05 by dlesieur         ###   ########.fr       */
+/*   Created: 2025/08/08 20:05:14 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/08 20:05:41 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-extern t_dynamic_bg_system g_dynamic_bg;
-
-
-// Apply liquid metal background - chrome-like flowing effect
-void    apply_liquid_metal_bg(uint32_t *buffer)
+static uint32_t	metal_lerp(float v)
 {
-	float time = g_dynamic_bg.time_accumulator;
-	
-	for (int y = 0; y < WIN_HEIGHT; y++)
+	if (v > 0.85f)
+		return (0xFFFFFF);
+	if (v > 0.6f)
+		return (lerp_color(0xCCCCCC, 0xFFFFFF, (v - 0.6f) * 4.0f));
+	if (v > 0.3f)
+		return (lerp_color(0x888888, 0xCCCCCC, (v - 0.3f) * 3.33f));
+	return (lerp_color(0x333333, 0x888888, v * 3.33f));
+}
+
+static uint32_t	metal_pixel(int x, int y, float t)
+{
+	t_fpoint2	n;
+	float		f1;
+	float		f2;
+	float		f3;
+	float		r;
+
+	n.x = (float)x / WIN_WIDTH;
+	n.y = (float)y / WIN_HEIGHT;
+	f1 = sinf((n.x * 6.0f + n.y * 2.0f + t * 2.0f) * M_PI);
+	f2 = sinf((n.x * 8.0f - n.y * 3.0f + t * 1.5f) * M_PI);
+	f3 = sinf((n.x * 4.0f + n.y * 4.0f + t * 3.0f) * M_PI);
+	r = (f1 + f2 + f3) / 3.0f;
+	r = (r + 1.0f) / 2.0f;
+	return (metal_lerp(r));
+}
+
+void	apply_liquid_metal_bg(uint32_t *b)
+{
+	int		y;
+	int		x;
+	float	t;
+
+	t = g_dynamic_bg.time_accumulator;
+	y = 0;
+	while (y < WIN_HEIGHT)
 	{
-		for (int x = 0; x < WIN_WIDTH; x++)
+		x = 0;
+		while (x < WIN_WIDTH)
 		{
-			int index = y * WIN_WIDTH + x;
-			
-			float norm_x = (float)x / WIN_WIDTH;
-			float norm_y = (float)y / WIN_HEIGHT;
-			
-			// Flowing metal waves
-			float flow1 = sinf((norm_x * 6.0f + norm_y * 2.0f + time * 2.0f) * M_PI);
-			float flow2 = sinf((norm_x * 8.0f - norm_y * 3.0f + time * 1.5f) * M_PI);
-			float flow3 = sinf((norm_x * 4.0f + norm_y * 4.0f + time * 3.0f) * M_PI);
-			
-			// Combine flows for metallic reflection
-			float metal_reflection = (flow1 + flow2 + flow3) / 3.0f;
-			metal_reflection = (metal_reflection + 1.0f) / 2.0f; // Normalize
-			
-			// Metallic colors - silver, chrome, steel
-			uint32_t dark_metal = 0x333333;
-			uint32_t medium_metal = 0x888888;
-			uint32_t bright_metal = 0xCCCCCC;
-			uint32_t chrome_highlight = 0xFFFFFF;
-			
-			if (metal_reflection > 0.85f)
-				buffer[index] = chrome_highlight;
-			else if (metal_reflection > 0.6f)
-				buffer[index] = lerp_color(bright_metal, chrome_highlight, (metal_reflection - 0.6f) * 4.0f);
-			else if (metal_reflection > 0.3f)
-				buffer[index] = lerp_color(medium_metal, bright_metal, (metal_reflection - 0.3f) * 3.33f);
-			else
-				buffer[index] = lerp_color(dark_metal, medium_metal, metal_reflection * 3.33f);
+			b[y * WIN_WIDTH + x] = metal_pixel(x, y, t);
+			++x;
 		}
+		++y;
 	}
 }

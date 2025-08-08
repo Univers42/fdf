@@ -6,53 +6,65 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:48:35 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 16:57:29 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 19:24:24 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-// Hexagon texture - honeycomb pattern
-void apply_hexagon_texture(t_app *fdf)
+static uint32_t	hexagon_color(float dist)
 {
-	float hex_size = 10.0f / g_texture.scale_factor;
-	
-	for (int y = 0; y < fdf->height; y++)
+	if (dist < 0.1f)
+		return (0xFFD700);
+	if (dist > 0.4f)
+		return (0x000000);
+	return (0xFFA500);
+}
+
+static uint32_t	hexagon_pixel(int x, int y, float hex_size)
+{
+	float	hex_x;
+	float	hex_y;
+	float	local_x;
+	float	local_y;
+	float	dist;
+
+	hex_x = x / hex_size;
+	hex_y = y / hex_size;
+	local_x = hex_x - floorf(hex_x) - 0.5f;
+	local_y = hex_y - floorf(hex_y) - 0.5f;
+	dist = fmaxf(fabsf(local_x), fabsf(local_y) * 0.866f);
+	return (hexagon_color(dist));
+}
+
+static void	hexagon_row(t_app *fdf, float hex_size, int y)
+{
+	int			x;
+	int			index;
+	uint32_t	tc;
+
+	x = 0;
+	while (x < fdf->width)
 	{
-		for (int x = 0; x < fdf->width; x++)
-		{
-			int index = y * fdf->width + x;
-			
-			// Hexagonal grid calculation (simplified)
-			float hex_x = x / hex_size;
-			float hex_y = y / hex_size;
-			
-			// Approximate hexagon pattern
-			int grid_x = (int)hex_x;
-			int grid_y = (int)hex_y;
-			
-			// Offset every other row
-			if (grid_y % 2 == 1)
-				grid_x += 0.5f;
-			
-			// Distance from hexagon center
-			float local_x = hex_x - floorf(hex_x) - 0.5f;
-			float local_y = hex_y - floorf(hex_y) - 0.5f;
-			float dist = fmaxf(fabsf(local_x), fabsf(local_y) * 0.866f);
-			
-			bool is_border = dist > 0.4f;
-			bool is_center = dist < 0.1f;
-			
-			uint32_t texture_color;
-			if (is_center)
-				texture_color = 0xFFD700; // Gold center
-			else if (is_border)
-				texture_color = 0x000000; // Black border
-			else
-				texture_color = 0xFFA500; // Orange fill
-			
-			fdf->color[index] = blend_colors(g_texture.original_colors[index], texture_color, 0.6f);
-		}
+		index = y * fdf->width + x;
+		tc = hexagon_pixel(x, y, hex_size);
+		fdf->color[index] = blend_colors(g_texture.original_colors[index],
+				tc, 0.6f);
+		++x;
+	}
+}
+
+void	apply_hexagon_texture(t_app *fdf)
+{
+	int		y;
+	float	hex_size;
+
+	hex_size = 10.0f / g_texture.scale_factor;
+	y = 0;
+	while (y < fdf->height)
+	{
+		hexagon_row(fdf, hex_size, y);
+		++y;
 	}
 }

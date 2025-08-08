@@ -1,56 +1,84 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   matrix_rain.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/08 21:07:36 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/08 21:07:40 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 #include <math.h>
 
-extern t_dynamic_bg_system g_dynamic_bg;
-
-// Apply Matrix rain background - digital falling code
-void apply_matrix_rain_bg(uint32_t *buffer)
+static void	matrix_clear(uint32_t *b)
 {
-	float time = g_dynamic_bg.time_accumulator;
-	
-	// Clear to black first
-	for (int i = 0; i < WIN_WIDTH * WIN_HEIGHT; i++)
-		buffer[i] = 0x000000;
-	
-	// Create falling "rain" columns
-	int column_width = 20;
-	int num_columns = WIN_WIDTH / column_width;
-	
-	for (int col = 0; col < num_columns; col++)
+	int	i;
+
+	i = 0;
+	while (i < WIN_WIDTH * WIN_HEIGHT)
+		b[i++] = 0x000000;
+}
+
+static void	matrix_segment(uint32_t *b, int col, int tr, float drop)
+{
+	t_point2	p;
+	int			dx;
+	float		fade;
+	uint32_t	color;
+
+	p.y = (int)(drop - tr * 25);
+	if (p.y < 0 || p.y >= WIN_HEIGHT)
+		return ;
+	fade = 1.0f - tr / 15.0f;
+	if (tr == 0)
+		color = 0x00FF00;
+	else if (tr < 3)
+		color = 0x00CC00;
+	else if (tr < 8)
+		color = (uint32_t)(0x008800 * fade);
+	else
+		color = (uint32_t)(0x004400 * fade);
+	dx = 0;
+	while (dx < 15)
 	{
-		// Each column has different timing
-		float column_offset = col * 0.7f;
-		float fall_speed = 8.0f + (col % 3) * 2.0f;
-		
-		// Calculate drop position
-		float drop_y = fmodf(time * fall_speed + column_offset, WIN_HEIGHT + 200.0f) - 100.0f;
-		
-		// Draw the falling "code"
-		for (int trail = 0; trail < 15; trail++)
-		{
-			int y = (int)(drop_y - trail * 25);
-			if (y >= 0 && y < WIN_HEIGHT)
-			{
-				for (int dx = 0; dx < column_width - 5; dx++)
-				{
-					int x = col * column_width + dx + 2;
-					if (x >= 0 && x < WIN_WIDTH)
-					{
-						// Fade trail effect
-						float fade = 1.0f - (trail / 15.0f);
-						
-						// Different shades of green
-						if (trail == 0)
-							buffer[y * WIN_WIDTH + x] = 0x00FF00; // Bright green head
-						else if (trail < 3)
-							buffer[y * WIN_WIDTH + x] = 0x00CC00; // Medium green
-						else if (trail < 8)
-							buffer[y * WIN_WIDTH + x] = (uint32_t)(0x008800 * fade); // Fading green
-						else
-							buffer[y * WIN_WIDTH + x] = (uint32_t)(0x004400 * fade); // Dark green
-					}
-				}
-			}
-		}
+		p.x = col * 20 + dx + 2;
+		if (p.x >= 0 && p.x < WIN_WIDTH)
+			b[p.y * WIN_WIDTH + p.x] = color;
+		++dx;
+	}
+}
+
+static void	matrix_column(uint32_t *b, int col, float time)
+{
+	float	drop;
+	int		tr;
+
+	drop = fmodf(time * (8.0f + (col % 3) * 2.0f) + col * 0.7f,
+			WIN_HEIGHT + 200.0f) - 100.0f;
+	tr = 0;
+	while (tr < 15)
+	{
+		matrix_segment(b, col, tr, drop);
+		++tr;
+	}
+}
+
+void	apply_matrix_rain_bg(uint32_t *b)
+{
+	int		col;
+	int		nc;
+	float	time;
+
+	time = g_dynamic_bg.time_accumulator;
+	matrix_clear(b);
+	nc = WIN_WIDTH / 20;
+	col = 0;
+	while (col < nc)
+	{
+		matrix_column(b, col, time);
+		++col;
 	}
 }

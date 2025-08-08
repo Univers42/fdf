@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:30 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:13:15 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 16:47:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <math.h>
 #include "ft_math.h"
 
-static float	calculate_wobble_axis(float freq, float *multipliers,
+float	calculate_wobble_axis(float freq, float *multipliers,
 								float *scales)
 {
 	float	comp1;

@@ -28,7 +28,7 @@ void store_original_object_points(t_app *fdf)
 		g_obj_effects.original_points[i] = fdf->points[i];
 	
 	g_obj_effects.initialized = true;
-	printf("Stored %d original points\n", g_obj_effects.total_points);
+	ft_printf("Stored %d original points\n", g_obj_effects.total_points);
 }
 
 // Main object effects update function
@@ -88,7 +88,7 @@ void object_effects_update(t_app *fdf)
 	static int debug_counter = 0;
 	if (++debug_counter % 300 == 0) // Every 5 seconds at 60fps
 	{
-		printf("Object Effect: %s (intensity: %.1f) - modifying %d points\n", 
+		ft_printf("Object Effect: %s (intensity: %.1f) - modifying %d points\n", 
 			effect_names[g_obj_effects.current_effect], g_obj_effects.intensity, g_obj_effects.total_points);
 	}
 }
@@ -109,7 +109,7 @@ void transition_start_object_effects(bool to_effects)
 		"Depth Distortion", "Vertex Magnet", "Geometric Fold", "Height Oscillation", "Vertex Scatter"
 	};
 	
-	printf("Object effects transitioning to: %s\n", effect_names[next_effect]);
+	ft_printf("Object effects transitioning to: %s\n", effect_names[next_effect]);
 }
 
 // Check if object effects are active

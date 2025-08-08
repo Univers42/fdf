@@ -6,54 +6,73 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:49:18 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 16:57:20 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 19:21:40 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
+#include <stdint.h>
 
-
-// Brick texture - rectangular pattern with mortar
-void    apply_brick_texture(t_app *fdf)
+static uint32_t	select_brick_color(int row, int col)
 {
-	float brick_width = 12.0f / g_texture.scale_factor;
-	float brick_height = 6.0f / g_texture.scale_factor;
-	
-	for (int y = 0; y < fdf->height; y++)
+	int			id;
+
+	id = (row * 1000 + col) % 3;
+	if (id == 0)
+		return (0xB22222);
+	if (id == 1)
+		return (0xA0522D);
+	return (0x8B4513);
+}
+
+static int	is_mortar(float lx, float ly, float bw, float bh)
+{
+	if (lx < 1.0f || lx > bw - 1.0f)
+		return (1);
+	if (ly < 1.0f || ly > bh - 1.0f)
+		return (1);
+	return (0);
+}
+
+static void	brick_row(t_app *fdf, float bw, float bh, int y)
+{
+	int			x;
+	int			index;
+	t_bound		dim;
+	t_fpoint2	l;
+	uint32_t	c;
+
+	dim.y = (int)(y / bh);
+	x = 0;
+	while (x < fdf->width)
 	{
-		for (int x = 0; x < fdf->width; x++)
-		{
-			int index = y * fdf->width + x;
-			
-			// Brick grid calculation
-			int row = (int)(y / brick_height);
-			int col = (int)((x + (row % 2) * brick_width / 2) / brick_width);
-			
-			// Mortar lines
-			float local_x = fmodf(x + (row % 2) * brick_width / 2, brick_width);
-			float local_y = fmodf(y, brick_height);
-			
-			bool is_mortar = (local_x < 1.0f || local_x > brick_width - 1.0f || 
-							 local_y < 1.0f || local_y > brick_height - 1.0f);
-			
-			uint32_t texture_color;
-			if (is_mortar)
-				texture_color = 0xD3D3D3; // Light gray mortar
-			else
-			{
-				// Vary brick colors
-				int brick_id = (row * 1000 + col) % 3;
-				switch (brick_id)
-				{
-					case 0: texture_color = 0xB22222; break; // Fire brick
-					case 1: texture_color = 0xA0522D; break; // Sienna
-					case 2: texture_color = 0x8B4513; break; // Saddle brown
-					default: texture_color = 0xB22222; break;
-				}
-			}
-			
-			fdf->color[index] = blend_colors(g_texture.original_colors[index], texture_color, 0.7f);
-		}
+		index = y * fdf->width + x;
+		dim.x = (int)((x + (dim.y % 2) * bw / 2.0f) / bw);
+		l.x = fmodf(x + (dim.y % 2) * bw / 2.0f, bw);
+		l.y = fmodf(y, bh);
+		if (is_mortar(l.x, l.y, bw, bh))
+			c = 0xD3D3D3;
+		else
+			c = select_brick_color(dim.y, dim.x);
+		fdf->color[index] = blend_colors(g_texture.original_colors[index],
+				c, 0.7f);
+		++x;
+	}
+}
+
+void	apply_brick_texture(t_app *fdf)
+{
+	int		y;
+	float	bw;
+	float	bh;
+
+	bw = 12.0f / g_texture.scale_factor;
+	bh = 6.0f / g_texture.scale_factor;
+	y = 0;
+	while (y < fdf->height)
+	{
+		brick_row(fdf, bw, bh, y);
+		++y;
 	}
 }

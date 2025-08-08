@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:53:43 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 00:12:51 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 23:54:32 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,23 @@
 #define DS_H
 
 #include "config.h"
+#include "ft_math.h"
+
+/* Forward declaration for palette function type */
+typedef void (*palette_func_t)(int *, int, int);
+
+/* Palette state structure (used in palette2.c) */
+typedef struct s_palette_state
+{
+	palette_func_t	*funcs;
+	int				count;
+	int				current;
+}	t_palette_state;
 
 typedef struct s_bound
 {
-	int	min;
-	int	max;
+	int x;
+	int y;
 }		t_bound;
 
 typedef struct s_trigo
@@ -118,15 +130,6 @@ typedef struct s_parser
 	bool			width_set;
 }					t_parser;
 
-typedef struct s_point4
-{
-	float	x;
-	float	y;
-	float	z;
-	float	w;
-}			t_point4;
-
-
 
 typedef struct s_projection_ctl
 {
@@ -212,7 +215,7 @@ typedef struct s_fdf
 	void					*image;
 	uint32_t				*color;
 	float					*points;
-	t_point4				*transformed_points;
+	t_fpoint4				*transformed_points;
 	int						(*edges)[2];
 	int						width;
 	int						height;
@@ -228,6 +231,7 @@ typedef struct s_fdf
 	int						drag_start[2];
 	bool					has_color;
 	bool					auto_rotate;
+	t_palette_state			palette_state; // added palette system state
 }							t_app;
 
 /**
@@ -390,5 +394,31 @@ typedef struct s_event_handler_table {
 	bool initialized;
 } t_event_handler_table;
 
+typedef struct s_trackball_state
+{
+	float	current_quat[4];
+	float	last_quat[4];
+	int		last_mouse_x;
+	int		last_mouse_y;
+	bool	active;
+	bool	initialized;
+}	t_trackball_state;
+
+typedef struct	s_retouch
+{
+	float	highlight;
+	float	intensity;
+	float	lines;
+}t_retouch;
+
+typedef struct s_plasma_vars {
+	float	nx;
+	float	ny;
+	float	p1;
+	float	p2;
+	float	p3;
+	float	p4;
+	float	intensity;
+}	t_plasma_vars;
 
 #endif

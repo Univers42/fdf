@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 22:39:41 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 22:46:08 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 20:22:10 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	init_z_perspective_control(t_app *fdf)
 		return ;
 	ctrl.initialized = true;
 	gzperspective(&ctrl);
-	printf("Z-Perspective Control initialized (original range: %.1f to %.1f)\n",
+	ft_printf("Z-Perspective Control initialized"
+		"(original range: %.1f to %.1f)\n",
 		ctrl.original_min_z, ctrl.original_max_z);
 }
 
@@ -77,6 +78,6 @@ void	reset_z_perspective(t_app *fdf)
 	fdf->max_z = ctrl.original_max_z;
 	fdf->min_z = ctrl.original_min_z;
 	gzperspective(&ctrl);
-	printf("Z-Perspective reset (original range: %d to %d)\n",
+	ft_printf("Z-Perspective reset (original range: %d to %d)\n",
 		fdf->min_z, fdf->max_z);
 }

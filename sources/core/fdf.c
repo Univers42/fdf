@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:42:54 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 19:31:30 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static inline bool	init_after_parsing(t_app *fdf)
 		ok = true;
 	}
 	else
-		printf("Error: Memory allocation failed\n");
+		ft_printf("Error: Memory allocation failed\n");
 	return (ok);
 }
 

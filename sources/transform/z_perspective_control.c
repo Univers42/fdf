@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:31 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 22:45:44 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 19:31:30 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,6 @@ void	update_z_perspective(t_app *fdf, float scale_change)
 		ctrl.scale_factor = 3.0f;
 	update_z_points(fdf, &ctrl);
 	gzperspective(&ctrl);
-	printf("Z-Perspective updated (scale: %.1f, range: %d to %d)\n",
+	ft_printf("Z-Perspective updated (scale: %.1f, range: %d to %d)\n",
 		ctrl.scale_factor, fdf->min_z, fdf->max_z);
 }

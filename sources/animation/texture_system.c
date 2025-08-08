@@ -81,7 +81,7 @@ void texture_system_update(t_app *fdf)
 	static int debug_counter = 0;
 	if (++debug_counter % 300 == 0)
 	{
-		printf("🎨 Texture: %s (scale: %.1fx, speed: %.1fx)\n", 
+		ft_printf("🎨 Texture: %s (scale: %.1fx, speed: %.1fx)\n", 
 			   texture_names[g_texture.current_texture], 
 			   g_texture.scale_factor, g_texture.animation_speed);
 	}
@@ -102,7 +102,7 @@ void texture_system_toggle(void)
 		"🐉 Scales", "🍯 Hexagon", "⚡ Plasma"
 	};
 	
-	printf("🎨 Texture switched to: %s\n", texture_names[next_texture]);
+	ft_printf("🎨 Texture switched to: %s\n", texture_names[next_texture]);
 }
 
 // Check if texture system is active
@@ -115,13 +115,13 @@ bool texture_system_is_active(void)
 void texture_system_set_scale(float scale)
 {
 	g_texture.scale_factor = fmaxf(0.1f, fminf(5.0f, scale));
-	printf("🎨 Texture scale set to %.1fx\n", g_texture.scale_factor);
+	ft_printf("🎨 Texture scale set to %.1fx\n", g_texture.scale_factor);
 }
 
 // Set animation speed
 void texture_system_set_speed(float speed)
 {
 	g_texture.animation_speed = fmaxf(0.0f, fminf(3.0f, speed));
-	printf("🎨 Texture animation speed set to %.1fx\n", g_texture.animation_speed);
+	ft_printf("🎨 Texture animation speed set to %.1fx\n", g_texture.animation_speed);
 }
 

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 22:40:23 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 00:33:44 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 17:38:00 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,4 +103,25 @@ t_event_handler_table	*get_event_handler_table(void)
 		instance.initialized = true;
 	}
 	return (&instance);
+}
+
+t_trackball_shape_state	*gstate_tball(void)
+{
+	static t_trackball_shape_state	g_trackball_state = {
+		{0.0f, 0.0f, 0.0f, 1.0f},
+		{1.0f, 0.0f, 0.0f, 0.0f,
+		 0.0f, 1.0f, 0.0f, 0.0f,
+		 0.0f, 0.0f, 1.0f, 0.0f,
+		 0.0f, 0.0f, 0.0f, 1.0f},
+		false
+	};
+
+	return (&g_trackball_state);
+}
+
+t_trackball_state	*gtrack(void)
+{
+	static t_trackball_state	s;
+
+	return (&s);
 }

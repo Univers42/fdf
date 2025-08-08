@@ -2,32 +2,31 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/05 18:27:32 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:40:53 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include <stdlib.h>            // added for realloc
+#include <stdint.h>            // uint32_t
 
 bool	realloc_all(t_parser *p, t_app *fdf)
 {
-	size_t	capacity;
+	size_t	new_cap;
+	float		*new_points;
+	uint32_t	*new_colors;
 
-	if (p->values_read >= p->arr_capacity)
-	{
-		capacity = sizeof(float [p->arr_capacity]);
-		if (!ft_realloc((void **) &fdf->points, &capacity,
-				sizeof(float [4096])))
-			return (false);
-		capacity = sizeof(uint32_t[p->arr_capacity]);
-		if (!ft_realloc((void **) &fdf->color, &capacity,
-				sizeof(uint32_t [4096])))
-			return (false);
-		p->arr_capacity = capacity / sizeof(*fdf->color);
-	}
+	if (p->values_read < p->arr_capacity)
+		return (true);
+	new_cap = (p->arr_capacity == 0) ? 4096 : p->arr_capacity * 2;
+	new_points = (float *)realloc(fdf->points, new_cap * sizeof(float));
+	if (!new_points)
+		return (false);
+	new_colors = (uint32_t *)realloc(fdf->color, new_cap * sizeof(uint32_t));
+	if (!new_colors)
+		return (false);
+	fdf->points = new_points;
+	fdf->color = new_colors;
+	p->arr_capacity = new_cap;
 	return (true);
 }
 
@@ -37,11 +36,9 @@ bool	parse_color(t_parser *p, size_t chunk_size, size_t *i)
 
 	if (*i < chunk_size && p->buf[*i] == ',')
 	{
-		if (*i == chunk_size || p->buf[*i] != ',')
-			return (false);
 		++*i;
 		hex_len = strntohex(&p->color, &p->buf[*i], p->buf + chunk_size);
-		if (hex_len == 0)
+		if (hex_len <= 0)
 			return (false);
 		*i += hex_len;
 	}

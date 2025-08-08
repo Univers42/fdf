@@ -29,7 +29,7 @@ static void init_dynamic_background_system(void)
 		return;
 	
 	g_dynamic_bg.initialized = true;
-	printf("🎨 Dynamic Background System initialized with %d effects\n", DYNAMIC_BG_COUNT);
+	ft_printf("🎨 Dynamic Background System initialized with %d effects\n", DYNAMIC_BG_COUNT);
 }
 
 // Helper function for smooth color interpolation
@@ -107,7 +107,7 @@ void dynamic_background_update(t_app *fdf)
 	static int debug_counter = 0;
 	if (++debug_counter % 300 == 0) // Every 5 seconds
 	{
-		printf("🎨 Dynamic Background: %s (speed: %.1fx)\n", 
+		ft_printf("🎨 Dynamic Background: %s (speed: %.1fx)\n", 
 			   bg_names[g_dynamic_bg.current_bg], g_dynamic_bg.animation_speed);
 	}
 }
@@ -128,12 +128,12 @@ void dynamic_background_toggle(void)
 		"🌟 Cosmic Nebula", "⚡ Electric Storm", "🔘 Liquid Metal", "🌪️ Rainbow Vortex"
 	};
 	
-	printf("🎨 Dynamic Background switched to: %s\n", bg_names[next_bg]);
+	ft_printf("🎨 Dynamic Background switched to: %s\n", bg_names[next_bg]);
 	
 	// Special warning for epileptic flash
 	if (next_bg == DYNAMIC_BG_EPILEPTIC_FLASH)
 	{
-		printf("⚠️  WARNING: EPILEPTIC FLASH MODE - SEIZURE TRIGGER! ⚠️\n");
+		ft_printf("⚠️  WARNING: EPILEPTIC FLASH MODE - SEIZURE TRIGGER! ⚠️\n");
 	}
 }
 
@@ -147,6 +147,6 @@ bool dynamic_background_is_active(void)
 void dynamic_background_set_speed(float speed)
 {
 	g_dynamic_bg.animation_speed = fmaxf(0.1f, fminf(5.0f, speed));
-	printf("🎨 Dynamic background speed set to %.1fx\n", g_dynamic_bg.animation_speed);
+	ft_printf("🎨 Dynamic background speed set to %.1fx\n", g_dynamic_bg.animation_speed);
 }
 

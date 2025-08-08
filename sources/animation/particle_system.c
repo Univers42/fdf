@@ -265,7 +265,7 @@ void transition_start_particles(bool to_particles)
 		"None", "Snow", "Rain", "Fire", "Sparks", "Stars", "Bubbles", "Dust", "Smoke"
 	};
 	
-	printf("Particle system transitioning to: %s\n", particle_names[next_type]);
+	ft_printf("Particle system transitioning to: %s\n", particle_names[next_type]);
 	
 	// Immediately spawn some particles for instant feedback
 	if (next_type != PARTICLE_NONE)

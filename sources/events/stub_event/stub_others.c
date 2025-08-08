@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 02:19:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 00:01:36 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 19:31:30 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	exit_prog(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode;
 	(void)data;
-	printf("Goodbye!\n");
+	ft_printf("Goodbye!\n");
 	mlx_loop_end(fdf->mlx);
 }
 
@@ -29,9 +29,9 @@ void	auto_rotate(t_app *fdf, int keycode, void *data)
 	(void)data;
 	fdf->auto_rotate = !fdf->auto_rotate;
 	if (fdf->auto_rotate)
-		printf("Auto-rotation ON\n");
+		ft_printf("Auto-rotation ON\n");
 	else
-		printf("Auto-rotation OFF\n");
+		ft_printf("Auto-rotation OFF\n");
 }
 
 void	dance_toggle_handler(t_app *fdf, int keycode, void *data)

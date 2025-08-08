@@ -6,13 +6,13 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 17:31:39 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/05 18:28:42 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 16:47:21 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-static inline bool	should_clip(t_point4 *p1, t_point4 *p2)
+static inline bool	should_clip(t_fpoint4 *p1, t_fpoint4 *p2)
 {
 	return ((p1->x < -1 && p2->x < -1)
 		|| (p1->x > 1 && p2->x > 1)

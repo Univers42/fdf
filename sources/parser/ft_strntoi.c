@@ -2,11 +2,6 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_strntoi.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/15 16:59:23 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/05 18:27:42 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +13,7 @@
 #define CUTOFF 214748364
 #define HEXTABLE "0123456789abcdef"
 
-static inline bool	ft_is_negative(const char *str, size_t *i, size_t max)
+static inline bool	negative(const char *str, size_t *i, size_t max)
 {
 	bool	is_negative;
 
@@ -39,7 +34,7 @@ int	ft_strntoi(int *n, char *str, size_t max)
 	unsigned int	accumulator;
 
 	i = 0;
-	is_negative = ft_is_negative(str, &i, max);
+	is_negative = negative(str, &i, max);
 	nlim = 7;
 	if (is_negative)
 		nlim = 8;
@@ -62,41 +57,51 @@ int	ft_strntoi(int *n, char *str, size_t max)
 
 static inline bool	skip_prefix(char **str, char *end)
 {
-	if (*str != end && **str == '0')
+	if (*str + 1 < end && **str == '0' && ((*str)[1] == 'x' || (*str)[1] == 'X'))
 	{
-		++*str;
-		if (*str == end || (**str != 'x' && **str != 'X'))
-			return (false);
-		++*str;
+		*str += 2;
+		return (true);
 	}
-	return (true);
+	return (false);
 }
 
 int	strntohex(uint32_t *n, char *str, char *end)
 {
-	uint32_t			num;
-	char				*found;
-	int					i;
-	bool				done;
+	uint32_t	acc;
+	int			digits;
+	char		c;
+	char		*cur;
+	bool		has_prefix;
 
-	if (!skip_prefix(&str, end) || str == end)
-		return (false);
-	num = 0;
-	i = 0;
-	done = false;
-	while (i < 8)
-	{
-		found = ft_strchr(HEXTABLE, ft_tolower(*str));
-		if (!found)
-			done = true;
-		if (!found)
-			break ;
-		num = (num << 4) | (found - HEXTABLE);
-		++i;
-		++str;
-	}
-	if (!done)
+	cur = str;
+	if (cur >= end)
 		return (0);
-	*n = num;
-	return (i + 2);
+	has_prefix = skip_prefix(&cur, end);
+	acc = 0;
+	digits = 0;
+	while (cur < end)
+	{
+		c = *cur;
+		if (c >= '0' && c <= '9')
+			c = c - '0';
+		else if (c >= 'a' && c <= 'f')
+			c = c - 'a' + 10;
+		else if (c >= 'A' && c <= 'F')
+			c = c - 'A' + 10;
+		else
+			break ;
+		if (digits == 8) // limit (prevent overflow & absurd long color)
+			break ;
+		acc = (acc << 4) | (uint32_t)c;
+		++digits;
+		++cur;
+	}
+	// require at least one digit; if prefix present, still same rule
+	if (digits == 0)
+		return (0);
+	// optional: if prefix present we already advanced; variable used for logic (can extend later)
+	if (has_prefix && digits == 0)
+		return (0);
+	*n = acc;
+	return (int)(cur - str); // includes prefix length if present
 }

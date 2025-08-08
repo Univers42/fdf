@@ -41,7 +41,7 @@ void store_original_dance_points(t_app *fdf)
 		g_dance.original_points[i] = fdf->points[i];
 	
 	g_dance.initialized = true;
-	printf("🕺 Dance system initialized with %d points - GET READY TO PARTY! 🕺\n", g_dance.total_points);
+	ft_printf("🕺 Dance system initialized with %d points - GET READY TO PARTY! 🕺\n", g_dance.total_points);
 }
 
 // Main dance system update function
@@ -138,7 +138,7 @@ void dance_system_update(t_app *fdf)
 	static int debug_counter = 0;
 	if (++debug_counter % 200 == 0) // More frequent updates
 	{
-		printf("🕺 DANCING: %s (intensity: %.1f, auto: %s) 🕺\n", 
+		ft_printf("🕺 DANCING: %s (intensity: %.1f, auto: %s) 🕺\n", 
 			   dance_names[g_dance.current_move], 
 			   g_dance.move_intensity,
 			   g_dance.auto_sequence ? "ON" : "OFF");
@@ -157,12 +157,12 @@ void dance_system_toggle(void)
 		g_dance.move_frame = 0;
 		g_dance.hold_frame = 0;
 		g_dance.transitioning = false;
-		printf("🎉🕺 ULTIMATE DANCE MODE ACTIVATED! GET READY FOR THE SHOW! 🕺🎉\n");
-		printf("💃 Your 3D model is about to PARTY HARD! 💃\n");
+		ft_printf("🎉🕺 ULTIMATE DANCE MODE ACTIVATED! GET READY FOR THE SHOW! 🕺🎉\n");
+		ft_printf("💃 Your 3D model is about to PARTY HARD! 💃\n");
 	}
 	else
 	{
-		printf("🛑 Dance mode deactivated - party's over! 🛑\n");
+		ft_printf("🛑 Dance mode deactivated - party's over! 🛑\n");
 	}
 }
 
@@ -177,12 +177,12 @@ bool dance_system_is_active(void)
 void dance_system_set_rhythm(float multiplier)
 {
 	g_dance.rhythm_multiplier = fmaxf(0.1f, fminf(5.0f, multiplier)); // Allow even faster!
-	printf("🎵 Dance rhythm set to %.1fx speed - FEEL THE BEAT! 🎵\n", g_dance.rhythm_multiplier);
+	ft_printf("🎵 Dance rhythm set to %.1fx speed - FEEL THE BEAT! 🎵\n", g_dance.rhythm_multiplier);
 }
 
 // Toggle auto-sequence mode
 void dance_system_toggle_auto_sequence(void)
 {
 	g_dance.auto_sequence = !g_dance.auto_sequence;
-	printf("🎭 Dance auto-sequence %s 🎭\n", g_dance.auto_sequence ? "enabled" : "disabled");
+	ft_printf("🎭 Dance auto-sequence %s 🎭\n", g_dance.auto_sequence ? "enabled" : "disabled");
 }

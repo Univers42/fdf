@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sparks.c                                           :+:      :+:    :+:   */
+/*   palette_integration.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 13:08:07 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 17:40:58 by dlesieur         ###   ########.fr       */
+/*   Created: 2025/08/08 00:28:06 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/09 00:00:44 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdlib.h>
+#include "mlx.h"
+#include "theme.h"
+#include <stdio.h>
+#include <math.h>
 
-void	particle_sparks(t_particle *p)
+uint32_t	get_color_for_z(t_app *fdf, int z)
 {
-	p->x = (float)(WIN_WIDTH / 2 + rand() % 100 - 50);
-	p->y = (float)(WIN_HEIGHT / 2 + rand() % 100 - 50);
-	p->z = (float)(rand() % 100 - 50);
-	p->vx = (rand() % 100 - 50) * 0.6f;
-	p->vy = (rand() % 100 - 50) * 0.6f;
-	p->vz = (rand() % 40 - 20) * 0.2f;
-	p->size = 2.0f + (rand() % 3);
-	p->color = 0xFFFF00;
-	p->lifetime = 80 + (rand() % 40);
+	int		range;
+	float	norm;
+
+	range = (fdf->max_z - fdf->min_z);
+	if (range == 0)
+		norm = 0.5f;
+	else
+		norm = (float)(z - fdf->min_z) / (float)range;
+	return get_color_for_height(fdf, norm);
 }

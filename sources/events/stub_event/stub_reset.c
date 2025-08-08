@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 23:28:01 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:35:20 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 23:53:02 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <X11/keysym.h>
 #include <stdio.h>
 #include "mlx.h"
+#include "theme.h"
 
 static void	reset_transformations(t_app *fdf)
 {
@@ -46,5 +47,5 @@ void	reset_state(t_app *fdf, int keycode, void *data)
 	reset_transformations(fdf);
 	reset_z_perspective(fdf);
 	set_palette_index(0, fdf);
-	printf("All systems reset to default state\n");
+	ft_printf("All systems reset to default state\n");
 }

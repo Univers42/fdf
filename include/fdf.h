@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/08 00:30:47 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/08 23:40:00 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,24 @@
 # include <stdint.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include "ft_math.h"
 # include <sys/types.h>
-#include <X11/Xlib.h>
-#include <X11/keysym.h>
-#include "config.h"
-#include "ds.h"
+# include <X11/Xlib.h>
+# include <X11/keysym.h>
+# include "config.h"
+# include "ds.h"
+# include "libft.h"
+# include "switch_color.h"
 
+/* Global system instances */
 extern t_dance_system g_dance;
-extern  t_object_effects_system g_obj_effects;
-extern t_particle_transition g_particle_system ;
+extern t_object_effects_system g_obj_effects;
+extern t_particle_transition g_particle_system;
 extern t_dynamic_bg_system g_dynamic_bg;
 extern t_texture_system g_texture;
 extern t_trackball_shape_state g_trackball_state;
-/*
- * FDF
- */
+
+/* Core FDF functions */
 bool		make_fdf(t_app *fdf, char *filename);
 void		fdf_destroy_contents(t_app *fdf);
 int			fdf_render(t_app *f);
@@ -40,9 +43,20 @@ void		fdf_init_edges(t_app *fdf);
 void		fdf_draw_lines(t_app *fdf);
 bool		parse_file(t_app *fdf, char *filename);
 
-/*
- * HANDLERS
- */
+/* Background functions */
+uint32_t	get_background_color(void);
+void		set_background_theme(int theme);
+void		generate_background(t_app *fdf, int theme_index);
+
+/* Color palette functions (from switch_color.h) */
+int			hex_to_color(char *color);
+
+/* Matrix operations */
+void		identity_matrix4(float *out);
+void		matrix4_multiply(const float *a, const float *b, float *out);
+void		matrix4_dot_product(float *m, float *a, float *out);
+
+/* Event handlers */
 int			key_press_handler(int keycode, t_app *fdf);
 int			key_release_handler(int keycode, t_app *fdf);
 int			button_press_handler(int button, int x, int y, t_app *fdf);
@@ -178,7 +192,6 @@ void	check_projection(t_projection_ctl *p);
 /*
  * BACKGROUND AND EFFECTS
  */
-void		generate_background(t_app *fdf, int theme_index);
 void		generate_stars(t_app *fdf);
 void		toggle_stars(void);
 bool		are_stars_enabled(void);
@@ -197,9 +210,8 @@ void		trackball_end_rotation(void);
 void		apply_trackball_to_transform_stack(t_app *fdf);
 void		apply_trackball_to_shape_points(t_app *fdf);
 void		apply_auto_trackball_rotation(t_app *fdf, float rotation_speed);
-bool		is_trackball_active(void);
 void		reset_trackball_rotation(void);
-
+bool	is_trackball_active(void);
 /*
  * ENHANCED HANDLERS WITH TRACKBALL
  */
@@ -491,4 +503,18 @@ void	setup_control_bindings(void);
 void	setup_palette_bindings(void);
 void	setup_feature_toggle_bindings(void);
 
-#endif
+t_trackball_state		*gtrack(void);
+t_trackball_shape_state	*gstate_tball(void);
+
+void	init_trackball_system(void);
+void	trackball_start_rotation(int mx, int my);
+void	trackball_update_rotation(int mx, int my);
+void	rotate_all_points(t_app *fdf, float cs, float sn);
+t_trackball_shape_state	gstate_ball(void);
+
+void	storm_bolts(uint32_t *b, float t);
+void	lightning_draw(uint32_t *b, int sx, int ex, float fade);
+void	draw_bolt_halo(uint32_t *b, int px, int py);
+void	draw_bolt_core(uint32_t *b, int px, int py);
+void	storm_base(uint32_t *b);
+# endif

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 23:30:06 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 23:53:58 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 00:15:18 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,14 @@ void	palette_1_handler(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode;
 	(void)data;
+	ft_printf("DEBUG: palette_1_handler called\n");
+	if (!fdf)
+	{
+		ft_printf("DEBUG: ERROR - fdf is NULL in palette_1_handler\n");
+		return ;
+	}
 	set_palette_index(0, fdf);
-	ft_printf("Color Palette 1: Planet/Ocean theme\n");
+	ft_printf("Color Palette 1: Planet/Ocean theme applied\n");
 }
 
 void	palette_2_handler(t_app *fdf, int keycode, void *data)
@@ -29,7 +35,7 @@ void	palette_2_handler(t_app *fdf, int keycode, void *data)
 	(void)keycode;
 	(void)data;
 	set_palette_index(1, fdf);
-	ft_printf("Color Palette 2: Default theme\n");
+	ft_printf("Color Palette 2: Default theme applied (objects + background)\n");
 }
 
 void	palette_3_handler(t_app *fdf, int keycode, void *data)

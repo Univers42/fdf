@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 00:05:21 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 23:53:02 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 00:15:16 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@ float	gcamera_speed(float set)
 
 void	init_mlx_handlers(t_app *f)
 {
+	ft_printf("DEBUG: init_mlx_handlers called\n");
+	if (!f)
+	{
+		ft_printf("DEBUG: ERROR - fdf is NULL in init_mlx_handlers\n");
+		return ;
+	}
+	ft_printf("DEBUG: fdf structure exists, continuing...\n");
 	init_trackball_system();
 	init_z_perspective_control(f);
 	setup_event_bindings();
@@ -49,7 +56,14 @@ void	init_mlx_handlers(t_app *f)
 	mlx_hook(f->window, ButtonRelease, ButtonReleaseMask,
 		button_release_handler, f);
 	mlx_hook(f->window, MotionNotify, PointerMotionMask, motion_handler, f);
+	ft_printf("DEBUG: Initializing palette system\n");
 	init_palette_system(f);
+	// Apply initial palette colors only once
+	if (f->points && f->color && f->width > 0 && f->height > 0)
+	{
+		ft_printf("DEBUG: Applying initial palette\n");
+		apply_current_palette(f);
+	}
 	mlx_loop_hook(f->mlx, fdf_render, f);
 	ft_printf("Centralized event system initialized with O(1) access\n");
 }

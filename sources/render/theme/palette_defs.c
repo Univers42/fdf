@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 00:05:21 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 23:59:43 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 00:15:16 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ const t_theme_palette *get_theme_palette(int idx)
 	t_theme_palette	*palettes;
 
 	palettes = get_palette_singleton();
+	if (!palettes)
+		return NULL;
 	if (idx < 0 || idx >= 9)
 		return &palettes[0];
 	return &palettes[idx];

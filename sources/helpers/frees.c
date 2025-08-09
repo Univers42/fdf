@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 14:10:40 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 00:32:55 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 02:05:41 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void	fdf_destroy_contents(t_app *fdf)
 {
-	transition_cleanup();
+	transition_cleanup(fdf);
 	cleanup_z_perspective_control();
 	dynamic_background_cleanup();
 	dance_system_cleanup();

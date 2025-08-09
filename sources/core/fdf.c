@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:42:54 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/08 19:31:30 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 02:05:40 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,15 @@ static inline bool	init_after_parsing(t_app *fdf)
 	{
 		fdf_init_edges(fdf);
 		init_mlx_handlers(fdf);
+		fdf->transition_state = (t_transition_state){
+			.frame = 0,
+			.max_frames = 60,
+			.active = false,
+			.current_shape = SHAPE_ORIGINAL,
+			.target_shape = SHAPE_ORIGINAL,
+			.original_positions = NULL,
+			.initialized = false
+		};
 		ok = true;
 	}
 	else

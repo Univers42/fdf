@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/08 23:40:00 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 02:15:30 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,6 @@ void		apply_tube_transformation(t_app *fdf);
 void		transition_update(t_app *fdf);
 void		transition_start_torus(bool to_torus);
 bool		transition_is_active(void);
-void		transition_cleanup(void);
 void		apply_cube_face_0_1(t_meta_shape *s, t_app *fdf);
 void		apply_cube_face_2_3(t_meta_shape *s, t_app *fdf);
 void		apply_cube_face_4_5(t_meta_shape *s, t_app *fdf);
@@ -177,8 +176,10 @@ float	get_dna_norm_y(t_app *fdf, t_meta_shape *s);
 int	get_dna_index(t_app *fdf, t_meta_shape *s);
 float	calc_heart_upper_lobes(float norm_x, float norm_y);
 float	get_tube_angle(int x, int width);
-
+void	transition_cleanup(t_app *fdf);
+bool	transition_app_is_active(t_app *fdf);
 float	get_tube_radius(t_app *fdf, t_meta_shape *s, float max_radius);
+void	transition_start_shape_cycle(t_app *fdf);
 /*
  * ANIMATION EFFECTS
  */
@@ -226,7 +227,7 @@ int			trackball_key_press_handler(int keycode, t_app *fdf);
 void		apply_shadow_effects(t_app *fdf, bool depth_shadows, bool ambient_shadows);
 void		apply_depth_shadow(t_app *fdf);
 void		apply_ambient_shadows(t_app *fdf);
-void		toggle_shadow_mode(void);
+void		toggle_shadow_mode(t_app *fdf);
 void		update_shadow_effects(t_app *fdf);
 int			get_shadow_mode(void);
 

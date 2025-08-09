@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:58 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 00:20:38 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 02:05:40 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	fdf_render(t_app *f)
 	transition_update(f);
 	object_effects_update(f);
 	dance_system_update(f);
-	if (!transition_is_active())
+	if (!transition_app_is_active(f))
 		transform_points(f);
 	texture_system_update(f);
 	update_shadow_effects(f);

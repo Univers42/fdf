@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:53:43 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 23:54:32 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 02:14:36 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,16 @@ typedef struct s_palette_state
 	int				count;
 	int				current;
 }	t_palette_state;
+
+typedef struct s_transition_state {
+	int				frame;
+	int				max_frames;
+	bool			active;
+	t_shape_type	current_shape;
+	t_shape_type	target_shape;
+	float			*original_positions;
+	bool			initialized;
+}	t_transition_state;
 
 typedef struct s_bound
 {
@@ -232,6 +242,8 @@ typedef struct s_fdf
 	bool					has_color;
 	bool					auto_rotate;
 	t_palette_state			palette_state; // added palette system state
+	t_transition_state		transition_state; // moved former global g_transition here
+	int					shadow_mode;
 }							t_app;
 
 /**
@@ -420,5 +432,8 @@ typedef struct s_plasma_vars {
 	float	p4;
 	float	intensity;
 }	t_plasma_vars;
+
+
+
 
 #endif

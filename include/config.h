@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:33:56 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 21:15:51 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 02:07:12 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,21 @@ typedef enum e_dynamic_bg_type {
 	DYNAMIC_BG_LIQUID_METAL = 10,
 	DYNAMIC_BG_RAINBOW_VORTEX = 11
 }	t_dynamic_bg_type;
+
+typedef enum e_shape_type {
+	SHAPE_ORIGINAL,
+	SHAPE_TORUS,
+	SHAPE_SPHERE,
+	SHAPE_CUBE,
+	SHAPE_PYRAMID,
+	SHAPE_DNA,
+	SHAPE_CHIPS,
+	SHAPE_WAVE,
+	SHAPE_HEART,
+	SHAPE_CONE,
+	SHAPE_TUBE,
+	SHAPE_COUNT
+}	t_shape_type;
 
 typedef enum e_dance_move {
 	DANCE_NONE = 0,

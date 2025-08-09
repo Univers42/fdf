@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 23:28:40 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 19:31:30 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 02:12:04 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,8 @@ void	ch_shape(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode;
 	(void)data;
-	(void)fdf;
-	transition_start_torus(false);
-	ft_printf("Shape transformation activated\n");
+	// Start next shape in the cycle using the per-app transition state
+	transition_start_shape_cycle(fdf);
 }
 
 void	ch_particules(t_app *fdf, int keycode, void *data)

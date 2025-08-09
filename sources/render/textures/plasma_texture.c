@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:49:35 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:47:37 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:31:05 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ static uint32_t	plasma_pixel(int x, int y, t_app *fdf)
 static void	plasma_row(t_app *fdf, int y)
 {
 	const t_texture_system	*t = gtexture(NULL);
-	int						x, idx;
+	int						x;
+	int						idx;
 	uint32_t				tc;
 
 	x = 0;

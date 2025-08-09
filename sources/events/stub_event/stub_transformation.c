@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 23:28:40 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 02:20:33 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 18:05:08 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,11 @@ void	ch_effect(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode;
 	(void)data;
-	(void)fdf;
+	if (!fdf || !fdf->points || fdf->width <= 0 || fdf->height <= 0)
+	{
+		ft_printf("Cannot activate object effects: invalid data\n");
+		return ;
+	}
 	transition_start_object_effects(false);
 	ft_printf("Object effects system activated\n");
 }

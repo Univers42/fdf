@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 03:03:38 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:29:44 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:04:16 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_trackball_state	*gtrack(void)
 	return (&s);
 }
 
-t_dance_system *gdance(t_dance_system *set)
+t_dance_system	*gdance(t_dance_system *set)
 {
 	static t_dance_system	s = {
 		.active = false,

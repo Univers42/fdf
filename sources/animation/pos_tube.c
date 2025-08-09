@@ -6,26 +6,12 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 15:15:09 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 16:49:06 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:51:57 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
-
-static inline float	orig_z(t_app *f, t_point2 *p)
-{
-	t_transition_state	*st;
-	int					i;
-
-	st = gtransition(NULL);
-	if (!st || !st->original_positions)
-		return (0.0f);
-	i = p->y * f->width + p->x;
-	if (i < 0 || i >= f->width * f->height)
-		return (0.0f);
-	return (st->original_positions[i * 3 + 2]);
-}
 
 static void	tube_init_vars(t_tube_vars *v, t_app *f, t_point2 *p)
 {

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:33:56 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 12:54:59 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 16:44:04 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ Can adapt the all the macro using this command when compiling in terminal
 #  define WIN_HEIGHT	32
 #  define WIN_WIDTH		32
 # endif
-
+#define TRANSITION_FRAMES 60
 #define STAR_COUNT 200
 #define INPUT_BUF_SIZE 4096
 #define PARTICLE_TRANSITION_FRAMES	45

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:30 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:23:01 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:29:27 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,47 +78,45 @@ static void	apply_rotation_wobble(t_app *fdf, float freq, float intensity)
 
 static void	apply_point_wobbles(t_wobble_point_params *params, t_app *fdf)
 {
-	float	w1;
-	float	w2;
-	float	w3;
-	float	w4;
 	float	total;
-	const t_dance_system *d = gdance(NULL);
 
-	w1 = sinf((params->norm_x + d->time_accumulator * params->freq * 1.2f)
+	total = sinf((params->norm_x
+				+ gdance(NULL)->time_accumulator * params->freq * 1.2f)
 			* M_PI * 6.0f);
-	w2 = cosf((params->norm_y + d->time_accumulator * params->freq * 1.8f)
+	total += cosf((params->norm_y
+				+ gdance(NULL)->time_accumulator * params->freq * 1.8f)
 			* M_PI * 4.0f);
-	w3 = sinf(((params->norm_x + params->norm_y) + d->time_accumulator
-				* params->freq * 2.3f) * M_PI * 5.0f);
-	w4 = cosf((params->norm_x * params->norm_y + d->time_accumulator
-				* params->freq * 0.7f) * M_PI * 8.0f);
-	total = (w1 + w2 + w3 + w4) * 15.0f * params->intensity;
-	fdf->points[params->index] = d->original_points[params->index] + total;
+	total += sinf(((params->norm_x + params->norm_y)
+				+ gdance(NULL)->time_accumulator * params->freq * 2.3f)
+			* M_PI * 5.0f);
+	total += cosf((params->norm_x * params->norm_y
+				+ gdance(NULL)->time_accumulator * params->freq * 0.7f)
+			* M_PI * 8.0f);
+	total = total * 15.0f * params->intensity;
+	fdf->points[params->index] = gdance(NULL)->original_points[params->index]
+		+ total;
 }
 
 void	apply_dance_wobble(t_app *fdf)
 {
 	t_wobble_point_params	params;
-	int						y;
-	int						x;
-	const t_dance_system *d = gdance(NULL);
+	t_point2				c;
 
-	params.freq = 8.0f * d->rhythm_multiplier;
-	params.intensity = d->move_intensity;
+	params.freq = 8.0f * gdance(NULL)->rhythm_multiplier;
+	params.intensity = gdance(NULL)->move_intensity;
 	apply_rotation_wobble(fdf, params.freq, params.intensity);
-	y = 0;
-	while (y < fdf->height)
+	c.y = 0;
+	while (c.y < fdf->height)
 	{
-		x = 0;
-		while (x < fdf->width)
+		c.x = 0;
+		while (c.x < fdf->width)
 		{
-			params.index = y * fdf->width + x;
-			params.norm_x = (float)x / fdf->width;
-			params.norm_y = (float)y / fdf->height;
+			params.index = c.y * fdf->width + c.x;
+			params.norm_x = (float)c.x / fdf->width;
+			params.norm_y = (float)c.y / fdf->height;
 			apply_point_wobbles(&params, fdf);
-			x++;
+			c.x++;
 		}
-		y++;
+		c.y++;
 	}
 }

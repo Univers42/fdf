@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 12:38:38 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 13:16:36 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 18:05:08 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@ void	store_original_object_points(t_app *fdf)
 	int						i;
 
 	oe = gobjfx(NULL);
-	if (oe->initialized)
+	if (oe->initialized && oe->original_points)
+		return ;
+	if (!fdf->points || fdf->width <= 0 || fdf->height <= 0)
 		return ;
 	oe->total_points = fdf->width * fdf->height;
 	if (oe->original_points)
@@ -76,6 +78,8 @@ void	object_effects_update(t_app *fdf)
 
 	oe = gobjfx(NULL);
 	if (oe->current_effect == OBJ_EFFECT_NONE)
+		return ;
+	if (!fdf->points || fdf->width <= 0 || fdf->height <= 0)
 		return ;
 	store_original_object_points(fdf);
 	if (!oe->original_points)

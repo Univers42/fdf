@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:53:43 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 14:38:26 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:43:11 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,6 +273,20 @@ typedef struct s_bresenham_ctx
 	int					major_axis;
 }						t_bresenham_ctx;
 
+typedef struct	s_generic_struct
+{
+	void	*a;
+	void	*b;
+	void	*c;
+	void	*d;
+}				t_generic_struct;
+
+typedef struct s_pos_check
+{
+	int		x;
+	int		index;
+}			t_pos_check;
+
 typedef struct s_meta_shape
 {
 	float		max_radius;
@@ -446,6 +460,20 @@ typedef struct s_plasma_vars {
 	float	p4;
 	float	intensity;
 }	t_plasma_vars;
+
+typedef struct s_tube_vars
+{
+	float	br;
+	float	hl;
+	float	ang;
+	float	r;
+	float	h;
+	t_fpoint2 c;
+	t_fpoint2 d;
+	float	gr;
+	float	mr;
+	float	cr;
+}	t_tube_vars;
 
 
 

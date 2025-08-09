@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:40 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:47:09 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:18:14 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,14 @@
 
 void	apply_height_oscillation_effect(t_app *fdf)
 {
-	const t_object_effects_system *oe = gobjfx(NULL);
-	int		y, x, index;
-	float	oscillation;
+	const t_object_effects_system	*oe = gobjfx(NULL);
+	int								y;
+	int								x;
+	int								index;
+	float							oscillation;
 
 	if (!oe->original_points)
-		return;
+		return ;
 	y = 0;
 	while (y < fdf->height)
 	{

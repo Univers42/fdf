@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 19:25:19 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:45:39 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:32:37 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,18 @@ static uint32_t	stripe_color(int id)
 
 static void	stripe_row(t_app *fdf, float w, int y)
 {
-	const t_texture_system	*t = gtexture(NULL);
+	const t_texture_system	*t;
 	int						x;
-	int						index;
-	float					pos;
-	int						id;
-	uint32_t				tc;
 
+	t = gtexture(NULL);
 	x = 0;
 	while (x < fdf->width)
 	{
-		index = y * fdf->width + x;
-		pos = (x + y + t->time_accumulator * 20.0f) / w;
-		id = (int)pos % 3;
-		tc = stripe_color(id);
-		fdf->color[index] = blend_colors(t->original_colors[index], tc, 0.5f);
+		fdf->color[y * fdf->width + x] = blend_colors(
+				t->original_colors[y * fdf->width + x],
+				stripe_color(
+					((int)((x + y + t->time_accumulator * 20.0f) / w)) % 3),
+				0.5f);
 		++x;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:49:18 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:45:41 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:45:48 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,26 +38,25 @@ static int	is_mortar(float lx, float ly, float bw, float bh)
 static void	brick_row(t_app *fdf, float bw, float bh, int y)
 {
 	const t_texture_system	*t = gtexture(NULL);
-	int						x;
-	int						index;
+	t_pos_check				pos;
 	t_bound					dim;
 	t_fpoint2				l;
 	uint32_t				c;
 
 	dim.y = (int)(y / bh);
-	x = 0;
-	while (x < fdf->width)
+	pos.x = -1;
+	while (++pos.x < fdf->width)
 	{
-		index = y * fdf->width + x;
-		dim.x = (int)((x + (dim.y % 2) * bw / 2.0f) / bw);
-		l.x = fmodf(x + (dim.y % 2) * bw / 2.0f, bw);
+		pos.index = y * fdf->width + pos.x;
+		dim.x = (int)((pos.x + (dim.y % 2) * bw / 2.0f) / bw);
+		l.x = fmodf(pos.x + (dim.y % 2) * bw / 2.0f, bw);
 		l.y = fmodf(y, bh);
 		if (is_mortar(l.x, l.y, bw, bh))
 			c = 0xD3D3D3;
 		else
 			c = select_brick_color(dim.y, dim.x);
-		fdf->color[index] = blend_colors(t->original_colors[index], c, 0.7f);
-		++x;
+		fdf->color[pos.index] = blend_colors(t->original_colors[pos.index],
+				c, 0.7f);
 	}
 }
 

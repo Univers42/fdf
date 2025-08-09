@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:12:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:55:49 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 18:05:09 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,11 @@ void	object_effects_cleanup(void)
 		oe->original_points = NULL;
 	}
 	oe->initialized = false;
+	oe->active = false;
 	oe->current_effect = OBJ_EFFECT_NONE;
 	oe->time_accumulator = 0.0f;
 	oe->intensity = 1.0f;
+	oe->total_points = 0;
 	ft_printf("Object effects system cleaned up\n");
 }
 

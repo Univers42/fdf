@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:34:42 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:55:29 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:11:35 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ void	apply_vertex_wave_effect(t_app *fdf)
 			idx = y * fdf->width + x;
 			w = sinf((float)x * 0.2f + oe->time_accumulator * 2.0f)
 				* cosf((float)y * 0.15f + oe->time_accumulator * 1.5f);
-			fdf->points[idx] = oe->original_points[idx] + w * 20.0f * oe->intensity;
+			fdf->points[idx] = oe->original_points[idx] + w * 20.0f
+				* oe->intensity;
 			++x;
 		}
 		++y;

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:27 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:24:48 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:07:14 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 static void	apply_wave_to_points(t_app *fdf, float amp, float freq)
 {
-	int		y;
-	int		x;
-	int		index;
-	float	total_wave;
+	int						y;
+	int						x;
+	int						index;
+	float					total_wave;
 	const t_dance_system	*d = gdance(NULL);
 
 	y = 0;
@@ -45,10 +45,10 @@ static void	apply_wave_to_points(t_app *fdf, float amp, float freq)
 void	apply_dance_wave_motion(t_app *fdf)
 {
 	const t_dance_system	*d = gdance(NULL);
-	float	wave_amplitude;
-	float	wave_freq;
-	float	move_x;
-	float	move_z;
+	float					wave_amplitude;
+	float					wave_freq;
+	float					move_x;
+	float					move_z;
 
 	wave_amplitude = 40.0f * d->move_intensity;
 	wave_freq = 3.0f * d->rhythm_multiplier;

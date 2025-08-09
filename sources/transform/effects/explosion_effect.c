@@ -5,46 +5,51 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 13:51:55 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:47:18 by dlesieur         ###   ########.fr       */
+/*   Created: 2025/08/09 17:55:00 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/09 18:10:17 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-static void	apply_explosion_to_points(t_app *fdf, float strength)
+static void	apply_explosion_to_points(t_app *fdf)
 {
-	const t_object_effects_system *oe = gobjfx(NULL);
-	int		y, x, index;
-	float	norm_dist, explosion_factor;
+	t_object_effects_system	*oe;
+	int						i;
+	float					t;
+	float					distance;
+	float					explosion_factor;
 
-	y = 0;
-	while (y < fdf->height)
+	oe = gobjfx(NULL);
+	if (!oe->original_points || !fdf->points)
+		return ;
+	t = oe->time_accumulator;
+	explosion_factor = sinf(t * 2.0f) * 0.5f + 0.5f;
+	explosion_factor *= oe->intensity;
+	i = -1;
+	while (++i < oe->total_points)
 	{
-		x = 0;
-		while (x < fdf->width)
-		{
-			index = y * fdf->width + x;
-			norm_dist = sqrtf(powf(x - fdf->width / 2.0f, 2)
-					+ powf(y - fdf->height / 2.0f, 2))
-				/ sqrtf(powf(fdf->width / 2.0f, 2)
-					+ powf(fdf->height / 2.0f, 2));
-			explosion_factor = sinf(oe->time_accumulator * 2.0f) * norm_dist;
-			fdf->points[index] = oe->original_points[index] + explosion_factor * strength;
-			++x;
-		}
-		++y;
+		if (i >= fdf->width * fdf->height)
+			break ;
+		distance = sqrtf((float)(i % fdf->width - fdf->width / 2)
+				* (i % fdf->width - fdf->width / 2)
+				+ (float)(i / fdf->width - fdf->height / 2)
+				* (i / fdf->width - fdf->height / 2));
+		fdf->points[i] = oe->original_points[i]
+			+ distance * explosion_factor * 10.0f;
 	}
 }
 
 void	apply_vertex_explosion_effect(t_app *fdf)
 {
-	const t_object_effects_system *oe = gobjfx(NULL);
-	float	explosion_strength;
+	t_object_effects_system	*oe;
 
+	oe = gobjfx(NULL);
+	if (oe->current_effect != OBJ_EFFECT_VERTEX_EXPLOSION)
+		return ;
+	store_original_object_points(fdf);
 	if (!oe->original_points)
-		return;
-	explosion_strength = 50.0f * oe->intensity;
-	apply_explosion_to_points(fdf, explosion_strength);
+		return ;
+	apply_explosion_to_points(fdf);
 }

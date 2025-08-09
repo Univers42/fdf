@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 15:13:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 16:40:35 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:51:26 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <math.h>
 
 // Local orig_z used by pos_pyramid
-static inline float	orig_z(t_app *f, t_point2 *p)
+float	orig_z(t_app *f, t_point2 *p)
 {
 	t_transition_state	*st;
 	int					i;

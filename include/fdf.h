@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/09 14:40:49 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 18:05:55 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -633,8 +633,7 @@ t_shape_pos_fn		*shape_pos_tbl(void);
 t_shape_apply_fn	*shape_apply_tbl(void);
 void				get_shape_position(t_shape_type shape, t_app *fdf,
 						t_point2 *p, t_fpoint3 *out);
-void				get_shape_position_coords(t_shape_type shape, t_app *fdf,
-						int x, int y, float *sx, float *sy, float *sz);
+void	get_shape_position_coords(t_shape_type shape, t_app *fdf, t_point2 coord, t_fpoint3 *out);
 
 /* Transition state singleton */
 t_transition_state	*gtransition(t_transition_state *set);
@@ -651,4 +650,33 @@ typedef struct s_row_apply
 	float		sp[4];
 	float		*dp;
 }	t_row_apply;
+
+void	apply_shape_grid(t_app *fdf, t_shape_type shape);
+void	apply_original_noop(t_app *fdf);
+void	apply_torus_persistent(t_app *fdf);
+void	apply_sphere_persistent(t_app *fdf);
+void	apply_cube_persistent(t_app *fdf);
+void	apply_pyramid_persistent(t_app *fdf);
+void	apply_dna_persistent(t_app *fdf);
+void	apply_chips_persistent(t_app *fdf);
+void	apply_wave_persistent(t_app *fdf);
+void	apply_heart_persistent(t_app *fdf);
+void	apply_cone_persistent(t_app *fdf);
+void	apply_tube_persistent(t_app *fdf);
+
+void	pos_pyramid(t_app *f, t_point2 *p, t_fpoint3 *o);
+t_shape_pos_fn	*shape_pos_tbl(void);
+void	transition_update(t_app *fdf);
+void	transition_start_torus(bool to_torus);
+void	apply_interpolated_frame(t_app *fdf, t_transition_state *st, float t);
+void	store_original_positions(t_app *fdf);
+float	heart_scale(t_app *f);
+void	heart_set_xy(t_fpoint3 *o, t_fpoint2 n, float s);
+void	pos_heart(t_app *f, t_point2 *p, t_fpoint3 *o);
+t_fpoint2	heart_norm(t_app *f, t_point2 *p);
+void	heart_lower_point(float s, t_fpoint2 n, t_fpoint3 *o);
+void	heart_upper_lobes(float s, t_fpoint2 n, t_fpoint3 *o);
+float	orig_z(t_app *f, t_point2 *p);
+void	set_idx(t_app *fdf, int idx);
+void	store_original_object_points(t_app *fdf);
 # endif

@@ -6,23 +6,20 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:23:02 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:37:57 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-// forward decl for accessor
-t_dance_system *gdance(t_dance_system *set);
-
 static void	apply_distortion_to_points(t_app *fdf, float t)
 {
-	int		y;
-	int		x;
-	int		index;
-	float	distortion;
-	const t_dance_system *d = gdance(NULL);
+	int						y;
+	int						x;
+	int						index;
+	float					distortion;
+	const t_dance_system	*d = gdance(NULL);
 
 	y = 0;
 	while (y < fdf->height)

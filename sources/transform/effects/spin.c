@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:12 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:25:10 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:06:58 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 
 static void	apply_spin_to_points(t_app *fdf)
 {
-	int		y;
-	int		x;
-	int		index;
-	float	spiral_effect;
-	const t_dance_system	*d = gdance(NULL);
+	int							y;
+	int							x;
+	int							index;
+	float						spiral_effect;
+	const t_dance_system		*d = gdance(NULL);
 
 	y = 0;
 	while (y < fdf->height)
@@ -42,7 +42,7 @@ static void	apply_spin_to_points(t_app *fdf)
 void	apply_dance_spin(t_app *fdf)
 {
 	const t_dance_system	*d = gdance(NULL);
-	float	spin_speed;
+	float					spin_speed;
 
 	spin_speed = 0.15f * d->rhythm_multiplier;
 	trans_stack_rotate_y(&fdf->trans_stack, spin_speed);

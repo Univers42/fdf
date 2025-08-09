@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 19:37:23 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:45:39 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:48:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,45 +18,54 @@ static uint32_t	scale_color(float h)
 	return (blend_colors(0x2F4F4F, 0x87CEEB, h));
 }
 
-static uint32_t	scale_pixel(int x, int y, float sz, t_app *fdf)
+static float	scale_highlight(t_point2 c, t_app *fdf,
+	const t_texture_system *t)
 {
-	const t_texture_system	*t = gtexture(NULL);
-	t_fpoint2				n;
-	t_fpoint2				s;
-	t_fpoint2				l;
-	float					dist;
-	float					hl;
+	t_fpoint2	n;
+	float		hl;
 
-	n.x = (float)x / fdf->width;
-	n.y = (float)y / fdf->height;
-	s.x = x / sz;
-	s.y = y / sz;
+	n.x = (float)c.x / (float)fdf->width;
+	n.y = (float)c.y / (float)fdf->height;
+	hl = sinf((n.x * 10.0f + n.y * 8.0f
+				+ t->time_accumulator * 3.0f) * M_PI) * 0.2f;
+	return (hl);
+}
+
+static uint32_t	scale_pixel(t_app *fdf, const t_texture_system *t,
+	t_point2 c, float sz)
+{
+	t_fpoint2	s;
+	t_fpoint2	l;
+	float		hl;
+
+	s.x = (float)c.x / sz;
+	s.y = (float)c.y / sz;
 	if (((int)s.y % 2) == 1)
 		s.x += 0.5f;
 	l.x = s.x - floorf(s.x) - 0.5f;
 	l.y = s.y - floorf(s.y) - 0.5f;
-	dist = sqrtf(l.x * l.x + l.y * l.y);
-	hl = 1.0f - dist * 2.0f;
+	hl = 1.0f - sqrtf(l.x * l.x + l.y * l.y) * 2.0f;
 	if (hl < 0.0f)
 		hl = 0.0f;
-	hl += sinf((n.x * 10.0f + n.y * 8.0f + t->time_accumulator * 3.0f) * M_PI) * 0.2f;
+	hl += scale_highlight(c, fdf, t);
 	return (scale_color(hl));
 }
 
 static void	scale_row(t_app *fdf, float sz, int y)
 {
-	const t_texture_system	*t = gtexture(NULL);
-	int						x;
-	int						index;
-	uint32_t				tc;
+	const t_texture_system	*t;
+	t_point2				c;
 
-	x = 0;
-	while (x < fdf->width)
+	t = gtexture(NULL);
+	c.y = y;
+	c.x = 0;
+	while (c.x < fdf->width)
 	{
-		index = y * fdf->width + x;
-		tc = scale_pixel(x, y, sz, fdf);
-		fdf->color[index] = blend_colors(t->original_colors[index], tc, 0.7f);
-		++x;
+		fdf->color[c.y * fdf->width + c.x] = blend_colors(
+				t->original_colors[c.y * fdf->width + c.x],
+				scale_pixel(fdf, t, c, sz),
+				0.7f);
+		++c.x;
 	}
 }
 

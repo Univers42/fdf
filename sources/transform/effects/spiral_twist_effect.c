@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:15 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:52:41 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:16:00 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 static void	apply_twist_to_points(t_app *fdf, float twist_strength)
 {
 	const t_object_effects_system	*oe = gobjfx(NULL);
-	int		y;
-	int		x;
-	int		index;
-	float	twist_effect;
+	int								y;
+	int								x;
+	int								index;
+	float							twist_effect;
 
 	y = 0;
 	while (y < fdf->height)

@@ -6,12 +6,14 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:26:22 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 16:32:16 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 15:04:15 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GETTERS_H
-# define GETTERS_H
-#include "ds.h"
+#ifndef SETTERS_H
+# define SETTERS_H
+
+# include "ds.h"
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 19:17:04 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:45:40 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:43:33 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,21 @@
 static void	checker_row(t_app *fdf, float size, int y)
 {
 	const t_texture_system	*t = gtexture(NULL);
-	int						x;
-	int						index;
+	t_pos_check				pos;
 	t_point2				c;
 	int						is_white;
 	uint32_t				tc;
 
-	x = 0;
-	while (x < fdf->width)
+	pos.x = -1;
+	while (++pos.x < fdf->width)
 	{
-		index = y * fdf->width + x;
-		c.x = (int)(x / size);
+		pos.index = y * fdf->width + pos.x;
+		c.x = (int)(pos.x / size);
 		c.y = (int)(y / size);
 		is_white = ((c.x + c.y) % 2) == 0;
 		tc = is_white * 0xFFFFFF;
-		fdf->color[index] = blend_colors(t->original_colors[index], tc, 0.6f);
-		++x;
+		fdf->color[pos.index] = blend_colors(t->original_colors[pos.index],
+				tc, 0.6f);
 	}
 }
 

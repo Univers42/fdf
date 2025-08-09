@@ -5,55 +5,58 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 16:49:30 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:47:42 by dlesieur         ###   ########.fr       */
+/*   Created: 2025/08/07 16:49:33 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/09 17:34:42 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-static uint32_t	select_marble_color(float m, uint32_t w, uint32_t g, uint32_t d)
+static uint32_t	marble_color(float t)
 {
-	if (m > 0.8f)
-		return (w);
-	if (m < 0.2f)
-		return (d);
-	return (g);
+	uint32_t	dark;
+	uint32_t	light;
+
+	if (t < 0.0f)
+		t = 0.0f;
+	if (t > 1.0f)
+		t = 1.0f;
+	dark = 0x404040;
+	light = 0xE0E0E0;
+	return (blend_colors(dark, light, t));
 }
 
-static uint32_t	calc_marble_pixel(int x, int y, t_app *fdf)
+static float	marble_pattern(t_fpoint2 n, const t_texture_system *tex)
 {
-	const t_texture_system	*t = gtexture(NULL);
-	t_fpoint2				n;
-	float					v1;
-	float					v2;
-	float					v3;
-	float					m;
+	float	s;
+	float	r;
 
-	n.x = (float)x / fdf->width;
-	n.y = (float)y / fdf->height;
-	v1 = sinf((n.x * 6.0f + n.y * 4.0f + t->time_accumulator * 0.3f) * M_PI);
-	v2 = sinf((n.x * 8.0f - n.y * 6.0f + t->time_accumulator * 0.2f) * M_PI);
-	v3 = sinf((n.x * 12.0f + n.y * 8.0f) * M_PI);
-	m = (v1 + v2 + v3) / 3.0f;
-	m = (m + 1.0f) / 2.0f;
-	return (select_marble_color(m, 0xF8F8FF, 0xC0C0C0, 0x696969));
+	s = tex->scale_factor;
+	r = sinf(n.x * 10.0f * s
+			+ sinf(n.y * 6.0f * s + tex->time_accumulator) * 2.0f)
+		* 0.5f + 0.5f;
+	return (r);
 }
 
 static void	marble_row(t_app *fdf, int y)
 {
-	const t_texture_system	*t = gtexture(NULL);
+	const t_texture_system	*t;
 	int						x;
-	int						index;
-	uint32_t				tc;
+	t_fpoint2				n;
+	float					p;
 
+	t = gtexture(NULL);
 	x = 0;
 	while (x < fdf->width)
 	{
-		index = y * fdf->width + x;
-		tc = calc_marble_pixel(x, y, fdf);
-		fdf->color[index] = blend_colors(t->original_colors[index], tc, 0.6f);
+		n.x = (float)x / (float)fdf->width;
+		n.y = (float)y / (float)fdf->height;
+		p = marble_pattern(n, t);
+		fdf->color[y * fdf->width + x] = blend_colors(
+				t->original_colors[y * fdf->width + x],
+				marble_color(p),
+				0.75f);
 		++x;
 	}
 }

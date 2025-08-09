@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:28:19 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 14:40:47 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 16:46:17 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include "ft_math.h"
-
-#define TRANSITION_FRAMES 60
-#define SHAPE_COUNT 11
 
 /* helpers to keep functions short and declarations at top */
 
@@ -95,7 +92,7 @@ static void	apply_row(t_app *fdf, t_transition_state *st, float t, int y)
 	}
 }
 
-static void	apply_interpolated_frame(t_app *fdf, t_transition_state *st, float t)
+void	apply_interpolated_frame(t_app *fdf, t_transition_state *st, float t)
 {
 	int	y;
 
@@ -105,108 +102,4 @@ static void	apply_interpolated_frame(t_app *fdf, t_transition_state *st, float t
 		apply_row(fdf, st, t, y);
 		++y;
 	}
-}
-
-void	transition_update(t_app *fdf)
-{
-	t_transition_state	*st;
-	float				progress;
-	float				smooth_t;
-
-	st = gtransition(NULL);
-	if (!st->active && st->current_shape == SHAPE_ORIGINAL)
-		return ;
-	store_original_positions(fdf);
-	if (!st->original_positions)
-		return ;
-	if (st->active)
-	{
-		progress = (float)st->frame / (float)st->max_frames;
-		smooth_t = ease_in_out(progress);
-		apply_interpolated_frame(fdf, st, smooth_t);
-		st->frame++;
-		if (st->frame >= st->max_frames)
-		{
-			st->active = false;
-			st->frame = 0;
-			st->current_shape = st->target_shape;
-		}
-	}
-	else if (st->current_shape != SHAPE_ORIGINAL)
-		apply_shape_with_transform(fdf, st->current_shape);
-}
-
-void	transition_start_torus(bool to_torus)
-{
-	t_transition_state	*st;
-	t_shape_type		 next;
-
-	(void)to_torus;
-	st = gtransition(NULL);
-	next = (st->current_shape + 1) % SHAPE_COUNT;
-	st->active = true;
-	st->frame = 0;
-	st->target_shape = next;
-}
-
-bool	transition_is_active(void)
-{
-	t_transition_state	*st;
-
-	st = gtransition(NULL);
-	return (st->active || st->current_shape != SHAPE_ORIGINAL);
-}
-
-/* Singleton accessor for transition state */
-t_transition_state	*gtransition(t_transition_state *set)
-{
-	static t_transition_state	instance = {0};
-	static bool					initialized = false;
-
-	if (set)
-		instance = *set;
-	if (!initialized)
-	{
-		instance.frame = 0;
-		instance.max_frames = TRANSITION_FRAMES;
-		instance.active = false;
-		instance.current_shape = SHAPE_ORIGINAL;
-		instance.target_shape = SHAPE_ORIGINAL;
-		instance.original_positions = NULL;
-		instance.initialized = false;
-		initialized = true;
-	}
-	return (&instance);
-}
-
-// Wrapper kept for compatibility with event code
-void	transition_start_shape_cycle(t_app *fdf)
-{
-	(void)fdf;
-	transition_start_torus(false);
-}
-
-// Wrapper kept for compatibility with render loop
-bool	transition_app_is_active(t_app *fdf)
-{
-	(void)fdf;
-	return (transition_is_active());
-}
-
-void	transition_cleanup(t_app *fdf)
-{
-	t_transition_state	*st;
-
-	(void)fdf;
-	st = gtransition(NULL);
-	if (st->original_positions)
-	{
-		free(st->original_positions);
-		st->original_positions = NULL;
-	}
-	st->initialized = false;
-	st->active = false;
-	st->frame = 0;
-	st->current_shape = SHAPE_ORIGINAL;
-	st->target_shape = SHAPE_ORIGINAL;
 }

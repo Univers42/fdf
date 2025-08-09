@@ -2,6 +2,11 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   helper_transition.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/09 14:48:32 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/09 14:52:04 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +19,7 @@ static void	pos_fallback(t_app *fdf, t_point2 *p, t_fpoint3 *o)
 {
 	(void)fdf;
 	if (!p || !o)
-		return;
+		return ;
 	o->x = (float)p->x;
 	o->y = (float)p->y;
 	o->z = 0.0f;
@@ -42,18 +47,10 @@ void	get_shape_position(t_shape_type shape, t_app *fdf, t_point2 *p,
 }
 
 // Add overloaded version for the different call signature
-void	get_shape_position_coords(t_shape_type shape, t_app *fdf, int x, int y,
-	float *sx, float *sy, float *sz)
+void	get_shape_position_coords(t_shape_type shape, t_app *fdf,
+			t_point2 coord, t_fpoint3 *out)
 {
-	t_point2	p;
-	t_fpoint3	out;
-
-	if (!fdf || !sx || !sy || !sz)
-		return;
-	p.x = x;
-	p.y = y;
-	get_shape_position(shape, fdf, &p, &out);
-	*sx = out.x;
-	*sy = out.y;
-	*sz = out.z;
+	if (!fdf || !out)
+		return ;
+	get_shape_position(shape, fdf, &coord, out);
 }

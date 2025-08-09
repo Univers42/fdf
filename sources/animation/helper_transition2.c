@@ -6,54 +6,38 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 13:36:02 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 14:40:48 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 16:51:00 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
 /* generic applicator: compute target shape positions and apply transform */
-static void	apply_shape_grid(t_app *fdf, t_shape_type shape)
+void	apply_shape_grid(t_app *fdf, t_shape_type shape)
 {
-	int		y;
-	int		x;
-	int		index;
-	float	sp[4];
-	float	*dp;
-	float	sx, sy, sz;
+	t_meta_shape	s;
+	t_point2		pt;
+	t_fpoint3		out;
 
-	y = 0;
-	while (y < fdf->height)
+	s.coord.y = -1;
+	while (++s.coord.y < fdf->height)
 	{
-		x = 0;
-		while (x < fdf->width)
+		s.coord.x = -1;
+		while (++s.coord.x < fdf->width)
 		{
-			index = y * fdf->width + x;
-			get_shape_position_coords(shape, fdf, x, y, &sx, &sy, &sz);
-			sp[0] = sx;
-			sp[1] = sy;
-			sp[2] = sz;
-			sp[3] = 1.0f;
-			dp = (float *)&fdf->transformed_points[index];
-			matrix4_dot_product(fdf->trans_stack.combined, sp, dp);
-			++x;
+			s.index = s.coord.y * fdf->width + s.coord.x;
+			pt.x = s.coord.x;
+			pt.y = s.coord.y;
+			get_shape_position_coords(shape, fdf, pt, &out);
+			s.sp[0] = out.x;
+			s.sp[1] = out.y;
+			s.sp[2] = out.z;
+			s.sp[3] = 1.0f;
+			s.dp = (float *)&fdf->transformed_points[s.index];
+			matrix4_dot_product(fdf->trans_stack.combined, s.sp, s.dp);
 		}
-		++y;
 	}
 }
-
-/* per-shape wrappers (uniform signature) */
-static void	apply_original_noop(t_app *fdf) { (void)fdf; }
-static void	apply_torus_persistent(t_app *fdf) { apply_shape_grid(fdf, SHAPE_TORUS); }
-static void	apply_sphere_persistent(t_app *fdf) { apply_shape_grid(fdf, SHAPE_SPHERE); }
-static void	apply_cube_persistent(t_app *fdf) { apply_shape_grid(fdf, SHAPE_CUBE); }
-static void	apply_pyramid_persistent(t_app *fdf) { apply_shape_grid(fdf, SHAPE_PYRAMID); }
-static void	apply_dna_persistent(t_app *fdf) { apply_shape_grid(fdf, SHAPE_DNA); }
-static void	apply_chips_persistent(t_app *fdf) { apply_shape_grid(fdf, SHAPE_CHIPS); }
-static void	apply_wave_persistent(t_app *fdf) { apply_shape_grid(fdf, SHAPE_WAVE); }
-static void	apply_heart_persistent(t_app *fdf) { apply_shape_grid(fdf, SHAPE_HEART); }
-static void	apply_cone_persistent(t_app *fdf) { apply_shape_grid(fdf, SHAPE_CONE); }
-static void	apply_tube_persistent(t_app *fdf) { apply_shape_grid(fdf, SHAPE_TUBE); }
 
 /* singleton function-pointer table (exported) */
 t_shape_apply_fn	*shape_apply_tbl(void)
@@ -86,4 +70,46 @@ void	apply_shape_with_transform(t_app *fdf, t_shape_type shape)
 	if (idx < 0 || idx >= (int)SHAPE_COUNT || tbl[idx] == NULL)
 		return ;
 	tbl[idx](fdf);
+}
+
+void	transition_update(t_app *fdf)
+{
+	t_transition_state	*st;
+	float				progress;
+	float				smooth_t;
+
+	st = gtransition(NULL);
+	if (!st->active && st->current_shape == SHAPE_ORIGINAL)
+		return ;
+	store_original_positions(fdf);
+	if (!st->original_positions)
+		return ;
+	if (st->active)
+	{
+		progress = (float)st->frame / (float)st->max_frames;
+		smooth_t = ease_in_out(progress);
+		apply_interpolated_frame(fdf, st, smooth_t);
+		st->frame++;
+		if (st->frame >= st->max_frames)
+		{
+			st->active = false;
+			st->frame = 0;
+			st->current_shape = st->target_shape;
+		}
+	}
+	else if (st->current_shape != SHAPE_ORIGINAL)
+		apply_shape_with_transform(fdf, st->current_shape);
+}
+
+void	transition_start_torus(bool to_torus)
+{
+	t_transition_state	*st;
+	t_shape_type		next;
+
+	(void)to_torus;
+	st = gtransition(NULL);
+	next = (st->current_shape + 1) % SHAPE_COUNT;
+	st->active = true;
+	st->frame = 0;
+	st->target_shape = next;
 }

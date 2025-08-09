@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 13:20:42 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 14:14:09 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 15:19:01 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,18 @@
 static void	(**tex_apply_tbl(void))(t_app *fdf)
 {
 	static void	(*tbl[TEXTURE_COUNT])(t_app *fdf) = {
-		NULL,                         /* TEXTURE_NONE (0) */
-		apply_checkerboard_texture,   /* 1 */
-		apply_stripes_texture,        /* 2 */
-		apply_wood_grain_texture,     /* 3 */
-		apply_metal_brushed_texture,  /* 4 */
-		apply_carbon_fiber_texture,   /* 5 */
-		apply_marble_texture,         /* 6 */
-		apply_brick_texture,          /* 7 */
-		apply_circuit_board_texture,  /* 8 */
-		apply_scales_texture,         /* 9 */
-		apply_hexagon_texture,        /* 10 */
-		apply_plasma_texture          /* 11 */
+		NULL,
+		apply_checkerboard_texture,		/* 1 */
+		apply_stripes_texture,			/* 2 */
+		apply_wood_grain_texture,		/* 3 */
+		apply_metal_brushed_texture,	/* 4 */
+		apply_carbon_fiber_texture,		/* 5 */
+		apply_marble_texture,			/* 6 */
+		apply_brick_texture,			/* 7 */
+		apply_circuit_board_texture,	/* 8 */
+		apply_scales_texture,			/* 9 */
+		apply_hexagon_texture,			/* 10 */
+		apply_plasma_texture			/* 11 */
 	};
 
 	return (tbl);

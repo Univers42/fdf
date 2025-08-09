@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:40 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 19:03:57 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 20:18:09 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,11 @@ bool	is_trackball_active(void)
 	return (t->active);
 }
 
-void trackball_update_rotation(float rq[4], float *p)
+void	trackball_update_rotation(float rq[4], float *p)
 {
-	t_fpoint2 p1;
-	t_fpoint2 p2;
+	t_fpoint2	p1;
+	t_fpoint2	p2;
 
-	// p[0], p[1] = start point; p[2], p[3] = end point
 	p1.x = p[0];
 	p1.y = p[1];
 	p2.x = p[2];

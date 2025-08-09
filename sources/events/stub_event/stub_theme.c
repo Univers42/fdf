@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 23:30:06 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 00:15:18 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 02:20:45 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ void	palette_2_handler(t_app *fdf, int keycode, void *data)
 	(void)keycode;
 	(void)data;
 	set_palette_index(1, fdf);
-	ft_printf("Color Palette 2: Default theme applied (objects + background)\n");
+	ft_printf("Color Palette 2: Default theme applied"
+		"(objects + background)\n");
 }
 
 void	palette_3_handler(t_app *fdf, int keycode, void *data)

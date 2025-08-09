@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 00:05:21 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 00:15:16 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 02:20:59 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void	init_mlx_handlers(t_app *f)
 	mlx_hook(f->window, MotionNotify, PointerMotionMask, motion_handler, f);
 	ft_printf("DEBUG: Initializing palette system\n");
 	init_palette_system(f);
-	// Apply initial palette colors only once
 	if (f->points && f->color && f->width > 0 && f->height > 0)
 	{
 		ft_printf("DEBUG: Applying initial palette\n");

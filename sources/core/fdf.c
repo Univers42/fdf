@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:42:54 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/09 02:25:46 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 21:22:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,30 @@ static inline bool	init_after_parsing(t_app *fdf)
 	return (ok);
 }
 
+static void	init_fdf_struct(t_app *fdf)
+{
+	ft_memset(fdf, 0, sizeof(t_app));
+	fdf->current_bg_theme = 0;
+	fdf->stars_enabled = 1;
+	fdf->auto_rotate = false;
+	fdf->shadow_mode = 0;
+	fdf->has_color = false;
+	fdf->input_state = INPUT_STATE_IDLE;
+	fdf->drag_start[0] = 0;
+	fdf->drag_start[1] = 0;
+	ft_memset(&fdf->renderer, 0, sizeof(t_renderer));
+	ft_memset(&fdf->bresenham_state, 0, sizeof(t_bresenham_state));
+	ft_memset(&fdf->trans_stack, 0, sizeof(t_trans_stack));
+	ft_memset(&fdf->palette_state, 0, sizeof(t_palette_state));
+	ft_memset(&fdf->transition_state, 0, sizeof(t_transition_state));
+}
+
 bool	make_fdf(t_app *fdf, char *filename)
 {
 	bool	ok;
 
 	ok = false;
-	ft_memset(fdf, 0, sizeof(t_app));
+	init_fdf_struct(fdf);
 	fdf->mlx = mlx_init();
 	if (fdf->mlx != NULL)
 	{

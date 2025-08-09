@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 12:38:38 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 18:05:08 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 21:33:12 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,14 @@ void	object_effects_update(t_app *fdf)
 	oe_apply_current(fdf, oe);
 }
 
-void	transition_start_object_effects(bool to_effects)
+void	transition_start_object_effects(t_app *fdf, bool to_effects)
 {
 	t_object_effects_system		*oe;
 	t_object_effect_type		next;
 
 	(void)to_effects;
 	oe = gobjfx(NULL);
+	cleanup_vertex_scatter_effect(fdf);
 	next = (oe->current_effect + 1) % OBJECT_EFFECT_COUNT;
 	oe->current_effect = next;
 	oe->time_accumulator = 0.0f;

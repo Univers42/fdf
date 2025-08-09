@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/09 19:30:31 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 21:41:31 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -382,14 +382,10 @@ void						effects_update(t_app *fdf);
 /*
  * OBJECT EFFECTS SYSTEM - Effects that modify the 3D object itself
  */
-void						transition_start_object_effects(bool to_effects);
 bool						object_effects_is_active(void);
-void						object_effects_cleanup(void);
+void						object_effects_cleanup(t_app *fdf);
 void						object_effects_update(t_app *fdf);
 void						set_object_effect_intensity(float intensity);
-
-//SWITCH EVENTS - Updated signatures with keycode parameter
-void						ch_effect(t_app *fdf, int keycode, void *data);
 
 /*
  * ULTIMATE DANCING SYSTEM - Make your 3D objects dance!
@@ -434,26 +430,11 @@ void						ch_effect(t_app *fdf, int keycode, void *data);
 /*
  * OBJECT EFFECTS SYSTEM - Effects that modify the 3D object itself
  */
-void						transition_start_object_effects(bool to_effects);
-bool						object_effects_is_active(void);
-void						object_effects_cleanup(void);
+void						transition_start_object_effects(
+								t_app *fdf, bool to_effects);
+void						object_effects_cleanup(t_app *fdf);
 void						object_effects_update(t_app *fdf);
-void						set_object_effect_intensity(float intensity);
-
-/*
- * ULTIMATE TEXTURE SYSTEM - Apply realistic textures to 3D objects!
- */
-void						texture_system_update(t_app *fdf);
-void						texture_system_toggle(void);
-bool						texture_system_is_active(void);
-void						texture_system_set_scale(float scale);
-void						texture_system_set_speed(float speed);
-void						texture_system_cleanup(void);
-
-//SWITCH EVENTS - Updated signatures with keycode parameter
-void						texture_toggle_handler(t_app *fdf,
-								int keycode, void *data);
-
+void						texture_toggle_handler(t_app *fdf, int keycode, void *data);
 /*
  * PARTICLES
  */
@@ -534,6 +515,13 @@ void						set_z_perspective_mode(t_app *fdf, int mode);
 float						get_z_perspective_scale(void);
 void						reduce_z_perspective(t_app *fdf);
 void						increase_z_perspective(t_app *fdf);
+/**
+z_point
+*/
+void						set_z_perspective_mode(t_app *fdf, int mode);
+float						get_z_perspective_scale(void);
+void						reduce_z_perspective(t_app *fdf);
+void						increase_z_perspective(t_app *fdf);
 void						reset_z_perspective(t_app *fdf);
 void						update_z_points(t_app *fdf, t_z_perspective *ctrl);
 float						get_target_scale(int mode);
@@ -584,7 +572,6 @@ void						draw_bolt_core(uint32_t *b, int px, int py);
 void						storm_base(uint32_t *b);
 
 /*PARSER*/
-void						apply_default_height_palette(t_app *fdf);
 void						apply_palette_to_points(t_app *fdf,
 								t_pivot *color, float range);
 bool						parse_file(t_app *fdf, char *filename);
@@ -692,6 +679,7 @@ void						texture_system_set_scale(float scale);
 bool						texture_system_is_active(void);
 void						texture_system_toggle(void);
 const char					**tex_name_tbl(void);
+void						texture_system_update(t_app *fdf);
 
 /*
  * TRANSITION HELPERS AND TABLES
@@ -755,5 +743,6 @@ float						orig_z(t_app *f, t_point2 *p);
 void						set_idx(t_app *fdf, int idx);
 void						store_original_object_points(t_app *fdf);
 void						set_background_theme(int theme);
-
+void						cleanup_vertex_scatter_effect(t_app *fdf);
+void						texture_system_cleanup(void);
 #endif

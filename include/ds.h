@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:53:43 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 18:46:57 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 21:37:22 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,6 +231,8 @@ typedef struct s_app
 	int						shadow_mode;
 	int						current_bg_theme;
 	int						stars_enabled;
+	float					*noise_offsets; // was: float noise_offsets
+	int						noise_size;
 }							t_app;
 
 struct s_pdraw

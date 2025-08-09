@@ -6,101 +6,94 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:21 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 17:29:12 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 21:44:04 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 #include <stdlib.h>
+#include <time.h>
 
-// forward decl for accessor
-t_object_effects_system	*gobjfx(t_object_effects_system *set);
-
-static void	seed_rng_once(void)
+static void	vs_seed_once(void)
 {
-	static int	seeded = 0;
+	static int	seeded;
 
 	if (!seeded)
 	{
-		srand(123456u);
+		srand((unsigned int)time(NULL));
 		seeded = 1;
 	}
 }
 
-static const float	*get_noise_offsets(t_app *fdf)
+static int	vs_ensure_noise(t_app *fdf, int total)
 {
-	static float	*buf = NULL;
-	static int		sz = 0;
-	int				n;
-	int				i;
+	size_t	req;
 
-	n = fdf->width * fdf->height;
-	if (n <= 0)
-		return (NULL);
-	if (buf == NULL || sz != n)
-	{
-		free(buf);
-		buf = (float *)malloc(sizeof(float) * n);
-		if (!buf)
-			return (NULL);
-		sz = n;
-		seed_rng_once();
-		i = -1;
-		while (++i < n)
-			buf[i] = (float)rand() / (float)RAND_MAX;
-	}
-	return (buf);
+	if (total <= 0)
+		return (0);
+	req = (size_t)total * 3u;
+	if (fdf->noise_offsets && fdf->noise_size == total)
+		return (1);
+	free(fdf->noise_offsets);
+	fdf->noise_offsets = (float *)malloc(sizeof(float) * req);
+	if (!fdf->noise_offsets)
+		return (0);
+	fdf->noise_size = total;
+	return (1);
 }
 
-static float	scatter_at(
-	const t_object_effects_system *oe, const float *offs, int index, float r)
+static void	vs_fill_noise(float *buf, int n3)
 {
-	float	offv;
-	float	val;
+	int	i;
 
-	offv = 0.0f;
-	if (offs)
-		offv = offs[index];
-	val = sinf(
-			oe->time_accumulator * 2.0f
-			+ offv * (float)M_PI * 2.0f);
-	return (val * r);
+	vs_seed_once();
+	i = 0;
+	while (i < n3)
+	{
+		buf[i] = ((float)rand() / (float)RAND_MAX) * 2.0f - 1.0f;
+		++i;
+	}
 }
 
-static void	apply_scatter_to_points(t_app *fdf, float radius)
+static void	vs_apply_point(
+	t_app *fdf,
+	const t_object_effects_system *oe,
+	int i,
+	float tf
+)
 {
-	const t_object_effects_system	*oe;
-	const float						*offs;
-	t_point2						c;
-	int								index;
+	float	*no;
+	float	inten;
+	float	sum;
 
-	oe = gobjfx(NULL);
-	offs = get_noise_offsets(fdf);
-	c.y = 0;
-	while (c.y < fdf->height)
-	{
-		c.x = 0;
-		while (c.x < fdf->width)
-		{
-			index = c.y * fdf->width + c.x;
-			fdf->points[index] = oe->original_points[index]
-				+ scatter_at(oe, offs, index, radius);
-			++c.x;
-		}
-		++c.y;
-	}
+	no = fdf->noise_offsets;
+	inten = oe->intensity;
+	sum = no[i * 3] * tf
+		+ no[i * 3 + 1] * 0.3f
+		+ no[i * 3 + 2] * sinf(oe->time_accumulator * 2.0f) * 0.2f;
+	fdf->points[i] = oe->original_points[i] + sum * inten;
 }
 
 void	apply_vertex_scatter_effect(t_app *fdf)
 {
 	const t_object_effects_system	*oe;
-	float							radius;
+	int								total;
+	int								i;
+	float							tf;
 
 	oe = gobjfx(NULL);
-	if (!oe->original_points)
+	if (!fdf || !oe || !fdf->points || !oe->original_points)
 		return ;
-	radius = 10.0f + 15.0f * fabsf(sinf(oe->time_accumulator * 0.7f));
-	radius *= oe->intensity;
-	apply_scatter_to_points(fdf, radius);
+	total = fdf->width * fdf->height;
+	if (!vs_ensure_noise(fdf, total))
+		return ;
+	vs_fill_noise(fdf->noise_offsets, total * 3);
+	tf = sinf(oe->time_accumulator) * 0.5f + 1.0f;
+	i = 0;
+	while (i < total)
+	{
+		vs_apply_point(fdf, oe, i, tf);
+		++i;
+	}
 }

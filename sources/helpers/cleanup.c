@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:12:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 18:05:09 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 21:44:21 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	dance_system_cleanup(void)
 }
 
 // Cleanup object effects system
-void	object_effects_cleanup(void)
+void	object_effects_cleanup(t_app *fdf)
 {
 	t_object_effects_system	*oe;
 
@@ -46,6 +46,7 @@ void	object_effects_cleanup(void)
 		free(oe->original_points);
 		oe->original_points = NULL;
 	}
+	cleanup_vertex_scatter_effect(fdf);
 	oe->initialized = false;
 	oe->active = false;
 	oe->current_effect = OBJ_EFFECT_NONE;
@@ -88,4 +89,16 @@ void	texture_system_cleanup(void)
 	t->current_texture = TEXTURE_NONE;
 	t->time_accumulator = 0.0f;
 	ft_printf("🎨 Texture system cleaned up\n");
+}
+
+void	cleanup_vertex_scatter_effect(t_app *fdf)
+{
+	if (!fdf)
+		return ;
+	if (fdf->noise_offsets)
+	{
+		free(fdf->noise_offsets);
+		fdf->noise_offsets = NULL;
+	}
+	fdf->noise_size = 0;
 }

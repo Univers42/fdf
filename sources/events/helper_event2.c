@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 00:28:06 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 18:05:09 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 21:33:13 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	toggle_effects(t_app *fdf, int keycode, void *data)
 		ft_printf("Cannot toggle object effects: invalid data\n");
 		return ;
 	}
-	transition_start_object_effects(false);
+	transition_start_object_effects(fdf, false);
 	ft_printf("Object effects toggled with H key\n");
 }
 

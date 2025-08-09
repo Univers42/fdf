@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 14:10:40 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 02:05:41 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 21:33:12 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	fdf_destroy_contents(t_app *fdf)
 	cleanup_z_perspective_control();
 	dynamic_background_cleanup();
 	dance_system_cleanup();
-	object_effects_cleanup();
+	object_effects_cleanup(fdf);
 	texture_system_cleanup();
 	free(fdf->points);
 	free(fdf->color);

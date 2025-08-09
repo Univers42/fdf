@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 13:36:02 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 16:51:00 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 18:38:06 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ void	apply_shape_grid(t_app *fdf, t_shape_type shape)
 	t_point2		pt;
 	t_fpoint3		out;
 
-	s.coord.y = -1;
-	while (++s.coord.y < fdf->height)
+	s.s_coord.y = -1;
+	while (++s.s_coord.y < fdf->height)
 	{
-		s.coord.x = -1;
-		while (++s.coord.x < fdf->width)
+		s.s_coord.x = -1;
+		while (++s.s_coord.x < fdf->width)
 		{
-			s.index = s.coord.y * fdf->width + s.coord.x;
-			pt.x = s.coord.x;
-			pt.y = s.coord.y;
+			s.index = s.s_coord.y * fdf->width + s.s_coord.x;
+			pt.x = s.s_coord.x;
+			pt.y = s.s_coord.y;
 			get_shape_position_coords(shape, fdf, pt, &out);
 			s.sp[0] = out.x;
 			s.sp[1] = out.y;

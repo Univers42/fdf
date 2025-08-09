@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:25:57 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 18:38:53 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,18 @@ static void	transform_wave_point(t_app *fdf, t_meta_shape *s,
 	float	wave2;
 	float	wave3;
 
-	norm_x = (2.0f * s->coord.x / ((float)fdf->width - 1.0f)) - 1.0f;
-	norm_y = (2.0f * s->coord.y / ((float)fdf->height - 1.0f)) - 1.0f;
-	s->shape.x = norm_x * base_radius;
-	s->shape.y = norm_y * base_radius;
+	norm_x = (2.0f * s->s_coord.x / ((float)fdf->width - 1.0f)) - 1.0f;
+	norm_y = (2.0f * s->s_coord.y / ((float)fdf->height - 1.0f)) - 1.0f;
+	s->s_shape.x = norm_x * base_radius;
+	s->s_shape.y = norm_y * base_radius;
 	wave1 = sinf(norm_x * 3.0f * M_PI) * cosf(norm_y * 3.0f * M_PI);
 	wave2 = sinf(norm_x * 5.0f * M_PI + norm_y * 2.0f * M_PI);
 	wave3 = cosf(norm_y * 4.0f * M_PI + norm_x * 2.0f * M_PI);
-	s->shape.z = wave_amplitude * (wave1 + wave2 + wave3) / 3.0f
+	s->s_shape.z = wave_amplitude * (wave1 + wave2 + wave3) / 3.0f
 		+ fdf->points[s->index] * 0.1f;
-	s->sp[0] = s->shape.x;
-	s->sp[1] = s->shape.y;
-	s->sp[2] = s->shape.z;
+	s->sp[0] = s->s_shape.x;
+	s->sp[1] = s->s_shape.y;
+	s->sp[2] = s->s_shape.z;
 	s->sp[3] = 1;
 	s->dp = (float *)&fdf->transformed_points[s->index];
 	matrix4_dot_product(fdf->trans_stack.combined, s->sp, s->dp);
@@ -47,13 +47,13 @@ void	apply_wave_transformation(t_app *fdf)
 
 	base_radius = fminf(fdf->width, fdf->height) / 3.0f;
 	wave_amplitude = fminf(fdf->width, fdf->height) / 6.0f;
-	s.coord.y = -1;
-	while (++s.coord.y < fdf->height)
+	s.s_coord.y = -1;
+	while (++s.s_coord.y < fdf->height)
 	{
-		s.coord.x = -1;
-		while (++s.coord.x < fdf->width)
+		s.s_coord.x = -1;
+		while (++s.s_coord.x < fdf->width)
 		{
-			s.index = s.coord.y * fdf->width + s.coord.x;
+			s.index = s.s_coord.y * fdf->width + s.s_coord.x;
 			transform_wave_point(fdf, &s, base_radius, wave_amplitude);
 		}
 	}

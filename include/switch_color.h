@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:29:01 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 23:40:10 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 18:35:59 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,19 @@
 # include "libft/math/geometry/draw/pixel.h"
 
 /* Forward declaration */
-typedef struct s_fdf t_app;
+typedef struct s_app t_app;
 
 /* Palette function type */
-typedef void (*palette_func_t)(int *arr, int pos, int z_value);
+typedef void (*t_palette_func)(int *arr, int pos, int z_value);
 
 /* Singleton palette API */
 int				palette_count(void);
 int				palette_current(void);
 void			palette_set(int idx, t_app *fdf);
-palette_func_t	palette_get(int idx);
+t_palette_func	palette_get(int idx);
 
 /* Backward compatibility */
-palette_func_t	get_color_palette(int idx);
+t_palette_func	get_color_palette(int idx);
 void			set_palette_index(int idx, t_app *fdf);
 void			set_color_array(t_app *fdf);
 

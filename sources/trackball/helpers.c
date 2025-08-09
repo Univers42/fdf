@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 17:27:14 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 20:22:34 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 19:33:45 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,18 @@
 
 int	trackball_motion_handler(int x, int y, t_app *fdf)
 {
-	if (is_trackball_active() && fdf->input_state == INPUT_STATE_ROTATING)
-		return (trackball_update_rotation(x, y), 0);
-	return (motion_handler(x, y, fdf));
+	t_trackball_shape_state	*state;
+	float					p[4];
+
+	state = gstate_tball();
+	p[0] = (float)fdf->drag_start[0];
+	p[1] = (float)fdf->drag_start[1];
+	p[2] = (float)x;
+	p[3] = (float)y;
+	trackball_update_rotation(state->current_rotation, p);
+	fdf->drag_start[0] = x;
+	fdf->drag_start[1] = y;
+	return (0);
 }
 
 int	trackball_key_press_handler(int keycode, t_app *fdf)

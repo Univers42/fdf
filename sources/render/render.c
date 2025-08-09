@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:58 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 04:58:52 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 18:26:40 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include <stdbool.h>
 #include "fdf.h"
 #include "libft.h"
-#include "colors_map.h"
 #include "theme.h"
 
 void	transform_points(t_app *f)

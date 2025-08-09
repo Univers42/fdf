@@ -6,28 +6,31 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:53:43 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 17:43:11 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 18:46:57 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DS_H
-#define DS_H
+# define DS_H
 
-#include "config.h"
-#include "ft_math.h"
+# include "config.h"
+# include "ft_math.h"
 
 /* Forward declaration for palette function type */
-typedef void (*palette_func_t)(int *, int, int);
+typedef void			(*t_palette_func)(int *, int, int);
+typedef struct s_app	t_app;
+// Handler type for composite key events with keycode context
+typedef void			(*t_event_fn)(t_app*, int keycode, void*);
 
-/* Palette state structure (used in palette2.c) */
 typedef struct s_palette_state
 {
-	palette_func_t	*funcs;
+	t_palette_func	*funcs;
 	int				count;
 	int				current;
-}	t_palette_state;
+}					t_palette_state;
 
-typedef struct s_transition_state {
+typedef struct s_transition_state
+{
 	int				frame;
 	int				max_frames;
 	bool			active;
@@ -35,12 +38,12 @@ typedef struct s_transition_state {
 	t_shape_type	target_shape;
 	float			*original_positions;
 	bool			initialized;
-}	t_transition_state;
+}					t_transition_state;
 
 typedef struct s_bound
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 }		t_bound;
 
 typedef struct s_trigo
@@ -61,7 +64,7 @@ typedef struct s_fbound
 // no member structure
 typedef struct s_texture_system
 {
-	t_texture_type	current_texture;		//enum
+	t_texture_type	current_texture;
 	bool			active;
 	float			time_accumulator;
 	float			scale_factor;
@@ -71,12 +74,11 @@ typedef struct s_texture_system
 	float			animation_speed;
 }					t_texture_system;
 
-
 typedef struct s_dance_system
 {
 	bool				active;
-	t_dance_move		current_move;		//enum
-	t_dance_move		next_move;			//enum
+	t_dance_move		current_move;
+	t_dance_move		next_move;
 	float				time_accumulator;
 	float				move_intensity;
 	int					move_frame;
@@ -89,11 +91,9 @@ typedef struct s_dance_system
 	float				rhythm_multiplier;
 }						t_dance_system;
 
-
-
 typedef struct s_object_effects_system
 {
-	t_object_effect_type	current_effect;		//enum
+	t_object_effect_type	current_effect;
 	bool					active;
 	float					time_accumulator;
 	float					intensity;
@@ -104,7 +104,7 @@ typedef struct s_object_effects_system
 
 typedef struct s_dynamic_bg_system
 {
-	t_dynamic_bg_type	current_bg;	//enum
+	t_dynamic_bg_type	current_bg;
 	bool				active;
 	float				time_accumulator;
 	float				intensity;
@@ -138,7 +138,6 @@ typedef struct s_parser
 	bool			width_set;
 }					t_parser;
 
-
 typedef struct s_projection_ctl
 {
 	float			box[3];
@@ -153,7 +152,7 @@ typedef struct s_projection_ctl
 	float			n;
 }					t_projection_ctl;
 
-//!to replace with the below structure but little by little
+//could be replace by the point struct to modularize more
 typedef struct s_trans_stack
 {
 	float				matrices[M_COUNT][16];
@@ -175,19 +174,6 @@ typedef struct s_trans_stack
 	float				oz;
 }						t_trans_stack;
 
-//typedef struct	s_trans_stack
-//{
-//	float	matrices[M_COUNT][16];
-//	float	temp[16];
-//	float	combined[16];
-//	bool	dirty[M_COUNT];
-//	t_projection_ctl	projection;
-//	t_point3		r;
-//	t_point3		t;
-//	t_point3		p;
-//	t_point3		o;
-//}t_transormation_stack;
-
 typedef struct s_bresenham_state
 {
 	int				delta[3];
@@ -195,8 +181,6 @@ typedef struct s_bresenham_state
 	int				p1[3];
 	int				p2[3];
 	int				error_count;
-	//t_color			color1;
-	//t_color			color2;
 	uint32_t		color1;
 	uint32_t		color2;
 	float			color_r_delta;
@@ -221,8 +205,7 @@ typedef struct s_pivot
 	void	*high;
 }			t_pivot;
 
-
-typedef struct s_fdf
+typedef struct s_app
 {
 	void					*mlx;
 	void					*window;
@@ -235,21 +218,19 @@ typedef struct s_fdf
 	int						height;
 	int						min_z;
 	int						max_z;
-	//t_bound					z_range;
-	//t_bound					dim_win;
 	size_t					n_edges;
 	t_renderer				renderer;
 	t_bresenham_state		bresenham_state;
-	t_trans_stack	trans_stack;
+	t_trans_stack			trans_stack;
 	t_input_state			input_state;
 	int						drag_start[2];
 	bool					has_color;
 	bool					auto_rotate;
-	t_palette_state			palette_state; // added palette system state
-	t_transition_state		transition_state; // moved former global g_transition here
-	int					shadow_mode;
-	int					current_bg_theme;
-	int					stars_enabled;
+	t_palette_state			palette_state;
+	t_transition_state		transition_state;
+	int						shadow_mode;
+	int						current_bg_theme;
+	int						stars_enabled;
 }							t_app;
 
 struct s_pdraw
@@ -273,13 +254,13 @@ typedef struct s_bresenham_ctx
 	int					major_axis;
 }						t_bresenham_ctx;
 
-typedef struct	s_generic_struct
+typedef struct s_generic_struct
 {
 	void	*a;
 	void	*b;
 	void	*c;
 	void	*d;
-}				t_generic_struct;
+}			t_generic_struct;
 
 typedef struct s_pos_check
 {
@@ -287,35 +268,46 @@ typedef struct s_pos_check
 	int		index;
 }			t_pos_check;
 
+typedef struct s_pack_color
+{
+	uint32_t	color;
+	uint32_t	bg_color;
+}				t_pack_color;
+
 typedef struct s_meta_shape
 {
 	float		max_radius;
 	float		height_limit;
-	struct {
+	struct
+	{
 		float	x;
 		float	y;
 		float	z;
-	}			shape;
-	struct {
+	}			s_shape;
+	struct
+	{
 		int		x;
 		int		y;
-	}			coord;
-	struct {
+	}			s_coord;
+	struct
+	{
 		float	u;
 		float	v;
 	}			s_vec;
-	struct {
+	struct
+	{
 		int	width;
 		int	height;
 		int	face;
 		int	tot_point;
 	}		s_face;
-	struct {
+	struct
+	{
 		int	idx;
 		int	x;
 		int	y;
 	}		s_loc;
-	struct 
+	struct
 	{
 		float	x;
 		float	y;
@@ -337,11 +329,14 @@ typedef struct s_meta_shape
 	float		dist_center;
 }				t_meta_shape;
 
-
 typedef struct s_particle
 {
-	float		x, y, z;
-	float		vx, vy, vz;
+	float		x;
+	float		y;
+	float		z;
+	float		vx;
+	float		vy;
+	float		vz;
 	float		size;
 	uint32_t	color;
 	int			lifetime;
@@ -353,9 +348,6 @@ typedef struct s_event_key
 	int				keycode;
 	unsigned int	modifiers;
 }					t_event_key;
-
-// Handler type for composite key events with keycode context
-typedef void (*t_event_fn)(t_app*, int keycode, void*);
 
 // Unified event binding (for both plain and combo events)
 typedef struct s_event_binding
@@ -375,8 +367,6 @@ typedef struct s_particle_transition
 	bool			initialized;
 	float			time_accumulator;
 }					t_particle_transition;
-
-
 
 typedef struct s_z_perspective
 {
@@ -398,41 +388,45 @@ typedef struct s_wobble_point_params
 }			t_wobble_point_params;
 
 // --- Add these lines for global trackball state access ---
-typedef struct s_trackball_shape_state {
-	float current_rotation[4];
-	float rotation_matrix[16];
-	bool is_active;
-} t_trackball_shape_state;
+typedef struct s_trackball_shape_state
+{
+	float	current_rotation[4];
+	float	rotation_matrix[16];
+	bool	is_active;
+}	t_trackball_shape_state;
 
 // Core handlers state singleton
-typedef struct s_core_handlers_state {
+typedef struct s_core_handlers_state
+{
 	bool	auto_rotate;
 	int		mouse_x;
 	int		mouse_y;
 	float	camera_speed;
 	bool	free_roam_mode;
 	bool	initialized;
-} t_core_handlers_state;
+}	t_core_handlers_state;
 
 // Global modifier state tracking
-typedef struct s_modifier_state {
+typedef struct s_modifier_state
+{
 	bool	ctrl_pressed;
 	bool	shift_pressed;
 	bool	alt_pressed;
 }	t_modifier_state;
 
-
 // Special keycode mapping for common X11 keys that are out of normal range
-typedef struct s_keycode_map {
-	int x11_keycode;
-	int mapped_keycode;
-} t_keycode_map;
+typedef struct s_keycode_map
+{
+	int	x11_keycode;
+	int	mapped_keycode;
+}	t_keycode_map;
 
 // Event handler table singleton
-typedef struct s_event_handler_table {
-	t_event_fn handler_table[MAX_KEYCODE][MODIFIER_COMBO_COUNT];
-	bool initialized;
-} t_event_handler_table;
+typedef struct s_event_handler_table
+{
+	t_event_fn	handler_table[MAX_KEYCODE][MODIFIER_COMBO_COUNT];
+	bool		initialized;
+}				t_event_handler_table;
 
 typedef struct s_trackball_state
 {
@@ -442,16 +436,17 @@ typedef struct s_trackball_state
 	int		last_mouse_y;
 	bool	active;
 	bool	initialized;
-}	t_trackball_state;
+}			t_trackball_state;
 
-typedef struct	s_retouch
+typedef struct s_retouch
 {
 	float	highlight;
 	float	intensity;
 	float	lines;
-}t_retouch;
+}			t_retouch;
 
-typedef struct s_plasma_vars {
+typedef struct s_plasma_vars
+{
 	float	nx;
 	float	ny;
 	float	p1;
@@ -459,23 +454,20 @@ typedef struct s_plasma_vars {
 	float	p3;
 	float	p4;
 	float	intensity;
-}	t_plasma_vars;
+}			t_plasma_vars;
 
 typedef struct s_tube_vars
 {
-	float	br;
-	float	hl;
-	float	ang;
-	float	r;
-	float	h;
-	t_fpoint2 c;
-	t_fpoint2 d;
-	float	gr;
-	float	mr;
-	float	cr;
-}	t_tube_vars;
-
-
-
+	float		br;
+	float		hl;
+	float		ang;
+	float		r;
+	float		h;
+	t_fpoint2	c;
+	t_fpoint2	d;
+	float		gr;
+	float		mr;
+	float		cr;
+}			t_tube_vars;
 
 #endif

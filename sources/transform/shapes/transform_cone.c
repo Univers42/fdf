@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:25:27 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 18:44:54 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,24 @@ static void	calc_cone_coords(
 	float	angle;
 	float	radius;
 
-	index = s->coord.y * fdf->width + s->coord.x;
+	index = s->s_coord.y * fdf->width + s->s_coord.x;
 	s->index = index;
-	height = (float)s->coord.y - (fdf->height / 2.0f);
-	angle = ((float)s->coord.x / fdf->width) * 2.0f * M_PI;
+	height = (float)s->s_coord.y - (fdf->height / 2.0f);
+	angle = ((float)s->s_coord.x / fdf->width) * 2.0f * M_PI;
 	radius = 0.0f;
 	if (fabsf(height) < height_limit)
 	{
 		radius = max_radius * (1.0f - fabsf(height) / height_limit);
 		radius += fdf->points[index] * 0.1f;
-		s->shape.x = radius * cosf(angle);
-		s->shape.y = height;
-		s->shape.z = radius * sinf(angle);
+		s->s_shape.x = radius * cosf(angle);
+		s->s_shape.y = height;
+		s->s_shape.z = radius * sinf(angle);
 	}
 	else
 	{
-		s->shape.x = 0.0f;
-		s->shape.y = height;
-		s->shape.z = 0.0f;
+		s->s_shape.x = 0.0f;
+		s->s_shape.y = height;
+		s->s_shape.z = 0.0f;
 	}
 }
 
@@ -47,9 +47,9 @@ static void	apply_cone_transform(
 	t_app *fdf, t_meta_shape *s
 )
 {
-	s->sp[0] = s->shape.x;
-	s->sp[1] = s->shape.y;
-	s->sp[2] = s->shape.z;
+	s->sp[0] = s->s_shape.x;
+	s->sp[1] = s->s_shape.y;
+	s->sp[2] = s->s_shape.z;
 	s->sp[3] = 1;
 	s->dp = (float *)&fdf->transformed_points[s->index];
 	matrix4_dot_product(fdf->trans_stack.combined, s->sp, s->dp);
@@ -67,11 +67,11 @@ static void	cone_loop(t_app *fdf, float max_radius, float height_limit)
 {
 	t_meta_shape	s;
 
-	s.coord.y = -1;
-	while (++s.coord.y < fdf->height)
+	s.s_coord.y = -1;
+	while (++s.s_coord.y < fdf->height)
 	{
-		s.coord.x = -1;
-		while (++s.coord.x < fdf->width)
+		s.s_coord.x = -1;
+		while (++s.s_coord.x < fdf->width)
 		{
 			transform_cone_point(fdf, &s, max_radius, height_limit);
 		}

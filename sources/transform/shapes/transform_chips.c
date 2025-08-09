@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:25:21 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 18:39:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@ static void	transform_chip_point(
 	float	norm_x;
 	float	norm_y;
 
-	s->index = s->coord.y * fdf->width + s->coord.x;
-	norm_x = (2.0f * s->coord.x / (fdf->width - 1)) - 1.0f;
-	norm_y = (2.0f * s->coord.y / (fdf->height - 1)) - 1.0f;
-	s->shape.x = norm_x * scale;
-	s->shape.y = norm_y * scale;
-	s->shape.z = a * (norm_x * norm_x - norm_y * norm_y) * scale;
-	s->shape.z += fdf->points[s->index] * 0.1f;
-	s->sp[0] = s->shape.x;
-	s->sp[1] = s->shape.y;
-	s->sp[2] = s->shape.z;
+	s->index = s->s_coord.y * fdf->width + s->s_coord.x;
+	norm_x = (2.0f * s->s_coord.x / (fdf->width - 1)) - 1.0f;
+	norm_y = (2.0f * s->s_coord.y / (fdf->height - 1)) - 1.0f;
+	s->s_shape.x = norm_x * scale;
+	s->s_shape.y = norm_y * scale;
+	s->s_shape.z = a * (norm_x * norm_x - norm_y * norm_y) * scale;
+	s->s_shape.z += fdf->points[s->index] * 0.1f;
+	s->sp[0] = s->s_shape.x;
+	s->sp[1] = s->s_shape.y;
+	s->sp[2] = s->s_shape.z;
 	s->sp[3] = 1;
 	s->dp = (float *)&fdf->transformed_points[s->index];
 	matrix4_dot_product(fdf->trans_stack.combined, s->sp, s->dp);
@@ -43,11 +43,11 @@ void	apply_chips_transformation(t_app *fdf)
 
 	scale = fminf(fdf->width, fdf->height) / 3.0f;
 	a = 0.3f;
-	s.coord.y = -1;
-	while (++s.coord.y < fdf->height)
+	s.s_coord.y = -1;
+	while (++s.s_coord.y < fdf->height)
 	{
-		s.coord.x = -1;
-		while (++s.coord.x < fdf->width)
+		s.s_coord.x = -1;
+		while (++s.s_coord.x < fdf->width)
 		{
 			transform_chip_point(fdf, &s, scale, a);
 		}

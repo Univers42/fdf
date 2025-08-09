@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 21:10:24 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 21:10:25 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:09:22 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define STAR_COUNT 200
+//static int	fdf->current_bg_theme = 0;
+//static int	fdf->stars_enabled = 1;
 
-static int	g_current_bg_theme = 0;
-static int	g_stars_enabled = 1;
-
-static uint32_t	star_color_for_theme(int theme, int i)
+uint32_t	star_color_for_theme(int theme, int i)
 {
 	uint32_t	c;
 
@@ -43,22 +41,21 @@ static uint32_t	star_color_for_theme(int theme, int i)
 	return (c);
 }
 
-void	generate_background(t_app *fdf, int theme_index)
+static uint32_t	get_bg_color_for_theme(int theme_index)
 {
 	static const uint32_t	bg[9] = {
 		0x00000000, 0x00001A1A, 0x001A0000,
 		0x00001A00, 0x00000033, 0x00331100,
 		0x00003333, 0x00330033, 0x00222222
 	};
-	uint32_t				*buf;
-	uint32_t				color;
-	int						i;
-	int						total;
 
-	g_current_bg_theme = theme_index % 9;
-	color = bg[g_current_bg_theme];
-	buf = (uint32_t *)fdf->renderer.data;
-	total = WIN_WIDTH * WIN_HEIGHT;
+	return (bg[theme_index % 9]);
+}
+
+static void	fill_background_buffer(uint32_t *buf, uint32_t color, int total)
+{
+	int	i;
+
 	i = 0;
 	while (i < total)
 	{
@@ -67,52 +64,19 @@ void	generate_background(t_app *fdf, int theme_index)
 	}
 }
 
-void	generate_stars(t_app *fdf)
+void	generate_background(t_app *fdf, int theme_index)
 {
 	uint32_t	*buf;
-	int			i;
-	int			sx;
-	int			sy;
-	uint32_t	c;
-	static int	seeded = 0;
+	int			total;
 
-	if (!g_stars_enabled)
-		return ;
-	if (!seeded)
-	{
-		srand((unsigned int)time(NULL));
-		seeded = 1;
-	}
+	fdf->current_bg_theme = theme_index % 9;
 	buf = (uint32_t *)fdf->renderer.data;
-	i = 0;
-	while (i < STAR_COUNT)
-	{
-		sx = (i * 73 + 17) % WIN_WIDTH;
-		sy = (i * 137 + 23) % WIN_HEIGHT;
-		c = star_color_for_theme(g_current_bg_theme, i);
-		if (sx + 1 < WIN_WIDTH && sy + 1 < WIN_HEIGHT)
-		{
-			buf[sy * WIN_WIDTH + sx] = c;
-			buf[sy * WIN_WIDTH + sx + 1] = c;
-			buf[(sy + 1) * WIN_WIDTH + sx] = c;
-			buf[(sy + 1) * WIN_WIDTH + sx + 1] = c;
-		}
-		++i;
-	}
+	total = WIN_WIDTH * WIN_HEIGHT;
+	fill_background_buffer(buf,
+		get_bg_color_for_theme(fdf->current_bg_theme), total);
 }
 
-void toggle_stars(void)
+int	get_current_background_theme(t_app *fdf)
 {
-	g_stars_enabled = !g_stars_enabled;
-	ft_printf("Stars %s\n", g_stars_enabled ? "enabled" : "disabled");
-}
-
-bool are_stars_enabled(void)
-{
-	return (g_stars_enabled);
-}
-
-int get_current_background_theme(void)
-{
-	return (g_current_bg_theme);
+	return (fdf->current_bg_theme);
 }

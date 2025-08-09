@@ -2,22 +2,30 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/09 02:33:35 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/09 02:47:19 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdlib.h>            // added for realloc
-#include <stdint.h>            // uint32_t
+#include <stdlib.h>
+#include <stdint.h>
 
 bool	realloc_all(t_parser *p, t_app *fdf)
 {
-	size_t	new_cap;
+	size_t		new_cap;
 	float		*new_points;
 	uint32_t	*new_colors;
 
 	if (p->values_read < p->arr_capacity)
 		return (true);
-	new_cap = (p->arr_capacity == 0) ? 4096 : p->arr_capacity * 2;
+	if (p->arr_capacity == 0)
+		new_cap = 4096;
+	else
+		new_cap = p->arr_capacity * 2;
 	new_points = (float *)realloc(fdf->points, new_cap * sizeof(float));
 	if (!new_points)
 		return (false);
@@ -57,4 +65,19 @@ int	skip_delim(char *buf, int end, int i)
 	while (i < end && is_delim(buf[i]))
 		++i;
 	return (i);
+}
+
+void	apply_palette_to_points(t_app *fdf, t_pivot *color, float range)
+{
+	int		i;
+	float	z;
+	float	t;
+
+	i = -1;
+	while (++i < fdf->width * fdf->height)
+	{
+		z = fdf->points[i];
+		t = (z - fdf->min_z) / range;
+		fdf->color[i] = get_palette_color(color, t);
+	}
 }

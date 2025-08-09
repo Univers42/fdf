@@ -1,126 +1,97 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   object_effects.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/09 12:38:38 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/09 13:16:36 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 #include <math.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdbool.h>
 
-
-t_object_effects_system g_obj_effects = {OBJ_EFFECT_NONE, false, 0.0f, 1.0f, false, NULL, 0};
-
-// Store original point positions
-void store_original_object_points(t_app *fdf)
+/* function table wrapped in a singleton-style accessor */
+static void	(**obj_effect_fn(void))(t_app *fdf)
 {
-	if (g_obj_effects.initialized)
-		return;
-	
-	g_obj_effects.total_points = fdf->width * fdf->height;
-	
-	if (g_obj_effects.original_points)
-		free(g_obj_effects.original_points);
-	
-	g_obj_effects.original_points = malloc(sizeof(float) * g_obj_effects.total_points);
-	if (!g_obj_effects.original_points)
-		return;
-	
-	// Store original Z values
-	for (int i = 0; i < g_obj_effects.total_points; i++)
-		g_obj_effects.original_points[i] = fdf->points[i];
-	
-	g_obj_effects.initialized = true;
-	ft_printf("Stored %d original points\n", g_obj_effects.total_points);
+	static void	(*tbl[OBJECT_EFFECT_COUNT])(t_app *fdf) = {
+		NULL, /* OBJ_EFFECT_NONE */
+		apply_vertex_wave_effect,
+		apply_geometric_pulse_effect,
+		apply_vertex_explosion_effect,
+		apply_spiral_twist_effect,
+		apply_depth_distortion_effect,
+		apply_vertex_magnet_effect,
+		apply_geometric_fold_effect,
+		apply_height_oscillation_effect,
+		apply_vertex_scatter_effect
+	};
+
+	return (tbl);
 }
 
-// Main object effects update function
-void object_effects_update(t_app *fdf)
+static void	oe_apply_current(t_app *fdf, const t_object_effects_system *oe)
 {
-	if (g_obj_effects.current_effect == OBJ_EFFECT_NONE)
-		return;
-	
+	int			idx;
+	void		(**tbl)(t_app *fdf);
+
+	idx = (int)oe->current_effect;
+	if (idx < 0 || idx >= OBJECT_EFFECT_COUNT)
+		return ;
+	tbl = obj_effect_fn();
+	if (tbl[idx] != NULL)
+		tbl[idx](fdf);
+}
+
+/* Store original point positions */
+void	store_original_object_points(t_app *fdf)
+{
+	t_object_effects_system	*oe;
+	int						i;
+
+	oe = gobjfx(NULL);
+	if (oe->initialized)
+		return ;
+	oe->total_points = fdf->width * fdf->height;
+	if (oe->original_points)
+		free(oe->original_points);
+	oe->original_points = malloc(sizeof(float) * oe->total_points);
+	if (!oe->original_points)
+		return ;
+	i = 0;
+	while (i < oe->total_points)
+	{
+		oe->original_points[i] = fdf->points[i];
+		++i;
+	}
+	oe->initialized = true;
+}
+
+void	object_effects_update(t_app *fdf)
+{
+	t_object_effects_system	*oe;
+
+	oe = gobjfx(NULL);
+	if (oe->current_effect == OBJ_EFFECT_NONE)
+		return ;
 	store_original_object_points(fdf);
-	
-	if (!g_obj_effects.original_points)
-		return;
-	
-	// Update time
-	g_obj_effects.time_accumulator += WAVE_FREQUENCY;
-	
-	// Apply current effect
-	const char *effect_names[] = {
-		"None", "Vertex Wave", "Geometric Pulse", "Vertex Explosion", "Spiral Twist",
-		"Depth Distortion", "Vertex Magnet", "Geometric Fold", "Height Oscillation", "Vertex Scatter"
-	};
-	
-	switch (g_obj_effects.current_effect)
-	{
-		case OBJ_EFFECT_NONE:
-			break;
-		case OBJ_EFFECT_VERTEX_WAVE:
-			apply_vertex_wave_effect(fdf);
-			break;
-		case OBJ_EFFECT_GEOMETRIC_PULSE:
-			apply_geometric_pulse_effect(fdf);
-			break;
-		case OBJ_EFFECT_VERTEX_EXPLOSION:
-			apply_vertex_explosion_effect(fdf);
-			break;
-		case OBJ_EFFECT_SPIRAL_TWIST:
-			apply_spiral_twist_effect(fdf);
-			break;
-		case OBJ_EFFECT_DEPTH_DISTORTION:
-			apply_depth_distortion_effect(fdf);
-			break;
-		case OBJ_EFFECT_VERTEX_MAGNET:
-			apply_vertex_magnet_effect(fdf);
-			break;
-		case OBJ_EFFECT_GEOMETRIC_FOLD:
-			apply_geometric_fold_effect(fdf);
-			break;
-		case OBJ_EFFECT_HEIGHT_OSCILLATION:
-			apply_height_oscillation_effect(fdf);
-			break;
-		case OBJ_EFFECT_VERTEX_SCATTER:
-			apply_vertex_scatter_effect(fdf);
-			break;
-	}
-	
-	// Debug output occasionally
-	static int debug_counter = 0;
-	if (++debug_counter % 300 == 0) // Every 5 seconds at 60fps
-	{
-		ft_printf("Object Effect: %s (intensity: %.1f) - modifying %d points\n", 
-			effect_names[g_obj_effects.current_effect], g_obj_effects.intensity, g_obj_effects.total_points);
-	}
+	if (!oe->original_points)
+		return ;
+	oe->time_accumulator += WAVE_FREQUENCY;
+	oe_apply_current(fdf, oe);
 }
 
-// Start object effect transition (replaces particle effects cycling)
-void transition_start_object_effects(bool to_effects)
+void	transition_start_object_effects(bool to_effects)
 {
-	(void)to_effects; // Unused parameter
-	
-	// Cycle through object effect types
-	t_object_effect_type next_effect = (g_obj_effects.current_effect + 1) % OBJECT_EFFECT_COUNT;
-	
-	g_obj_effects.current_effect = next_effect;
-	g_obj_effects.time_accumulator = 0.0f;
-	
-	const char *effect_names[] = {
-		"None", "Vertex Wave", "Geometric Pulse", "Vertex Explosion", "Spiral Twist",
-		"Depth Distortion", "Vertex Magnet", "Geometric Fold", "Height Oscillation", "Vertex Scatter"
-	};
-	
-	ft_printf("Object effects transitioning to: %s\n", effect_names[next_effect]);
-}
+	t_object_effects_system		*oe;
+	t_object_effect_type		next;
 
-// Check if object effects are active
-bool object_effects_is_active(void)
-{
-	return g_obj_effects.current_effect != OBJ_EFFECT_NONE;
-}
-
-
-// Set object effect intensity
-void set_object_effect_intensity(float intensity)
-{
-	g_obj_effects.intensity = fmaxf(0.1f, fminf(2.0f, intensity));
+	(void)to_effects;
+	oe = gobjfx(NULL);
+	next = (oe->current_effect + 1) % OBJECT_EFFECT_COUNT;
+	oe->current_effect = next;
+	oe->time_accumulator = 0.0f;
 }

@@ -6,12 +6,15 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 14:04:35 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:09:11 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:23:32 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
+
+// Accessor is declared in fdf.h:
+// t_dance_system *gdance(t_dance_system *set);
 
 static void	apply_twist_to_points(t_app *fdf, float speed, float amplitude)
 {
@@ -20,6 +23,7 @@ static void	apply_twist_to_points(t_app *fdf, float speed, float amplitude)
 	int		index;
 	float	twist_factor;
 	float	twist_effect;
+	const t_dance_system *d = gdance(NULL);
 
 	y = 0;
 	while (y < fdf->height)
@@ -30,11 +34,11 @@ static void	apply_twist_to_points(t_app *fdf, float speed, float amplitude)
 			index = y * fdf->width + x;
 			twist_factor = sqrtf(powf(x - fdf->width / 2.0f, 2)
 					+ powf(y - fdf->height / 2.0f, 2)) * 0.2f
-				+ g_dance.time_accumulator * speed * 20.0f;
+				+ d->time_accumulator * speed * 20.0f;
 			twist_effect = sinf(twist_factor) * amplitude;
 			twist_effect += cosf(twist_factor * 1.7f
-					+ g_dance.time_accumulator * 3.0f) * amplitude * 0.6f;
-			fdf->points[index] = g_dance.original_points[index] + twist_effect;
+					+ d->time_accumulator * 3.0f) * amplitude * 0.6f;
+			fdf->points[index] = d->original_points[index] + twist_effect;
 			x++;
 		}
 		y++;
@@ -45,9 +49,10 @@ void	apply_dance_twist(t_app *fdf)
 {
 	float	twist_speed;
 	float	twist_amplitude;
+	const t_dance_system *d = gdance(NULL);
 
-	twist_speed = 0.2f * g_dance.rhythm_multiplier;
-	twist_amplitude = 60.0f * g_dance.move_intensity;
+	twist_speed = 0.2f * d->rhythm_multiplier;
+	twist_amplitude = 60.0f * d->move_intensity;
 	trans_stack_rotate_y(&fdf->trans_stack, twist_speed);
 	trans_stack_rotate_x(&fdf->trans_stack, twist_speed * 0.8f);
 	trans_stack_rotate_z(&fdf->trans_stack, twist_speed * 0.6f);

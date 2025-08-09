@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:49:35 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 19:27:44 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:47:37 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,13 @@ static uint32_t	plasma_color(float t)
 
 static void	plasma_waves(t_plasma_vars *v)
 {
-	v->p1 = sinf((v->nx * 8.0f
-				+ g_texture.time_accumulator * 2.0f) * M_PI);
-	v->p2 = sinf((v->ny * 6.0f
-				+ g_texture.time_accumulator * 1.5f) * M_PI);
-	v->p3 = sinf(((v->nx + v->ny) * 10.0f
-				+ g_texture.time_accumulator * 3.0f) * M_PI);
+	const t_texture_system	*t = gtexture(NULL);
+
+	v->p1 = sinf((v->nx * 8.0f + t->time_accumulator * 2.0f) * M_PI);
+	v->p2 = sinf((v->ny * 6.0f + t->time_accumulator * 1.5f) * M_PI);
+	v->p3 = sinf(((v->nx + v->ny) * 10.0f + t->time_accumulator * 3.0f) * M_PI);
 	v->p4 = sinf((sqrtf(v->nx * v->nx + v->ny * v->ny) * 12.0f
-				- g_texture.time_accumulator * 4.0f) * M_PI);
+				- t->time_accumulator * 4.0f) * M_PI);
 	v->intensity = (v->p1 + v->p2 + v->p3 + v->p4) / 4.0f;
 	v->intensity = (v->intensity + 1.0f) / 2.0f;
 }
@@ -50,17 +49,16 @@ static uint32_t	plasma_pixel(int x, int y, t_app *fdf)
 
 static void	plasma_row(t_app *fdf, int y)
 {
-	int			x;
-	int			idx;
-	uint32_t	tc;
+	const t_texture_system	*t = gtexture(NULL);
+	int						x, idx;
+	uint32_t				tc;
 
 	x = 0;
 	while (x < fdf->width)
 	{
 		idx = y * fdf->width + x;
 		tc = plasma_pixel(x, y, fdf);
-		fdf->color[idx] = blend_colors(g_texture.original_colors[idx],
-				tc, 0.8f);
+		fdf->color[idx] = blend_colors(t->original_colors[idx], tc, 0.8f);
 		++x;
 	}
 }

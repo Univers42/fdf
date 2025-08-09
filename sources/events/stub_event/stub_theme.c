@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 23:30:06 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 02:20:45 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:52:23 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,49 +16,14 @@
 #include "mlx.h"
 #include "theme.h"
 
-void	palette_1_handler(t_app *fdf, int keycode, void *data)
-{
-	(void)keycode;
-	(void)data;
-	ft_printf("DEBUG: palette_1_handler called\n");
-	if (!fdf)
-	{
-		ft_printf("DEBUG: ERROR - fdf is NULL in palette_1_handler\n");
-		return ;
-	}
-	set_palette_index(0, fdf);
-	ft_printf("Color Palette 1: Planet/Ocean theme applied\n");
-}
+static inline void	set_idx(t_app *fdf, int idx) { set_palette_index(idx, fdf); }
 
-void	palette_2_handler(t_app *fdf, int keycode, void *data)
-{
-	(void)keycode;
-	(void)data;
-	set_palette_index(1, fdf);
-	ft_printf("Color Palette 2: Default theme applied"
-		"(objects + background)\n");
-}
-
-void	palette_3_handler(t_app *fdf, int keycode, void *data)
-{
-	(void)keycode;
-	(void)data;
-	set_palette_index(2, fdf);
-	ft_printf("Color Palette 3: Gamma Random V2\n");
-}
-
-void	palette_4_handler(t_app *fdf, int keycode, void *data)
-{
-	(void)keycode;
-	(void)data;
-	set_palette_index(3, fdf);
-	ft_printf("Color Palette 4: Vibrant/Rainbow\n");
-}
-
-void	palette_5_handler(t_app *fdf, int keycode, void *data)
-{
-	(void)keycode;
-	(void)data;
-	set_palette_index(4, fdf);
-	ft_printf("Color Palette 5: Grayscale\n");
-}
+void	palette_1_handler(t_app *fdf, int keycode, void *data) { (void)keycode; (void)data; set_idx(fdf, 0); }
+void	palette_2_handler(t_app *fdf, int keycode, void *data) { (void)keycode; (void)data; set_idx(fdf, 1); }
+void	palette_3_handler(t_app *fdf, int keycode, void *data) { (void)keycode; (void)data; set_idx(fdf, 2); }
+void	palette_4_handler(t_app *fdf, int keycode, void *data) { (void)keycode; (void)data; set_idx(fdf, 3); }
+void	palette_5_handler(t_app *fdf, int keycode, void *data) { (void)keycode; (void)data; set_idx(fdf, 4); }
+void	palette_6_handler(t_app *fdf, int keycode, void *data) { (void)keycode; (void)data; set_idx(fdf, 5); }
+void	palette_7_handler(t_app *fdf, int keycode, void *data) { (void)keycode; (void)data; set_idx(fdf, 6); }
+void	palette_8_handler(t_app *fdf, int keycode, void *data) { (void)keycode; (void)data; set_idx(fdf, 7); }
+void	palette_9_handler(t_app *fdf, int keycode, void *data) { (void)keycode; (void)data; set_idx(fdf, 8); }

@@ -1,188 +1,106 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dancing_system.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/09 12:27:52 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/09 12:34:28 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 
+static void	ds_update_timing_and_sequence(t_dance_system *d)
+{
+	int	next_move;
 
-t_dance_system g_dance = {
-	.active = false,
-	.current_move = DANCE_NONE,
-	.next_move = DANCE_SPIN,
-	.time_accumulator = 0.0f,
-	.move_intensity = 1.0f,
-	.move_frame = 0,
-	.hold_frame = 0,
-	.transitioning = false,
-	.auto_sequence = true,
-	.original_points = NULL,
-	.initialized = false,
-	.total_points = 0,
-	.rhythm_multiplier = 1.0f
-};
+	d->time_accumulator += 0.15f;
+	d->move_frame++;
+	if (!d->auto_sequence || d->transitioning)
+		return ;
+	d->hold_frame++;
+	if (d->hold_frame < DANCE_HOLD_FRAMES)
+		return ;
+	d->transitioning = true;
+	d->hold_frame = 0;
+	d->move_frame = 0;
+	next_move = (d->current_move + 1) % DANCE_MOVE_COUNT;
+	if (next_move == DANCE_NONE)
+		next_move = DANCE_SPIN;
+	d->next_move = (t_dance_move)next_move;
+}
+
+static void	ds_handle_transition(t_dance_system *d)
+{
+	float	progress;
+
+	if (!d->transitioning)
+	{
+		d->move_intensity = 1.5f;
+		return ;
+	}
+	progress = (float)d->move_frame / DANCE_TRANSITION_FRAMES;
+	if (progress >= 1.0f)
+	{
+		d->current_move = d->next_move;
+		d->transitioning = false;
+		d->move_frame = 0;
+	}
+	else
+		d->move_intensity = sinf(progress * M_PI) * 0.5f + 0.5f;
+}
+
+static void	ds_apply_current_move(t_app *fdf, const t_dance_system *d)
+{
+	int		idx;
+	void	(**fn_table)(t_app *fdf);
+
+	idx = (int)d->current_move;
+	fn_table = dance_move_fn();
+	if (idx < 0 || idx >= DANCE_MOVE_COUNT)
+		return ;
+	if (fn_table[idx] != NULL)
+		fn_table[idx](fdf);
+}
 
 // Store original geometry for dance moves
-void store_original_dance_points(t_app *fdf)
+void	store_original_dance_points(t_app *fdf)
 {
-	if (g_dance.initialized)
-		return;
-	
-	g_dance.total_points = fdf->width * fdf->height;
-	
-	if (g_dance.original_points)
-		free(g_dance.original_points);
-	
-	g_dance.original_points = malloc(sizeof(float) * g_dance.total_points);
-	if (!g_dance.original_points)
-		return;
-	
-	// Store original Z values
-	for (int i = 0; i < g_dance.total_points; i++)
-		g_dance.original_points[i] = fdf->points[i];
-	
-	g_dance.initialized = true;
-	ft_printf("🕺 Dance system initialized with %d points - GET READY TO PARTY! 🕺\n", g_dance.total_points);
+	t_dance_system	*d;
+	int				i;
+
+	d = gdance(NULL);
+	if (d->initialized)
+		return ;
+	d->total_points = fdf->width * fdf->height;
+	if (d->original_points)
+		free(d->original_points);
+	d->original_points = malloc(sizeof(float) * d->total_points);
+	if (!d->original_points)
+		return ;
+	i = -1;
+	while (++i < d->total_points)
+		d->original_points[i] = fdf->points[i];
+	d->initialized = true;
 }
 
 // Main dance system update function
-void dance_system_update(t_app *fdf)
+void	dance_system_update(t_app *fdf)
 {
-	if (!g_dance.active)
-		return;
-	
+	t_dance_system	*d;
+
+	d = gdance(NULL);
+	if (!d->active)
+		return ;
 	store_original_dance_points(fdf);
-	
-	if (!g_dance.original_points)
-		return;
-	
-	// Update dance timing - MUCH faster for more energy!
-	g_dance.time_accumulator += 0.15f; // Increased from 0.05f
-	g_dance.move_frame++;
-	
-	// Handle automatic dance sequence
-	if (g_dance.auto_sequence && !g_dance.transitioning)
-	{
-		g_dance.hold_frame++;
-		
-		// Switch moves more frequently for more excitement!
-		if (g_dance.hold_frame >= DANCE_HOLD_FRAMES)
-		{
-			g_dance.transitioning = true;
-			g_dance.hold_frame = 0;
-			g_dance.move_frame = 0;
-			
-			// Select next dance move
-			t_dance_move next_move = (g_dance.current_move + 1) % DANCE_MOVE_COUNT;
-			if (next_move == DANCE_NONE) next_move = DANCE_SPIN; // Skip NONE
-			g_dance.next_move = next_move;
-		}
-	}
-	
-	// Handle dance move transitions
-	if (g_dance.transitioning)
-	{
-		float transition_progress = (float)g_dance.move_frame / DANCE_TRANSITION_FRAMES;
-		
-		if (transition_progress >= 1.0f)
-		{
-			g_dance.current_move = g_dance.next_move;
-			g_dance.transitioning = false;
-			g_dance.move_frame = 0;
-		}
-		else
-		{
-			// Smooth intensity transition
-			g_dance.move_intensity = sinf(transition_progress * M_PI) * 0.5f + 0.5f;
-		}
-	}
-	else
-	{
-		// MAXIMUM intensity when not transitioning!
-		g_dance.move_intensity = 1.5f; // Even more intense!
-	}
-	
-	// Apply current dance move with EXTREME effects
-	const char *dance_names[] = {
-		"None", "🌪️ SPIN TORNADO", "⚡ MEGA BOUNCE", "🌊 TSUNAMI WAVES", "🌀 TWIST MADNESS", 
-		"💨 BREATHING BEAST", "♾️ FIGURE INFINITY", "🎪 CHAOS WOBBLE"
-	};
-	
-	switch (g_dance.current_move)
-	{
-		case DANCE_NONE:
-			break;
-		case DANCE_SPIN:
-			apply_dance_spin(fdf);
-			break;
-		case DANCE_BOUNCE:
-			apply_dance_bounce(fdf);
-			break;
-		case DANCE_WAVE_MOTION:
-			apply_dance_wave_motion(fdf);
-			break;
-		case DANCE_TWIST:
-			apply_dance_twist(fdf);
-			break;
-		case DANCE_EXPAND_CONTRACT:
-			apply_dance_expand_contract(fdf);
-			break;
-		case DANCE_FIGURE_EIGHT:
-			apply_dance_figure_eight(fdf);
-			break;
-		case DANCE_WOBBLE:
-			apply_dance_wobble(fdf);
-			break;
-	}
-	
-	// Debug output occasionally with emojis for excitement!
-	static int debug_counter = 0;
-	if (++debug_counter % 200 == 0) // More frequent updates
-	{
-		ft_printf("🕺 DANCING: %s (intensity: %.1f, auto: %s) 🕺\n", 
-			   dance_names[g_dance.current_move], 
-			   g_dance.move_intensity,
-			   g_dance.auto_sequence ? "ON" : "OFF");
-	}
-}
-
-// Start/stop dancing system
-void dance_system_toggle(void)
-{
-	g_dance.active = !g_dance.active;
-	
-	if (g_dance.active)
-	{
-		g_dance.current_move = DANCE_SPIN;
-		g_dance.time_accumulator = 0.0f;
-		g_dance.move_frame = 0;
-		g_dance.hold_frame = 0;
-		g_dance.transitioning = false;
-		ft_printf("🎉🕺 ULTIMATE DANCE MODE ACTIVATED! GET READY FOR THE SHOW! 🕺🎉\n");
-		ft_printf("💃 Your 3D model is about to PARTY HARD! 💃\n");
-	}
-	else
-	{
-		ft_printf("🛑 Dance mode deactivated - party's over! 🛑\n");
-	}
-}
-
-// Check if dancing is active
-bool dance_system_is_active(void)
-{
-	return g_dance.active;
-}
-
-
-// Set dance rhythm speed
-void dance_system_set_rhythm(float multiplier)
-{
-	g_dance.rhythm_multiplier = fmaxf(0.1f, fminf(5.0f, multiplier)); // Allow even faster!
-	ft_printf("🎵 Dance rhythm set to %.1fx speed - FEEL THE BEAT! 🎵\n", g_dance.rhythm_multiplier);
-}
-
-// Toggle auto-sequence mode
-void dance_system_toggle_auto_sequence(void)
-{
-	g_dance.auto_sequence = !g_dance.auto_sequence;
-	ft_printf("🎭 Dance auto-sequence %s 🎭\n", g_dance.auto_sequence ? "enabled" : "disabled");
+	if (!d->original_points)
+		return ;
+	ds_update_timing_and_sequence(d);
+	ds_handle_transition(d);
+	ds_apply_current_move(fdf, d);
 }

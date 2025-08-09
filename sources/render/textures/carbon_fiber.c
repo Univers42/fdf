@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 19:15:01 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 19:15:33 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:45:41 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,27 +39,28 @@ static uint32_t	carbon_pixel(int x, int y, float weave_size)
 
 static void	apply_carbon_row(t_app *fdf, float weave_size, int y)
 {
-	int			x;
-	int			index;
-	uint32_t	tc;
+	const t_texture_system	*t = gtexture(NULL);
+	int						x;
+	int						index;
+	uint32_t				tc;
 
 	x = 0;
 	while (x < fdf->width)
 	{
 		index = y * fdf->width + x;
 		tc = carbon_pixel(x, y, weave_size);
-		fdf->color[index] = blend_colors(g_texture.original_colors[index],
-				tc, 0.7f);
+		fdf->color[index] = blend_colors(t->original_colors[index], tc, 0.7f);
 		++x;
 	}
 }
 
 void	apply_carbon_fiber_texture(t_app *fdf)
 {
-	int		y;
-	float	weave_size;
+	const t_texture_system	*t = gtexture(NULL);
+	int						y;
+	float					weave_size;
 
-	weave_size = 4.0f / g_texture.scale_factor;
+	weave_size = 4.0f / t->scale_factor;
 	y = 0;
 	while (y < fdf->height)
 	{

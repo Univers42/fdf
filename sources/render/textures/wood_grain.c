@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 19:41:50 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 19:41:52 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:45:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,14 @@ static uint32_t	wood_color(float intensity)
 
 static uint32_t	wood_pixel(int x, int y, t_app *fdf)
 {
-	t_fpoint2	n;
-	t_fpoint3	g;
-	float		in;
+	const t_texture_system	*t = gtexture(NULL);
+	t_fpoint2				n;
+	t_fpoint3				g;
+	float					in;
 
 	n.x = (float)x / fdf->width;
 	n.y = (float)y / fdf->height;
-	g.x = sinf((n.x * 20.0f + g_texture.time_accumulator * 0.5f) * M_PI);
+	g.x = sinf((n.x * 20.0f + t->time_accumulator * 0.5f) * M_PI);
 	g.y = sinf((n.y * 8.0f + n.x * 2.0f) * M_PI);
 	g.z = sinf((n.x * 40.0f + g.x * 5.0f) * M_PI);
 	in = (g.x + g.y + g.z) / 3.0f;
@@ -41,17 +42,17 @@ static uint32_t	wood_pixel(int x, int y, t_app *fdf)
 
 static void	wood_row(t_app *fdf, int y)
 {
-	int			x;
-	int			index;
-	uint32_t	tc;
+	const t_texture_system	*t = gtexture(NULL);
+	int						x;
+	int						index;
+	uint32_t				tc;
 
 	x = 0;
 	while (x < fdf->width)
 	{
 		index = y * fdf->width + x;
 		tc = wood_pixel(x, y, fdf);
-		fdf->color[index] = blend_colors(g_texture.original_colors[index],
-				tc, 0.7f);
+		fdf->color[index] = blend_colors(t->original_colors[index], tc, 0.7f);
 		++x;
 	}
 }

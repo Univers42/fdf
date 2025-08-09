@@ -5,83 +5,50 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/08 00:05:21 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 00:15:16 by dlesieur         ###   ########.fr       */
+/*   Created: 2025/08/09 04:21:39 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/09 04:26:08 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "theme.h"
+#include "fdf.h"
 
-static t_theme_palette	*get_palette_singleton(void)
+int	theme_preset_count(void)
 {
-	static t_theme_palette	palettes[9];
-	static bool				initialized = false;
-
-	if (!initialized)
-	{
-		// Planet/Ocean
-		palettes[0] = (t_theme_palette){"Planet/Ocean", 
-			{create_color(10,25,68), create_color(18,87,122), create_color(32,155,164), create_color(180,220,230)}, 
-			4, create_color(0,8,20)};
-		
-		// Default
-		palettes[1] = (t_theme_palette){"Default", 
-			{create_color(30,30,30), create_color(80,80,80), create_color(160,160,160), create_color(220,220,220)}, 
-			4, create_color(0,0,0)};
-		
-		// Gamma Random V2
-		palettes[2] = (t_theme_palette){"Gamma Random V2", 
-			{create_color(5,5,20), create_color(90,15,120), create_color(200,40,40), create_color(250,200,60)}, 
-			4, create_color(5,5,16)};
-		
-		// Vibrant/Rainbow
-		palettes[3] = (t_theme_palette){"Vibrant/Rainbow", 
-			{create_color(255,0,64), create_color(255,128,0), create_color(64,255,0), create_color(0,200,255), create_color(160,0,255)}, 
-			5, create_color(0,0,0)};
-		
-		// Grayscale
-		palettes[4] = (t_theme_palette){"Grayscale", 
-			{create_color(0,0,0), create_color(64,64,64), create_color(128,128,128), create_color(192,192,192), create_color(255,255,255)}, 
-			5, create_color(0,0,0)};
-		
-		// Sunset
-		palettes[5] = (t_theme_palette){"Sunset", 
-			{create_color(20,10,40), create_color(120,30,90), create_color(220,80,40), create_color(255,180,60)}, 
-			4, create_color(20,10,40)};
-		
-		// Matrix/Neon Green
-		palettes[6] = (t_theme_palette){"Matrix/Neon Green", 
-			{create_color(0,8,0), create_color(0,40,0), create_color(0,120,0), create_color(40,255,90)}, 
-			4, create_color(0,6,0)};
-		
-		// Fire/Lava
-		palettes[7] = (t_theme_palette){"Fire/Lava", 
-			{create_color(20,0,0), create_color(120,10,0), create_color(200,40,0), create_color(255,160,0), create_color(255,240,180)}, 
-			5, create_color(18,0,0)};
-		
-		// Ice/Arctic
-		palettes[8] = (t_theme_palette){"Ice/Arctic", 
-			{create_color(0,10,30), create_color(0,60,120), create_color(40,140,200), create_color(160,220,255)}, 
-			4, create_color(0,16,32)};
-		
-		initialized = true;
-	}
-	return palettes;
+	return (9);
 }
 
-const t_theme_palette *get_theme_palette(int idx)
+static t_theme	init_theme(void)
 {
-	t_theme_palette	*palettes;
-
-	palettes = get_palette_singleton();
-	if (!palettes)
-		return NULL;
-	if (idx < 0 || idx >= 9)
-		return &palettes[0];
-	return &palettes[idx];
+	return ((t_theme){
+		.name = "Unknown",
+		.background = create_color(0, 0, 0),
+		.rule_count = 0
+	});
 }
 
-int	get_theme_palette_count(void)
+void	theme_make_preset(int idx, t_theme *out)
 {
-	return 9;
+	if (!out)
+		return ;
+	if (idx < 0 || idx >= theme_preset_count())
+		idx = 0;
+	*out = init_theme();
+	if (idx == 0)
+		return (theme_preset_build_0(out));
+	if (idx == 1)
+		return (theme_preset_build_1(out));
+	if (idx == 2)
+		return (theme_preset_build_2(out));
+	if (idx == 3)
+		return (theme_preset_build_3(out));
+	if (idx == 4)
+		return (theme_preset_build_4(out));
+	if (idx == 5)
+		return (theme_preset_build_5(out));
+	if (idx == 6)
+		return (theme_preset_build_6(out));
+	if (idx == 7)
+		return (theme_preset_build_7(out));
+	if (idx == 8)
+		return (theme_preset_build_8(out));
 }

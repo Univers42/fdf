@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:18 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 22:57:57 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:51:10 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 static void	apply_magnet_to_points(t_app *fdf, float m1[2], float m2[2])
 {
+	const t_object_effects_system	*oe = gobjfx(NULL);
 	int		y;
 	int		x;
 	int		index;
@@ -30,9 +31,9 @@ static void	apply_magnet_to_points(t_app *fdf, float m1[2], float m2[2])
 			index = y * fdf->width + x;
 			dist1 = sqrtf(powf(x - m1[0], 2) + powf(y - m1[1], 2)) + 1.0f;
 			dist2 = sqrtf(powf(x - m2[0], 2) + powf(y - m2[1], 2)) + 1.0f;
-			fdf->points[index] = g_obj_effects.original_points[index]
+			fdf->points[index] = oe->original_points[index]
 				+ ((500.0f / (dist1 * dist1)) + (-300.0f / (dist2 * dist2)))
-				* g_obj_effects.intensity;
+				* oe->intensity;
 			x++;
 		}
 		y++;
@@ -41,18 +42,19 @@ static void	apply_magnet_to_points(t_app *fdf, float m1[2], float m2[2])
 
 void	apply_vertex_magnet_effect(t_app *fdf)
 {
+	const t_object_effects_system	*oe = gobjfx(NULL);
 	float	magnet1[2];
 	float	magnet2[2];
 
-	if (!g_obj_effects.original_points)
+	if (!oe->original_points)
 		return ;
-	magnet1[0] = (sinf(g_obj_effects.time_accumulator * 0.8f) + 1.0f)
+	magnet1[0] = (sinf(oe->time_accumulator * 0.8f) + 1.0f)
 		* fdf->width * 0.5f;
-	magnet1[1] = (cosf(g_obj_effects.time_accumulator * 0.6f) + 1.0f)
+	magnet1[1] = (cosf(oe->time_accumulator * 0.6f) + 1.0f)
 		* fdf->height * 0.5f;
-	magnet2[0] = (sinf(g_obj_effects.time_accumulator * 1.2f + M_PI) + 1.0f)
+	magnet2[0] = (sinf(oe->time_accumulator * 1.2f + M_PI) + 1.0f)
 		* fdf->width * 0.5f;
-	magnet2[1] = (cosf(g_obj_effects.time_accumulator * 0.9f + M_PI) + 1.0f)
+	magnet2[1] = (cosf(oe->time_accumulator * 0.9f + M_PI) + 1.0f)
 		* fdf->height * 0.5f;
 	apply_magnet_to_points(fdf, magnet1, magnet2);
 }

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:27:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 17:16:23 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 03:02:29 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@
 #include <stdio.h>
 #include "fdf.h"
 #include "libft/libft.h"
-
-#define INPUT_BUF_SIZE 4096
 
 static inline bool	find_chunk_end(
 	t_parser *p,
@@ -57,8 +55,8 @@ static inline bool	find_chunk_end(
 /**
  * Chunks represent the parseable end of the buffer. Whatever is after chunk end
  * is copied to the front of the buffer.
- */
-static inline bool	parse_buffered(t_parser *p, t_app *fdf, int fd)
+*/
+bool	parse_buffered(t_parser *p, t_app *fdf, int fd)
 {
 	size_t			leftover;
 	size_t			chunk_end;
@@ -88,73 +86,28 @@ static inline bool	parse_buffered(t_parser *p, t_app *fdf, int fd)
 
 static inline uint32_t	blend_rgb(uint32_t a, uint32_t b, float t)
 {
-	uint8_t	ar = (a >> 16) & 0xFF, ag = (a >> 8) & 0xFF, ab = a & 0xFF;
-	uint8_t	br = (b >> 16) & 0xFF, bg = (b >> 8) & 0xFF, bb = b & 0xFF;
-	uint8_t	r = ar + (uint8_t)((br - ar) * t);
-	uint8_t	g = ag + (uint8_t)((bg - ag) * t);
-	uint8_t	bc = ab + (uint8_t)((bb - ab) * t);
-	return (r << 16) | (g << 8) | bc;
+	return (lerp_color(a, b, t));
 }
 
-static void	apply_default_height_palette(t_app *fdf)
+void	init_pivot_colors(t_pivot *color)
 {
-	int			total;
-	int			i;
-	float		range;
-	uint32_t	c_low, c_mid, c_high;
-
-	if (fdf->color == NULL || fdf->points == NULL)
-		return ;
-	/* Heuristic: if at least one non-white color exists, skip auto palette */
-	total = fdf->width * fdf->height;
-	i = 0;
-	while (i < total)
-	{
-		if (fdf->color[i] != 0xFFFFFF)
-			return ;
-		++i;
-	}
-	range = (float)(fdf->max_z - fdf->min_z);
-	if (range == 0)
-		range = 1.0f;
-	c_low = 0x0000FF;
-	c_mid = 0x00FF00;
-	c_high = 0xFF0000;
-	i = 0;
-	while (i < total)
-	{
-		float z = fdf->points[i];
-		float t = (z - fdf->min_z) / range;
-		uint32_t c;
-		if (t < 0.5f)
-			c = blend_rgb(c_low, c_mid, t / 0.5f);
-		else
-			c = blend_rgb(c_mid, c_high, (t - 0.5f) / 0.5f);
-		fdf->color[i] = c;
-		++i;
-	}
+	color->low = (void *)(uintptr_t)0x0000FF;
+	color->mid = (void *)(uintptr_t)0x00FF00;
+	color->high = (void *)(uintptr_t)0xFF0000;
 }
 
-bool	parse_file(t_app *fdf, char *filename)
+uint32_t	get_palette_color(t_pivot *color, float t)
 {
-	bool		ok;
-	t_parser	parser;
-	int			fd;
-
-	ok = false;
-	parser = (t_parser){0};
-	parser.buf = malloc(INPUT_BUF_SIZE);
-	fd = open(filename, O_RDONLY);
-	if (fd >= 0)
-	{
-		if (parser.buf != NULL)
-			ok = parse_buffered(&parser, fdf, fd);
-		close(fd);
-	}
+	if (t < 0.5f)
+		return (blend_rgb(
+				(uint32_t)(uintptr_t)color->low,
+			(uint32_t)(uintptr_t)color->mid,
+			t / 0.5f
+		));
 	else
-		perror("open: ");
-	free(parser.buf);
-	if (ok)
-		apply_default_height_palette(fdf);
-	return (ok);
+		return (blend_rgb(
+				(uint32_t)(uintptr_t)color->mid,
+			(uint32_t)(uintptr_t)color->high,
+			(t - 0.5f) / 0.5f
+		));
 }

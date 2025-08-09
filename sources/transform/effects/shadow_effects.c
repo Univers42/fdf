@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 21:30:18 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 02:18:15 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 02:26:02 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	depth_pass(t_app *f)
 
 /* ---------------- Ambient Occlusion (split into helpers) ------------ */
 
-static float	ao_accumulate(t_app *f, int i, float z0)
+float	ao_accumulate(t_app *f, int i, float z0)
 {
 	float	occ;
 
@@ -78,7 +78,7 @@ static float	ao_accumulate(t_app *f, int i, float z0)
 	return (fminf(0.5f, occ / 20.0f));
 }
 
-static void	ao_apply(t_app *f, int i, float occ)
+void	ao_apply(t_app *f, int i, float occ)
 {
 	float	fct;
 	int		c;

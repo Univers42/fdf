@@ -6,12 +6,15 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:23:02 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
+
+// forward decl for accessor
+t_dance_system *gdance(t_dance_system *set);
 
 static void	apply_distortion_to_points(t_app *fdf, float t)
 {
@@ -19,6 +22,7 @@ static void	apply_distortion_to_points(t_app *fdf, float t)
 	int		x;
 	int		index;
 	float	distortion;
+	const t_dance_system *d = gdance(NULL);
 
 	y = 0;
 	while (y < fdf->height)
@@ -29,8 +33,8 @@ static void	apply_distortion_to_points(t_app *fdf, float t)
 			index = y * fdf->width + x;
 			distortion = sinf(t + ((float)x / fdf->width) * M_PI * 2.0f)
 				* cosf(t * 1.5f + ((float)y / fdf->height) * M_PI * 3.0f);
-			distortion *= 25.0f * g_dance.move_intensity;
-			fdf->points[index] = g_dance.original_points[index] + distortion;
+			distortion *= 25.0f * d->move_intensity;
+			fdf->points[index] = d->original_points[index] + distortion;
 			x++;
 		}
 		y++;
@@ -39,13 +43,14 @@ static void	apply_distortion_to_points(t_app *fdf, float t)
 
 void	apply_dance_figure_eight(t_app *fdf)
 {
-	float	orbit_freq;
-	float	orbit_size;
-	float	t;
+	const t_dance_system	*d = gdance(NULL);
+	float					orbit_freq;
+	float					orbit_size;
+	float					t;
 
-	orbit_freq = 2.5f * g_dance.rhythm_multiplier;
-	orbit_size = 40.0f * g_dance.move_intensity;
-	t = g_dance.time_accumulator * orbit_freq;
+	orbit_freq = 2.5f * d->rhythm_multiplier;
+	orbit_size = 40.0f * d->move_intensity;
+	t = d->time_accumulator * orbit_freq;
 	trans_stack_translate(&fdf->trans_stack,
 		sinf(t) * orbit_size * 0.05f,
 		sinf(t * 2.0f) * orbit_size * 0.8f * 0.05f,

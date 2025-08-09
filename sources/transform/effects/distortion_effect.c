@@ -16,13 +16,12 @@
 // Apply depth distor effect - warps depth based on position
 void	apply_depth_distortion_effect(t_app *fdf)
 {
-	int		y;
-	int		x;
-	int		index;
+	const t_object_effects_system *oe = gobjfx(NULL);
+	int		y, x, index;
 	float	distor;
 
-	if (!g_obj_effects.original_points)
-		return ;
+	if (!oe->original_points)
+		return;
 	y = 0;
 	while (y < fdf->height)
 	{
@@ -31,12 +30,11 @@ void	apply_depth_distortion_effect(t_app *fdf)
 		{
 			index = y * fdf->width + x;
 			distor = sinf((((float)x / fdf->width) + ((float)y / fdf->height)
-						+ g_obj_effects.time_accumulator) * M_PI * 4.0f);
-			distor *= g_obj_effects.intensity * 25.0f;
-			fdf->points[index] = g_obj_effects.original_points[index]
-				+ distor;
-			x++;
+						+ oe->time_accumulator) * M_PI * 4.0f);
+			distor *= oe->intensity * 25.0f;
+			fdf->points[index] = oe->original_points[index] + distor;
+			++x;
 		}
-		y++;
+		++y;
 	}
 }

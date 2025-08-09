@@ -1,7 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strntoi.c                                       :+:      :+:    :+:   */
+/*   helpers.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/09 02:47:42 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/09 02:59:55 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -9,9 +14,34 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "libft/libft.h"
+#include "fdf.h"
 
 #define CUTOFF 214748364
 #define HEXTABLE "0123456789abcdef"
+
+bool	parse_file(t_app *fdf, char *filename)
+{
+	bool		ok;
+	t_parser	parser;
+	int			fd;
+
+	ok = false;
+	parser = (t_parser){0};
+	parser.buf = malloc(INPUT_BUF_SIZE);
+	fd = open(filename, O_RDONLY);
+	if (fd >= 0)
+	{
+		if (parser.buf != NULL)
+			ok = parse_buffered(&parser, fdf, fd);
+		close(fd);
+	}
+	else
+		perror("open: ");
+	free(parser.buf);
+	if (ok)
+		apply_default_height_palette(fdf);
+	return (ok);
+}
 
 static inline bool	negative(const char *str, size_t *i, size_t max)
 {
@@ -55,53 +85,13 @@ int	ft_strntoi(int *n, char *str, size_t max)
 	return ((int)i);
 }
 
-static inline bool	skip_prefix(char **str, char *end)
+bool	skip_prefix(char **str, char *end)
 {
-	if (*str + 1 < end && **str == '0' && ((*str)[1] == 'x' || (*str)[1] == 'X'))
+	if (*str + 1 < end && **str == '0' && ((*str)[1] == 'x'
+		|| (*str)[1] == 'X'))
 	{
 		*str += 2;
 		return (true);
 	}
 	return (false);
-}
-
-int	strntohex(uint32_t *n, char *str, char *end)
-{
-	uint32_t	acc;
-	int			digits;
-	char		c;
-	char		*cur;
-	bool		has_prefix;
-
-	cur = str;
-	if (cur >= end)
-		return (0);
-	has_prefix = skip_prefix(&cur, end);
-	acc = 0;
-	digits = 0;
-	while (cur < end)
-	{
-		c = *cur;
-		if (c >= '0' && c <= '9')
-			c = c - '0';
-		else if (c >= 'a' && c <= 'f')
-			c = c - 'a' + 10;
-		else if (c >= 'A' && c <= 'F')
-			c = c - 'A' + 10;
-		else
-			break ;
-		if (digits == 8) // limit (prevent overflow & absurd long color)
-			break ;
-		acc = (acc << 4) | (uint32_t)c;
-		++digits;
-		++cur;
-	}
-	// require at least one digit; if prefix present, still same rule
-	if (digits == 0)
-		return (0);
-	// optional: if prefix present we already advanced; variable used for logic (can extend later)
-	if (has_prefix && digits == 0)
-		return (0);
-	*n = acc;
-	return (int)(cur - str); // includes prefix length if present
 }

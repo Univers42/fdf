@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/09 02:15:30 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 14:40:49 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,12 @@
 # include "libft.h"
 # include "switch_color.h"
 
-/* Global system instances */
-extern t_dance_system g_dance;
-extern t_object_effects_system g_obj_effects;
-extern t_particle_transition g_particle_system;
-extern t_dynamic_bg_system g_dynamic_bg;
-extern t_texture_system g_texture;
-extern t_trackball_shape_state g_trackball_state;
+/* Global system instances (singletons, no globals) */
+t_dance_system			*gdance(t_dance_system *set);
+t_object_effects_system	*gobjfx(t_object_effects_system *set);
+t_particle_transition	*gparticles(t_particle_transition *set);
+t_dynamic_bg_system		*gdynbg(t_dynamic_bg_system *set);
+t_texture_system		*gtexture(t_texture_system *set);
 
 /* Core FDF functions */
 bool		make_fdf(t_app *fdf, char *filename);
@@ -44,7 +43,7 @@ void		fdf_draw_lines(t_app *fdf);
 bool		parse_file(t_app *fdf, char *filename);
 
 /* Background functions */
-uint32_t	get_background_color(void);
+uint32_t	get_background_color(t_app *fdf);
 void		set_background_theme(int theme);
 void		generate_background(t_app *fdf, int theme_index);
 
@@ -194,9 +193,9 @@ void	check_projection(t_projection_ctl *p);
  * BACKGROUND AND EFFECTS
  */
 void		generate_stars(t_app *fdf);
-void		toggle_stars(void);
-bool		are_stars_enabled(void);
-int			get_current_background_theme(void);
+void		toggle_stars(t_app *fdf);
+bool		are_stars_enabled(t_app *fdf);
+int			get_current_background_theme(t_app *fdf);
 
 /*
  * TRACKBALL SYSTEM
@@ -230,7 +229,9 @@ void		apply_ambient_shadows(t_app *fdf);
 void		toggle_shadow_mode(t_app *fdf);
 void		update_shadow_effects(t_app *fdf);
 int			get_shadow_mode(void);
-
+void		ao_apply(t_app *f, int i, float occ);
+float		ao_accumulate(t_app *f, int i, float z0);
+void		depth_pass(t_app *f);
 /*
  * Z-Perspective Control functions
  */
@@ -347,9 +348,12 @@ bool		dance_system_is_active(void);
 void		dance_system_cleanup(void);
 void		dance_system_set_rhythm(float multiplier);
 void		dance_system_toggle_auto_sequence(void);
-
-//SWITCH EVENTS - Updated signatures with keycode parameter
-void    dance_toggle_handler(t_app *fdf, int keycode, void *data);
+/* singleton accessors (no globals) */
+t_dance_system			*gdance(t_dance_system *set);
+t_object_effects_system	*gobjfx(t_object_effects_system *set);
+t_particle_transition	*gparticles(t_particle_transition *set);
+t_dynamic_bg_system		*gdynbg(t_dynamic_bg_system *set);
+t_texture_system		*gtexture(t_texture_system *set);
 
 /*
  * ULTIMATE DYNAMIC BACKGROUND SYSTEM - Spectacular animated backgrounds!
@@ -518,4 +522,133 @@ void	lightning_draw(uint32_t *b, int sx, int ex, float fade);
 void	draw_bolt_halo(uint32_t *b, int px, int py);
 void	draw_bolt_core(uint32_t *b, int px, int py);
 void	storm_base(uint32_t *b);
+
+/*PARSER*/
+void	apply_default_height_palette(t_app *fdf);
+void	apply_palette_to_points(t_app *fdf, t_pivot *color, float range);
+bool	parse_file(t_app *fdf, char *filename);
+void	apply_default_height_palette(t_app *fdf);
+int	accumulate_hex(uint32_t *acc, char *cur, char *end, int *digits);
+int	hex_digit(char c);
+uint32_t	get_palette_color(t_pivot *color, float t);
+void	init_pivot_colors(t_pivot *color);
+bool	skip_prefix(char **str, char *end);
+bool	parse_buffered(t_parser *p, t_app *fdf, int fd);
+
+/**palette */
+int	get_theme_palette_count(void);
+
+/*
+ * THEME SYSTEM (no globals)
+ */
+typedef struct s_theme_rule {
+	uint32_t	color;
+	float		z_min;     // if relative == true: [0..1] of (max_z-min_z) offset from min_z
+	float		z_max;     // if relative == true: [0..1] of (max_z-min_z) offset from min_z
+	bool		relative;  // true -> z_min/z_max are normalized, false -> absolute z units
+} t_theme_rule;
+
+typedef struct s_theme {
+	const char	*name;
+	uint32_t	background;
+	int			rule_count; // <= 9
+	t_theme_rule rules[9];
+} t_theme;
+
+typedef struct s_abs_rule {
+	uint32_t	color;
+	float		min_z;
+	float		max_z;
+} t_abs_rule;
+
+
+// Theme presets API
+int			theme_preset_count(void);
+void		theme_make_preset(int idx, t_theme *out);
+
+// Apply a theme to the current map (writes directly to fdf->color)
+void		apply_theme_to_map(t_app *fdf, const t_theme *theme);
+uint32_t	create_color(uint8_t r, uint8_t g, uint8_t b);
+uint32_t	get_color_for_height(t_app *fdf, float norm);
+uint32_t	pack_rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+// Builders implemented in split files
+void	theme_preset_build_0(t_theme *t);
+void	theme_preset_build_1(t_theme *t);
+void	theme_preset_build_2(t_theme *t);
+void	theme_preset_build_3(t_theme *t);
+void	theme_preset_build_4(t_theme *t);
+void	theme_preset_build_5(t_theme *t);
+void	theme_preset_build_6(t_theme *t);
+void	theme_preset_build_7(t_theme *t);
+void	theme_preset_build_8(t_theme *t);
+
+t_theme_rule	rr(uint32_t c, float a, float b);
+uint32_t	star_color_for_theme(int theme, int i);
+void	dance_toggle_handler(t_app *fdf, int keycode, void *data);
+void	init_noise_offsets(float **noise_offsets);
+void	(**dance_move_fn(void))(t_app *fdf);
+
+/**DANCE SYSTEM */
+void	dance_system_toggle(void);
+bool	dance_system_is_active(void);
+void	dance_system_set_rhythm(float multiplier);
+void	dance_system_toggle_auto_sequence(void);
+
+/**PARTICLE SYSTEM */
+void	(**ps_init_tbl(void))(t_particle *p);
+const int	*ps_rate_tbl(void);
+void	init_particle(t_particle *p, t_particle_type type, t_app *fdf);
+void	apply_particle_physics(t_particle *p, t_particle_type type);
+void	update_particle(t_particle *p, t_particle_type type);
+void	draw_particle_square(uint32_t *screen, struct s_pdraw *d);
+void	render_particles(t_app *fdf);
+void	spawn_one_of_type(t_particle_transition *ps,
+		t_particle_type type, t_app *fdf);
+void	spawn_particles(t_particle_type type, t_app *fdf);
+void	ps_init_if_needed(t_particle_transition *ps);
+void	ps_update_all(t_particle_transition *ps);
+void	ps_transition_step(t_particle_transition *ps);
+
+/**
+bakcground system */
+void	dynamic_background_set_speed(float speed);
+bool	dynamic_background_is_active(void);
+bool	object_effects_is_active(void);
+void	set_object_effect_intensity(float intensity);
+
+// PARTICLE SYSTEM
+void	texture_system_set_speed(float speed);
+void	texture_system_set_scale(float scale);
+bool	texture_system_is_active(void);
+void	texture_system_toggle(void);
+const char	**tex_name_tbl(void);
+
+/*
+ * TRANSITION HELPERS AND TABLES
+ */
+typedef void (*t_shape_pos_fn)(t_app *fdf, t_point2 *p, t_fpoint3 *o);
+typedef void (*t_shape_apply_fn)(t_app *fdf);
+
+t_shape_pos_fn		*shape_pos_tbl(void);
+t_shape_apply_fn	*shape_apply_tbl(void);
+void				get_shape_position(t_shape_type shape, t_app *fdf,
+						t_point2 *p, t_fpoint3 *out);
+void				get_shape_position_coords(t_shape_type shape, t_app *fdf,
+						int x, int y, float *sx, float *sy, float *sz);
+
+/* Transition state singleton */
+t_transition_state	*gtransition(t_transition_state *set);
+void	apply_shape_with_transform(t_app *fdf, t_shape_type shape);
+
+/* pack row vars to keep var count low per function */
+typedef struct s_row_apply
+{
+	int			x;
+	int			index;
+	t_fpoint3	c;
+	t_fpoint3	d;
+	t_fpoint3	o;
+	float		sp[4];
+	float		*dp;
+}	t_row_apply;
 # endif

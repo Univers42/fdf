@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 21:58:07 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/05 18:27:37 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 02:48:59 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,28 @@ bool	parse_chunk(t_parser *p, t_app *fdf, size_t chunk_size)
 			return (false);
 	}
 	return (true);
+}
+
+void	apply_default_height_palette(t_app *fdf)
+{
+	int		total;
+	int		i;
+	float	range;
+	t_pivot	color;
+
+	if (fdf->color == NULL || fdf->points == NULL)
+		return ;
+	total = fdf->width * fdf->height;
+	i = 0;
+	while (i < total)
+	{
+		if (fdf->color[i] != 0xFFFFFF)
+			return ;
+		++i;
+	}
+	range = (float)(fdf->max_z - fdf->min_z);
+	if (range == 0)
+		range = 1.0f;
+	init_pivot_colors(&color);
+	apply_palette_to_points(fdf, &color, range);
 }

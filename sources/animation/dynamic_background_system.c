@@ -1,152 +1,120 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dynamic_background_system.c                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/09 13:13:51 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/09 13:14:37 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 #include <math.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
 
-
-
-t_dynamic_bg_system g_dynamic_bg = {
-	.current_bg = DYNAMIC_BG_STATIC,
-	.active = false,
-	.time_accumulator = 0.0f,
-	.intensity = 1.0f,
-	.initialized = false,
-	.bg_buffer = NULL,
-	.animation_speed = 1.0f,
-	.frame_counter = 0
-};
-
-// Initialize dynamic background system
-static void init_dynamic_background_system(void)
+/* table of background applicators wrapped in a singleton-style accessor */
+static void	(**bg_apply_tbl(void))(uint32_t *buf)
 {
-	if (g_dynamic_bg.initialized)
-		return;
-	
-	// Allocate background buffer
-	g_dynamic_bg.bg_buffer = malloc(sizeof(uint32_t) * WIN_WIDTH * WIN_HEIGHT);
-	if (!g_dynamic_bg.bg_buffer)
-		return;
-	
-	g_dynamic_bg.initialized = true;
-	ft_printf("🎨 Dynamic Background System initialized with %d effects\n", DYNAMIC_BG_COUNT);
-}
-
-// Helper function for smooth color interpolation
-
-
-
-
-// Main dynamic background update function
-void dynamic_background_update(t_app *fdf)
-{
-	if (g_dynamic_bg.current_bg == DYNAMIC_BG_STATIC)
-		return;
-	
-	init_dynamic_background_system();
-	
-	if (!g_dynamic_bg.bg_buffer)
-		return;
-	
-	// Update timing
-	g_dynamic_bg.time_accumulator += WAVE_FREQUENCY * g_dynamic_bg.animation_speed;
-	g_dynamic_bg.frame_counter++;
-	
-	// Apply current background effect
-	const char *bg_names[] = {
-		"Static", "🌈 Vibrant Gradient", "⛈️ Dramatic Clouds", "⚡ Epileptic Flash", 
-		"🌊 Water Ripples", "🔥 Fire Plasma", "💚 Matrix Rain", "🌌 Aurora Waves",
-		"🌟 Cosmic Nebula", "⚡ Electric Storm", "🔘 Liquid Metal", "🌪️ Rainbow Vortex"
+	static void	(*tbl[DYNAMIC_BG_COUNT])(uint32_t *buf) = {
+		NULL, /* DYNAMIC_BG_STATIC */
+		apply_vibrant_gradient_bg,
+		apply_dramatic_clouds_bg,
+		apply_epileptic_flash_bg,
+		apply_water_ripples_bg,
+		apply_fire_plasma_bg,
+		apply_matrix_rain_bg,
+		apply_aurora_waves_bg,
+		apply_cosmic_nebula_bg,
+		apply_electric_storm_bg,
+		apply_liquid_metal_bg,
+		apply_rainbow_vortex_bg
 	};
-	
-	switch (g_dynamic_bg.current_bg)
-	{
-		case DYNAMIC_BG_STATIC:
-			break;
-		case DYNAMIC_BG_VIBRANT_GRADIENT:
-			apply_vibrant_gradient_bg(g_dynamic_bg.bg_buffer);
-			break;
-		case DYNAMIC_BG_DRAMATIC_CLOUDS:
-			apply_dramatic_clouds_bg(g_dynamic_bg.bg_buffer);
-			break;
-		case DYNAMIC_BG_EPILEPTIC_FLASH:
-			apply_epileptic_flash_bg(g_dynamic_bg.bg_buffer);
-			break;
-		case DYNAMIC_BG_WATER_RIPPLES:
-			apply_water_ripples_bg(g_dynamic_bg.bg_buffer);
-			break;
-		case DYNAMIC_BG_FIRE_PLASMA:
-			apply_fire_plasma_bg(g_dynamic_bg.bg_buffer);
-			break;
-		case DYNAMIC_BG_MATRIX_RAIN:
-			apply_matrix_rain_bg(g_dynamic_bg.bg_buffer);
-			break;
-		case DYNAMIC_BG_AURORA_WAVES:
-			apply_aurora_waves_bg(g_dynamic_bg.bg_buffer);
-			break;
-		case DYNAMIC_BG_COSMIC_NEBULA:
-			apply_cosmic_nebula_bg(g_dynamic_bg.bg_buffer);
-			break;
-		case DYNAMIC_BG_ELECTRIC_STORM:
-			apply_electric_storm_bg(g_dynamic_bg.bg_buffer);
-			break;
-		case DYNAMIC_BG_LIQUID_METAL:
-			apply_liquid_metal_bg(g_dynamic_bg.bg_buffer);
-			break;
-		case DYNAMIC_BG_RAINBOW_VORTEX:
-			apply_rainbow_vortex_bg(g_dynamic_bg.bg_buffer);
-			break;
-	}
-	
-	// Copy dynamic background to main renderer buffer
-	uint32_t *main_buffer = (uint32_t *)fdf->renderer.data;
-	for (int i = 0; i < WIN_WIDTH * WIN_HEIGHT; i++)
-		main_buffer[i] = g_dynamic_bg.bg_buffer[i];
-	
-	// Debug output occasionally
-	static int debug_counter = 0;
-	if (++debug_counter % 300 == 0) // Every 5 seconds
-	{
-		ft_printf("🎨 Dynamic Background: %s (speed: %.1fx)\n", 
-			   bg_names[g_dynamic_bg.current_bg], g_dynamic_bg.animation_speed);
-	}
+
+	return (tbl);
 }
 
-// Start dynamic background transition (circular buffer)
-void dynamic_background_toggle(void)
+static void	db_apply_current(t_dynamic_bg_system *db)
 {
-	// Cycle through background types
-	t_dynamic_bg_type next_bg = (g_dynamic_bg.current_bg + 1) % DYNAMIC_BG_COUNT;
-	
-	g_dynamic_bg.current_bg = next_bg;
-	g_dynamic_bg.time_accumulator = 0.0f;
-	g_dynamic_bg.frame_counter = 0;
-	
-	const char *bg_names[] = {
-		"Static", "🌈 Vibrant Gradient", "⛈️ Dramatic Clouds", "⚡ Epileptic Flash", 
-		"🌊 Water Ripples", "🔥 Fire Plasma", "💚 Matrix Rain", "🌌 Aurora Waves",
-		"🌟 Cosmic Nebula", "⚡ Electric Storm", "🔘 Liquid Metal", "🌪️ Rainbow Vortex"
-	};
-	
-	ft_printf("🎨 Dynamic Background switched to: %s\n", bg_names[next_bg]);
-	
-	// Special warning for epileptic flash
-	if (next_bg == DYNAMIC_BG_EPILEPTIC_FLASH)
+	void	(**tbl)(uint32_t *buf);
+	int		idx;
+
+	tbl = bg_apply_tbl();
+	idx = (int)db->current_bg;
+	if (idx > (int)DYNAMIC_BG_STATIC && idx < (int)DYNAMIC_BG_COUNT
+		&& tbl[idx] != NULL)
+		tbl[idx](db->bg_buffer);
+}
+
+void	dynamic_background_update(t_app *fdf)
+{
+	t_dynamic_bg_system	*db;
+	uint32_t			*dst;
+	int					i;
+	int					total;
+
+	db = gdynbg(NULL);
+	if (db->current_bg == DYNAMIC_BG_STATIC)
+		return ;
+	if (!db->initialized)
 	{
-		ft_printf("⚠️  WARNING: EPILEPTIC FLASH MODE - SEIZURE TRIGGER! ⚠️\n");
+		db->bg_buffer = (uint32_t *)malloc(sizeof(uint32_t)
+				* WIN_WIDTH * WIN_HEIGHT);
+		if (!db->bg_buffer)
+			return ;
+		db->initialized = true;
 	}
+	db->time_accumulator += WAVE_FREQUENCY * db->animation_speed;
+	db->frame_counter++;
+	db_apply_current(db);
+	dst = (uint32_t *)fdf->renderer.data;
+	i = -1;
+	total = WIN_WIDTH * WIN_HEIGHT;
+	while (++i < total)
+		dst[i] = db->bg_buffer[i];
 }
 
-// Check if dynamic background is active
-bool dynamic_background_is_active(void)
+void	dynamic_background_toggle(void)
 {
-	return g_dynamic_bg.current_bg != DYNAMIC_BG_STATIC;
+	t_dynamic_bg_system	*db;
+	t_dynamic_bg_type	next;
+	const char			*names[DYNAMIC_BG_COUNT];
+
+	db = gdynbg(NULL);
+	next = (db->current_bg + 1) % DYNAMIC_BG_COUNT;
+	db->current_bg = next;
+	db->time_accumulator = 0.0f;
+	db->frame_counter = 0;
+	names[0] = "Static";
+	names[1] = "Vibrant";
+	names[2] = "Clouds";
+	names[3] = "Flash";
+	names[4] = "Water";
+	names[5] = "Fire";
+	names[6] = "Matrix";
+	names[7] = "Aurora";
+	names[8] = "Nebula";
+	names[9] = "Storm";
+	names[10] = "Metal";
+	names[11] = "Vortex";
+	ft_printf("Dynamic Background: %s\n", names[next]);
+	if (next == DYNAMIC_BG_EPILEPTIC_FLASH)
+		ft_printf("Warning: Epileptic flash mode\n");
 }
 
-// Set animation speed
-void dynamic_background_set_speed(float speed)
+void	dynamic_background_cleanup(void)
 {
-	g_dynamic_bg.animation_speed = fmaxf(0.1f, fminf(5.0f, speed));
-	ft_printf("🎨 Dynamic background speed set to %.1fx\n", g_dynamic_bg.animation_speed);
-}
+	t_dynamic_bg_system	*db;
 
+	db = gdynbg(NULL);
+	if (db->bg_buffer)
+	{
+		free(db->bg_buffer);
+		db->bg_buffer = NULL;
+	}
+	db->initialized = false;
+	db->current_bg = DYNAMIC_BG_STATIC;
+	db->time_accumulator = 0.0f;
+	db->frame_counter = 0;
+}

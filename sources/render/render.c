@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:58 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 02:05:40 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 04:58:52 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	clear_screen(t_app *f)
 	uint32_t	value;
 
 	i = 0;
-	value = get_background_color();
+	value = get_background_color(f);
 	while (i < WIN_WIDTH * WIN_HEIGHT)
 	{
 		((uint32_t *)f->renderer.data)[i] = value;
@@ -75,7 +75,7 @@ int	fdf_render(t_app *f)
 		dynamic_background_update(f);
 	else
 	{
-		generate_background(f, get_current_background_theme());
+		generate_background(f, get_current_background_theme(f));
 		generate_stars(f);
 	}
 	fdf_draw_lines(f);

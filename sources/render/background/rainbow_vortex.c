@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 21:06:32 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 21:06:34 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:45:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	apply_rainbow_vortex_bg(uint32_t *buf)
 	int		x;
 	float	time;
 
-	time = g_dynamic_bg.time_accumulator;
+	time = gdynbg(NULL)->time_accumulator;
 	y = 0;
 	while (y < WIN_HEIGHT)
 	{

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:53:43 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 02:14:36 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 14:38:26 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,6 @@ typedef struct s_object_effects_system
 	float					*original_points;
 	int						total_points;
 }							t_object_effects_system;
-
-
 
 typedef struct s_dynamic_bg_system
 {
@@ -216,6 +214,12 @@ typedef struct s_renderer
 	int				is_big_endian;
 }					t_renderer;
 
+typedef struct s_pivot
+{
+	void	*low;
+	void	*mid;
+	void	*high;
+}			t_pivot;
 
 
 typedef struct s_fdf
@@ -244,7 +248,17 @@ typedef struct s_fdf
 	t_palette_state			palette_state; // added palette system state
 	t_transition_state		transition_state; // moved former global g_transition here
 	int					shadow_mode;
+	int					current_bg_theme;
+	int					stars_enabled;
 }							t_app;
+
+struct s_pdraw
+{
+	int			px;
+	int			py;
+	int			size;
+	uint32_t	color;
+};
 
 /**
  * Struct holding the context for the Bresenham drawing loop.

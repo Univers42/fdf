@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:40 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 22:57:59 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:47:09 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,12 @@
 
 void	apply_height_oscillation_effect(t_app *fdf)
 {
-	int		y;
-	int		x;
-	int		index;
+	const t_object_effects_system *oe = gobjfx(NULL);
+	int		y, x, index;
 	float	oscillation;
 
-	if (!g_obj_effects.original_points)
-		return ;
+	if (!oe->original_points)
+		return;
 	y = 0;
 	while (y < fdf->height)
 	{
@@ -29,12 +28,12 @@ void	apply_height_oscillation_effect(t_app *fdf)
 		while (x < fdf->width)
 		{
 			index = y * fdf->width + x;
-			oscillation = sinf(g_obj_effects.time_accumulator * 3.0f
-					+ (g_obj_effects.original_points[index] / 100.0f)) * 15.0f;
-			fdf->points[index] = g_obj_effects.original_points[index]
-				+ oscillation * g_obj_effects.intensity;
-			x++;
+			oscillation = sinf(oe->time_accumulator * 3.0f
+					+ (oe->original_points[index] / 100.0f)) * 15.0f;
+			fdf->points[index] = oe->original_points[index]
+				+ oscillation * oe->intensity;
+			++x;
 		}
-		y++;
+		++y;
 	}
 }

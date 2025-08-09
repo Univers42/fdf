@@ -5,40 +5,87 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/08 00:28:06 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 00:15:17 by dlesieur         ###   ########.fr       */
+/*   Created: 2025/08/09 04:26:23 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/09 04:34:21 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include "mlx.h"
-#include "theme.h"
-#include <stdio.h>
-#include <math.h>
+#include "memory.h"
 
-uint32_t	get_color_for_z(t_app *fdf, int z)
+// Helper: compute absolute z ranges for theme rules
+static void	compute_absolute_rules(const t_theme *theme,
+					t_app *fdf, t_abs_rule *ar)
 {
-	int		range;
-	float	norm;
+	int					i;
+	float				zrange;
+	const t_theme_rule	*r;
 
-	range = (fdf->max_z - fdf->min_z);
-	if (range == 0)
-		norm = 0.5f;
+	zrange = (float)(fdf->max_z - fdf->min_z);
+	if (zrange == 0.0f)
+		zrange = 1.0f;
+	i = -1;
+	while (++i < theme->rule_count)
+	{
+		r = &theme->rules[i];
+		if (r->relative)
+		{
+			ar[i].min_z = (float)fdf->min_z + r->z_min * zrange;
+			ar[i].max_z = (float)fdf->min_z + r->z_max * zrange;
+		}
+		else
+		{
+			ar[i].min_z = r->z_min;
+			ar[i].max_z = r->z_max;
+		}
+		if (ar[i].min_z > ar[i].max_z)
+			ft_swap(&ar[i].min_z, &ar[i].max_z, sizeof(float));
+		ar[i].color = r->color;
+	}
+}
+
+// Helper: find color for z value using theme rules
+static int	find_theme_color_for_z(float z, t_abs_rule *ar, int rule_count)
+{
+	int	k;
+
+	k = -1;
+	while (++k < rule_count)
+		if (z >= ar[k].min_z && z <= ar[k].max_z)
+			return (k);
+	return (-1);
+}
+
+// Helper: clamp color to nearest band if no match
+static uint32_t	clamp_theme_color(float z, t_abs_rule *ar, int rule_count)
+{
+	if (z < ar[0].min_z)
+		return (ar[0].color);
 	else
-		norm = (float)(z - fdf->min_z) / (float)range;
-	return get_color_for_height(fdf, norm);
+		return (ar[rule_count - 1].color);
 }
 
-void	update_background_from_palette(t_app *fdf)
+// Main: apply theme to map
+void	apply_theme_to_map(t_app *fdf, const t_theme *theme)
 {
-	ft_printf("DEBUG: update_background_from_palette called (no-op for now)\n");
-	(void)fdf;  // For now, just make this a no-op to avoid segfault
-	// Background will be handled in the main render loop
-}
+	t_abs_rule	ar[9];
+	int			i;
+	int			k;
+	int			rule_count;
+	float		z;
 
-void	clear_screen_with_palette_bg(t_app *fdf)
-{
-	ft_printf("DEBUG: clear_screen_with_palette_bg called (no-op for now)\n");
-	(void)fdf;  // For now, just make this a no-op to avoid segfault
-	// Background will be handled in the main render loop
+	if (!fdf || !theme || !fdf->points || !fdf->color || theme->rule_count <= 0)
+		return ;
+	rule_count = theme->rule_count;
+	compute_absolute_rules(theme, fdf, ar);
+	i = -1;
+	while (++i < fdf->width * fdf->height)
+	{
+		z = fdf->points[i];
+		k = find_theme_color_for_z(z, ar, rule_count);
+		if (k >= 0)
+			fdf->color[i] = ar[k].color;
+		else
+			fdf->color[i] = clamp_theme_color(z, ar, rule_count);
+	}
 }

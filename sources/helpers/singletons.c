@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 22:40:23 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 17:38:00 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 14:40:57 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,23 +105,73 @@ t_event_handler_table	*get_event_handler_table(void)
 	return (&instance);
 }
 
-t_trackball_shape_state	*gstate_tball(void)
+t_texture_system	*gtexture(t_texture_system *set)
 {
-	static t_trackball_shape_state	g_trackball_state = {
-		{0.0f, 0.0f, 0.0f, 1.0f},
-		{1.0f, 0.0f, 0.0f, 0.0f,
-		 0.0f, 1.0f, 0.0f, 0.0f,
-		 0.0f, 0.0f, 1.0f, 0.0f,
-		 0.0f, 0.0f, 0.0f, 1.0f},
-		false
+	static t_texture_system	s = {
+		.current_texture = TEXTURE_NONE,
+		.active = false,
+		.time_accumulator = 0.0f,
+		.scale_factor = 1.0f,
+		.initialized = false,
+		.original_colors = NULL,
+		.total_points = 0,
+		.animation_speed = 1.0f
 	};
 
-	return (&g_trackball_state);
+	if (set)
+		s = *set;
+	return (&s);
 }
 
-t_trackball_state	*gtrack(void)
+t_dynamic_bg_system	*gdynbg(t_dynamic_bg_system *set)
 {
-	static t_trackball_state	s;
+	static t_dynamic_bg_system	s = {
+		.current_bg = DYNAMIC_BG_STATIC,
+		.active = false,
+		.time_accumulator = 0.0f,
+		.intensity = 1.0f,
+		.initialized = false,
+		.bg_buffer = NULL,
+		.animation_speed = 1.0f,
+		.frame_counter = 0
+	};
 
+	if (set)
+		s = *set;
+	return (&s);
+}
+
+t_particle_transition	*gparticles(t_particle_transition *set)
+{
+	static t_particle_transition	s = {
+		.frame = 0,
+		.max_frames = PARTICLE_TRANSITION_FRAMES,
+		.active = false,
+		.current_type = PARTICLE_NONE,
+		.target_type = PARTICLE_NONE,
+		// particles array zero-initialized
+		.initialized = false,
+		.time_accumulator = 0.0f
+	};
+
+	if (set)
+		s = *set;
+	return (&s);
+}
+
+t_object_effects_system	*gobjfx(t_object_effects_system *set)
+{
+	static t_object_effects_system	s = {
+		.current_effect = OBJ_EFFECT_NONE,
+		.active = false,
+		.time_accumulator = 0.0f,
+		.intensity = 1.0f,
+		.initialized = false,
+		.original_points = NULL,
+		.total_points = 0
+	};
+
+	if (set)
+		s = *set;
 	return (&s);
 }

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 21:10:34 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 21:10:35 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:45:42 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	apply_water_ripples_bg(uint32_t *b)
 	int		x;
 	float	t;
 
-	t = g_dynamic_bg.time_accumulator;
+	t = gdynbg(NULL)->time_accumulator;
 	y = 0;
 	while (y < WIN_HEIGHT)
 	{

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:48:35 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 19:24:24 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:45:40 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,27 +40,28 @@ static uint32_t	hexagon_pixel(int x, int y, float hex_size)
 
 static void	hexagon_row(t_app *fdf, float hex_size, int y)
 {
-	int			x;
-	int			index;
-	uint32_t	tc;
+	const t_texture_system	*t = gtexture(NULL);
+	int						x;
+	int						index;
+	uint32_t				tc;
 
 	x = 0;
 	while (x < fdf->width)
 	{
 		index = y * fdf->width + x;
 		tc = hexagon_pixel(x, y, hex_size);
-		fdf->color[index] = blend_colors(g_texture.original_colors[index],
-				tc, 0.6f);
+		fdf->color[index] = blend_colors(t->original_colors[index], tc, 0.6f);
 		++x;
 	}
 }
 
 void	apply_hexagon_texture(t_app *fdf)
 {
-	int		y;
-	float	hex_size;
+	const t_texture_system	*t = gtexture(NULL);
+	int						y;
+	float					hex_size;
 
-	hex_size = 10.0f / g_texture.scale_factor;
+	hex_size = 10.0f / t->scale_factor;
 	y = 0;
 	while (y < fdf->height)
 	{

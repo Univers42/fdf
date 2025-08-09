@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:49:18 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 19:21:40 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:45:41 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,12 @@ static int	is_mortar(float lx, float ly, float bw, float bh)
 
 static void	brick_row(t_app *fdf, float bw, float bh, int y)
 {
-	int			x;
-	int			index;
-	t_bound		dim;
-	t_fpoint2	l;
-	uint32_t	c;
+	const t_texture_system	*t = gtexture(NULL);
+	int						x;
+	int						index;
+	t_bound					dim;
+	t_fpoint2				l;
+	uint32_t				c;
 
 	dim.y = (int)(y / bh);
 	x = 0;
@@ -55,20 +56,20 @@ static void	brick_row(t_app *fdf, float bw, float bh, int y)
 			c = 0xD3D3D3;
 		else
 			c = select_brick_color(dim.y, dim.x);
-		fdf->color[index] = blend_colors(g_texture.original_colors[index],
-				c, 0.7f);
+		fdf->color[index] = blend_colors(t->original_colors[index], c, 0.7f);
 		++x;
 	}
 }
 
 void	apply_brick_texture(t_app *fdf)
 {
-	int		y;
-	float	bw;
-	float	bh;
+	const t_texture_system	*t = gtexture(NULL);
+	int						y;
+	float					bw;
+	float					bh;
 
-	bw = 12.0f / g_texture.scale_factor;
-	bh = 6.0f / g_texture.scale_factor;
+	bw = 12.0f / t->scale_factor;
+	bh = 6.0f / t->scale_factor;
 	y = 0;
 	while (y < fdf->height)
 	{

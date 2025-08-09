@@ -21,7 +21,6 @@ void		update_palette_if_needed(t_app *fdf); // added: check and apply if needed
 /* Color access */
 uint32_t	get_color_for_height(t_app *fdf, float norm);
 uint32_t	get_color_for_z(t_app *fdf, int z);
-uint32_t	get_background_color(void);
 
 /* Utility */
 uint32_t	pack_rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a);

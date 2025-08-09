@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 23:28:01 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 23:53:02 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 04:48:39 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	reset_state(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode;
 	(void)data;
-	transition_cleanup();
+	transition_cleanup(fdf);
 	particles_cleanup();
 	reset_transformations(fdf);
 	reset_z_perspective(fdf);

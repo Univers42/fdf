@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 21:07:36 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 21:07:40 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:45:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	apply_matrix_rain_bg(uint32_t *b)
 	int		nc;
 	float	time;
 
-	time = g_dynamic_bg.time_accumulator;
+	time = gdynbg(NULL)->time_accumulator;
 	matrix_clear(b);
 	nc = WIN_WIDTH / 20;
 	col = 0;

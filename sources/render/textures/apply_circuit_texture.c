@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 19:07:05 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 19:08:52 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 05:45:42 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,31 +28,32 @@ static uint32_t	circuit_color(
 
 static uint32_t	circuit_pixel(int x, int y)
 {
-	int	h_trace;
-	int	v_trace;
-	int	junction;
-	int	active;
+	const t_texture_system	*t = gtexture(NULL);
+	int						h_trace;
+	int						v_trace;
+	int						junction;
+	int						active;
 
 	h_trace = (y % 8 == 0 || y % 8 == 1);
 	v_trace = (x % 12 == 0 || x % 12 == 1);
 	junction = ((x % 12) < 3 && (y % 8) < 3);
-	active = ((x + y + (int)(g_texture.time_accumulator * 10.0f)) % 20) < 2;
+	active = ((x + y + (int)(t->time_accumulator * 10.0f)) % 20) < 2;
 	return (circuit_color(h_trace, v_trace, junction, active));
 }
 
 static void	circuit_row(t_app *fdf, int y)
 {
-	int			x;
-	int			index;
-	uint32_t	tc;
+	const t_texture_system	*t = gtexture(NULL);
+	int						x;
+	int						index;
+	uint32_t				tc;
 
 	x = 0;
 	while (x < fdf->width)
 	{
 		index = y * fdf->width + x;
 		tc = circuit_pixel(x, y);
-		fdf->color[index] = blend_colors(g_texture.original_colors[index],
-				tc, 0.6f);
+		fdf->color[index] = blend_colors(t->original_colors[index], tc, 0.6f);
 		++x;
 	}
 }

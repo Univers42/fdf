@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:29:06 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/06 01:43:43 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/09 03:58:27 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,6 @@ typedef struct s_pack_color
 
 
 void		set_background_theme(int theme);
-uint32_t	get_background_color(void);
+
 
 #endif

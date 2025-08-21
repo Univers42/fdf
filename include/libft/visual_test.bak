@@ -1,0 +1,532 @@
+// #include "window.h"
+// #include "object.h"
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include <time.h>
+// #include <math.h>
+// #include <unistd.h>
+
+// #define MAX_OBJECTS 20
+// #define MIN_SPEED 50.0f
+// #define MAX_SPEED 200.0f
+
+// typedef enum e_boundary_behavior
+// {
+//     BOUNDARY_BOUNCE,
+//     BOUNDARY_WRAP,
+//     BOUNDARY_STOP,
+//     BOUNDARY_DISAPPEAR
+// } t_boundary_behavior;
+
+// typedef struct s_moving_object
+// {
+//     t_object *obj;
+//     float velocity_x;
+//     float velocity_y;
+//     float speed;
+//     t_boundary_behavior boundary_behavior;
+//     bool visible;
+//     bool out_of_bounds;
+//     int creation_frame;
+// } t_moving_object;
+
+// typedef struct s_visual_test
+// {
+//     t_window *window;
+//     t_moving_object objects[MAX_OBJECTS];
+//     int object_count;
+//     int frame_count;
+//     bool resize_test_mode;
+//     bool boundary_test_mode;
+//     int test_phase;
+//     char status_message[256];
+
+//     // Statistics
+//     int objects_out_of_bounds;
+//     int objects_disappeared;
+//     int resize_count;
+// } t_visual_test;
+
+// // Movement algorithms
+// static void update_object_position(t_visual_test *test, t_moving_object *moving_obj, float delta_time)
+// {
+//     if (!moving_obj->visible || !moving_obj->obj)
+//         return;
+
+//     t_point3d current_pos = moving_obj->obj->transform.position;
+
+//     // Update position based on velocity
+//     current_pos.x += moving_obj->velocity_x * delta_time;
+//     current_pos.y += moving_obj->velocity_y * delta_time;
+
+//     // Check boundaries and apply behavior
+//     bool hit_boundary = false;
+//     bool was_out_of_bounds = moving_obj->out_of_bounds;
+
+//     // Check horizontal boundaries
+//     if (current_pos.x < 0 || current_pos.x > test->window->width)
+//     {
+//         hit_boundary = true;
+//         moving_obj->out_of_bounds = true;
+
+//         switch (moving_obj->boundary_behavior)
+//         {
+//         case BOUNDARY_BOUNCE:
+//             if (current_pos.x < 0)
+//             {
+//                 current_pos.x = 0;
+//                 moving_obj->velocity_x = -moving_obj->velocity_x;
+//             }
+//             else
+//             {
+//                 current_pos.x = test->window->width;
+//                 moving_obj->velocity_x = -moving_obj->velocity_x;
+//             }
+//             moving_obj->out_of_bounds = false;
+//             break;
+
+//         case BOUNDARY_WRAP:
+//             if (current_pos.x < 0)
+//             {
+//                 current_pos.x = test->window->width;
+//             }
+//             else
+//             {
+//                 current_pos.x = 0;
+//             }
+//             moving_obj->out_of_bounds = false;
+//             break;
+
+//         case BOUNDARY_STOP:
+//             if (current_pos.x < 0)
+//                 current_pos.x = 0;
+//             if (current_pos.x > test->window->width)
+//                 current_pos.x = test->window->width;
+//             moving_obj->velocity_x = 0;
+//             break;
+
+//         case BOUNDARY_DISAPPEAR:
+//             moving_obj->visible = false;
+//             if (!was_out_of_bounds)
+//                 test->objects_disappeared++;
+//             break;
+//         }
+//     }
+
+//     // Check vertical boundaries
+//     if (current_pos.y < 0 || current_pos.y > test->window->height)
+//     {
+//         hit_boundary = true;
+//         moving_obj->out_of_bounds = true;
+
+//         switch (moving_obj->boundary_behavior)
+//         {
+//         case BOUNDARY_BOUNCE:
+//             if (current_pos.y < 0)
+//             {
+//                 current_pos.y = 0;
+//                 moving_obj->velocity_y = -moving_obj->velocity_y;
+//             }
+//             else
+//             {
+//                 current_pos.y = test->window->height;
+//                 moving_obj->velocity_y = -moving_obj->velocity_y;
+//             }
+//             moving_obj->out_of_bounds = false;
+//             break;
+
+//         case BOUNDARY_WRAP:
+//             if (current_pos.y < 0)
+//             {
+//                 current_pos.y = test->window->height;
+//             }
+//             else
+//             {
+//                 current_pos.y = 0;
+//             }
+//             moving_obj->out_of_bounds = false;
+//             break;
+
+//         case BOUNDARY_STOP:
+//             if (current_pos.y < 0)
+//                 current_pos.y = 0;
+//             if (current_pos.y > test->window->height)
+//                 current_pos.y = test->window->height;
+//             moving_obj->velocity_y = 0;
+//             break;
+
+//         case BOUNDARY_DISAPPEAR:
+//             moving_obj->visible = false;
+//             if (!was_out_of_bounds)
+//                 test->objects_disappeared++;
+//             break;
+//         }
+//     }
+
+//     // Update object position
+//     moving_obj->obj->transform.position = current_pos;
+
+//     // Update statistics
+//     if (hit_boundary && !was_out_of_bounds)
+//     {
+//         test->objects_out_of_bounds++;
+//     }
+// }
+
+// static void create_test_object(t_visual_test *test, int index)
+// {
+//     if (index >= MAX_OBJECTS)
+//         return;
+
+//     t_moving_object *moving_obj = &test->objects[index];
+
+//     // Use the proper object creation functions instead of manual allocation
+//     switch (index % 4)
+//     {
+//     case 0:
+//         moving_obj->obj = object_create_circle(20.0f, 16);
+//         if (moving_obj->obj)
+//             moving_obj->obj->color = 0xFF0000; // Red circles
+//         break;
+//     case 1:
+//         moving_obj->obj = object_create_rectangle(30.0f, 20.0f);
+//         if (moving_obj->obj)
+//             moving_obj->obj->color = 0x00FF00; // Green rectangles
+//         break;
+//     case 2:
+//         moving_obj->obj = object_create_circle(15.0f, 16);
+//         if (moving_obj->obj)
+//             moving_obj->obj->color = 0x0000FF; // Blue circles
+//         break;
+//     case 3:
+//         moving_obj->obj = object_create_rectangle(25.0f, 25.0f);
+//         if (moving_obj->obj)
+//             moving_obj->obj->color = 0xFFFF00; // Yellow squares
+//         break;
+//     }
+
+//     if (!moving_obj->obj)
+//         return;
+
+//     // Random starting position
+//     moving_obj->obj->transform.position.x = rand() % test->window->width;
+//     moving_obj->obj->transform.position.y = rand() % test->window->height;
+//     moving_obj->obj->transform.position.z = 0;
+
+//     // Random velocity
+//     float angle = (rand() % 360) * M_PI / 180.0f;
+//     moving_obj->speed = MIN_SPEED + (rand() % (int)(MAX_SPEED - MIN_SPEED));
+//     moving_obj->velocity_x = cos(angle) * moving_obj->speed;
+//     moving_obj->velocity_y = sin(angle) * moving_obj->speed;
+
+//     // Assign boundary behavior based on object type
+//     moving_obj->boundary_behavior = (t_boundary_behavior)(index % 4);
+//     moving_obj->visible = true;
+//     moving_obj->out_of_bounds = false;
+//     moving_obj->creation_frame = test->frame_count;
+// }
+
+// static void draw_status_overlay(t_visual_test *test)
+// {
+//     // Draw status background
+//     window_draw_rectangle_simple(test->window, 10, 10, 400, 150, 0x000000);
+//     window_draw_rectangle_simple(test->window, 11, 11, 398, 148, 0x333333);
+
+//     // Draw status text using simple graphics
+//     int y = 20;
+
+//     // Phase indicator
+//     for (int i = 0; i < test->test_phase && i < 10; i++)
+//     {
+//         window_draw_rectangle_simple(test->window, 20 + i * 15, y, 10, 10, 0x00FF00);
+//     }
+//     y += 20;
+
+//     // Object count visualization
+//     for (int i = 0; i < test->object_count && i < 20; i++)
+//     {
+//         int color = test->objects[i].visible ? 0xFFFFFF : 0xFF0000;
+//         window_put_pixel(test->window, 20 + i * 2, y, color);
+//         window_put_pixel(test->window, 20 + i * 2, y + 1, color);
+//     }
+//     y += 15;
+
+//     // Boundary behavior legend
+//     window_draw_rectangle_simple(test->window, 20, y, 10, 10, 0xFF0000); // Bounce (red)
+//     window_draw_rectangle_simple(test->window, 35, y, 10, 10, 0x00FF00); // Wrap (green)
+//     window_draw_rectangle_simple(test->window, 50, y, 10, 10, 0x0000FF); // Stop (blue)
+//     window_draw_rectangle_simple(test->window, 65, y, 10, 10, 0xFFFF00); // Disappear (yellow)
+//     y += 20;
+
+//     // Statistics bars
+//     int bar_width = test->objects_out_of_bounds * 2;
+//     if (bar_width > 0)
+//     {
+//         window_draw_rectangle_simple(test->window, 20, y, bar_width, 5, 0xFF8800);
+//     }
+//     y += 10;
+
+//     bar_width = test->objects_disappeared * 3;
+//     if (bar_width > 0)
+//     {
+//         window_draw_rectangle_simple(test->window, 20, y, bar_width, 5, 0xFF0000);
+//     }
+//     y += 10;
+
+//     bar_width = test->resize_count * 10;
+//     if (bar_width > 0)
+//     {
+//         window_draw_rectangle_simple(test->window, 20, y, bar_width, 5, 0x00FFFF);
+//     }
+// }
+
+// static void update_test_phase(t_visual_test *test)
+// {
+//     switch (test->test_phase)
+//     {
+//     case 0: // Initial setup
+//         snprintf(test->status_message, sizeof(test->status_message),
+//                  "Phase 1: Creating moving objects. Watch them move!");
+//         for (int i = 0; i < 10; i++)
+//         {
+//             create_test_object(test, i);
+//             test->object_count++;
+//         }
+//         test->test_phase = 1;
+//         break;
+
+//     case 1: // More objects
+//         if (test->frame_count > 300)
+//         {
+//             snprintf(test->status_message, sizeof(test->status_message),
+//                      "Phase 2: Adding more objects with different behaviors");
+//             for (int i = 10; i < MAX_OBJECTS; i++)
+//             {
+//                 create_test_object(test, i);
+//                 test->object_count++;
+//             }
+//             test->test_phase = 2;
+//         }
+//         break;
+
+//     case 2: // Resize test
+//         if (test->frame_count > 600)
+//         {
+//             test->resize_test_mode = true;
+//             snprintf(test->status_message, sizeof(test->status_message),
+//                      "Phase 3: RESIZE TEST - Please resize the window!");
+//             test->test_phase = 3;
+//         }
+//         break;
+
+//     case 3: // Boundary test
+//         if (test->frame_count > 1200)
+//         {
+//             test->boundary_test_mode = true;
+//             snprintf(test->status_message, sizeof(test->status_message),
+//                      "Phase 4: BOUNDARY TEST - Watch object behaviors!");
+//             test->test_phase = 4;
+//         }
+//         break;
+
+//     case 4: // Final phase
+//         if (test->frame_count > 1800)
+//         {
+//             snprintf(test->status_message, sizeof(test->status_message),
+//                      "Phase 5: Test complete! Press 'q' to quit");
+//             test->test_phase = 5;
+//         }
+//         break;
+//     }
+// }
+
+// static int visual_test_loop(void *param)
+// {
+//     t_visual_test *test = (t_visual_test *)param;
+//     static struct timespec last_frame = {0, 0};
+//     struct timespec current_frame;
+//     float delta_time;
+
+//     // Calculate delta time
+//     clock_gettime(CLOCK_MONOTONIC, &current_frame);
+//     delta_time = (current_frame.tv_sec - last_frame.tv_sec) +
+//                  (current_frame.tv_nsec - last_frame.tv_nsec) / 1e9f;
+//     if (delta_time > 0.1f)
+//         delta_time = 0.016f; // Cap at ~60 FPS
+//     last_frame = current_frame;
+
+//     test->frame_count++;
+
+//     // Update test phase
+//     update_test_phase(test);
+
+//     // Clear window
+//     window_clear(test->window);
+
+//     // Update and draw objects
+//     for (int i = 0; i < test->object_count; i++)
+//     {
+//         if (test->objects[i].obj && test->objects[i].visible)
+//         {
+//             update_object_position(test, &test->objects[i], delta_time);
+
+//             // Add object to window for rendering
+//             window_add_object(test->window, test->objects[i].obj, 1);
+//         }
+//     }
+
+//     // Draw status overlay
+//     draw_status_overlay(test);
+
+//     // Render everything
+//     window_render(test->window);
+
+//     // Clean up objects from window (they get re-added next frame)
+//     // This simulates proper object management
+//     for (int i = 0; i < test->object_count; i++)
+//     {
+//         if (test->objects[i].obj)
+//         {
+//             window_remove_object(test->window, test->objects[i].obj);
+//         }
+//     }
+
+//     return 0;
+// }
+
+// static int visual_test_key_hook(int keycode, void *param)
+// {
+//     t_visual_test *test = (t_visual_test *)param;
+
+//     printf("Visual Test: Key %d pressed\n", keycode);
+
+//     if (keycode == 'q' || keycode == 'Q' || keycode == 65307)
+//     {
+//         test->window->should_close = true;
+//         return 0;
+//     }
+
+//     if (keycode == 'r' || keycode == 'R')
+//     {
+//         // Simulate resize
+//         printf("Manual resize trigger - resizing window to random size\n");
+//         int new_width = 600 + (rand() % 400);
+//         int new_height = 400 + (rand() % 300);
+//         window_resize(test->window, new_width, new_height);
+//         test->resize_count++;
+//         return 0;
+//     }
+
+//     if (keycode == 'p' || keycode == 'P')
+//     {
+//         // Add more objects
+//         if (test->object_count < MAX_OBJECTS)
+//         {
+//             create_test_object(test, test->object_count);
+//             test->object_count++;
+//             printf("Added object %d\n", test->object_count);
+//         }
+//         return 0;
+//     }
+
+//     return 0;
+// }
+
+// // Add a static close_hook to handle window close events
+// static int close_hook(void *param)
+// {
+//     t_window *window = (t_window *)param;
+//     window->should_close = true;
+//     return 0;
+// }
+
+// t_visual_test *visual_test_create(int width, int height)
+// {
+//     t_visual_test *test = malloc(sizeof(t_visual_test));
+//     if (!test)
+//         return NULL;
+
+//     memset(test, 0, sizeof(t_visual_test));
+
+//     test->window = window_new(width, height, "Visual Test Suite", 0x001122);
+//     if (!test->window)
+//     {
+//         free(test);
+//         return NULL;
+//     }
+
+//     snprintf(test->status_message, sizeof(test->status_message),
+//              "Visual Test Starting...");
+
+//     return test;
+// }
+
+// void visual_test_destroy(t_visual_test *test)
+// {
+//     if (!test)
+//         return;
+
+//     // Clean up objects using proper object_destroy
+//     for (int i = 0; i < test->object_count; i++)
+//     {
+//         if (test->objects[i].obj)
+//         {
+//             object_destroy(test->objects[i].obj);
+//         }
+//     }
+
+//     if (test->window)
+//     {
+//         window_destroy(test->window);
+//     }
+
+//     free(test);
+// }
+
+// int visual_test_run(void)
+// {
+//     printf("🎯 Starting Visual Test Suite\n");
+//     printf("This test will validate:\n");
+//     printf("  ✓ Window rendering and pixel operations\n");
+//     printf("  ✓ Object movement and boundary handling\n");
+//     printf("  ✓ Window resizing and buffer recalculation\n");
+//     printf("  ✓ Object visibility and state management\n");
+//     printf("\nControls:\n");
+//     printf("  'r' - Trigger manual resize\n");
+//     printf("  'p' - Add more objects\n");
+//     printf("  'q' - Quit test\n\n");
+
+//     srand(time(NULL));
+
+//     t_visual_test *test = visual_test_create(800, 600);
+//     if (!test)
+//     {
+//         printf("❌ Failed to create visual test\n");
+//         return 1;
+//     }
+
+//     // Setup event handlers
+//     mlx_hook(test->window->win_ptr, 2, 1L << 0, visual_test_key_hook, test);
+//     mlx_hook(test->window->win_ptr, 17, 0, close_hook, test->window);
+
+//     // Setup main loop
+//     mlx_loop_hook(test->window->mlx_ptr, visual_test_loop, test);
+
+//     printf("🚀 Visual test running...\n");
+
+//     // Main event loop
+//     mlx_loop(test->window->mlx_ptr);
+
+//     // Print final statistics
+//     printf("\n📊 Visual Test Results:\n");
+//     printf("  Objects created: %d\n", test->object_count);
+//     printf("  Objects went out of bounds: %d\n", test->objects_out_of_bounds);
+//     printf("  Objects disappeared: %d\n", test->objects_disappeared);
+//     printf("  Window resizes: %d\n", test->resize_count);
+//     printf("  Total frames: %d\n", test->frame_count);
+
+//     visual_test_destroy(test);
+
+//     printf("✅ Visual test completed successfully!\n");
+//     return 0;
+// }

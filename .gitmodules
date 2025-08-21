@@ -1,3 +1,0 @@
-[submodule "include/libft"]
-	path = include/libft
-	url = git@github.com:Univers42/libft.git

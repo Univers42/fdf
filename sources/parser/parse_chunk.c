@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 21:58:07 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/21 14:38:34 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 15:31:08 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,20 +105,25 @@ void	apply_default_height_palette(t_app *fdf)
 	int		i;
 	float	range;
 	t_pivot	color;
+	bool	has_explicit_color;
 
 	if (fdf->color == NULL || fdf->points == NULL)
 		return ;
 	total = fdf->width * fdf->height;
-	i = 0;
-	while (i < total)
+	i = -1;
+	has_explicit_color = false;
+	while (++i < total)
 	{
 		if (fdf->color[i] != 0xFFFFFF)
-			return ;
-		++i;
+		{
+			has_explicit_color = true;
+			break ;
+		}
 	}
+	if (has_explicit_color)
+		return ;
 	range = (float)(fdf->max_z - fdf->min_z);
 	if (range == 0)
 		range = 1.0f;
-	init_pivot_colors(&color);
-	apply_palette_to_points(fdf, &color, range);
+	(init_pivot_colors(&color), apply_palette_to_points(fdf, &color, range));
 }

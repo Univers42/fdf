@@ -5,13 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/09 04:34:38 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 04:34:47 by dlesieur         ###   ########.fr       */
+/*   Created: 2025/08/21 15:36:16 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/21 15:38:52 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <math.h>
 
 void	init_palette_system(t_app *fdf)
 {
@@ -44,32 +43,12 @@ uint32_t	get_background_color(t_app *fdf)
 	t_theme	theme;
 
 	if (!fdf || fdf->palette_state.count == 0)
-		return (pack_rgba(0, 0, 0, 255));
+		return (0);
 	if (fdf->palette_state.current < 0
 		|| fdf->palette_state.current >= fdf->palette_state.count)
 		fdf->palette_state.current = 0;
 	theme_make_preset(fdf->palette_state.current, &theme);
 	return (theme.background);
-}
-
-// Compatibility function for bresenham algorithm
-uint32_t	pack_color(t_bresenham_state *bs, int step)
-{
-	uint8_t	r;
-	uint8_t	g;
-	uint8_t	b_val;
-	float	t;
-
-	if (!bs)
-		return (0xFF000000);
-	if (bs->error_count <= 0)
-		t = 0.0f;
-	else
-		t = (float)step / (float)bs->error_count;
-	r = (uint8_t)((bs->color1 >> 24) + t * bs->color_r_delta);
-	g = (uint8_t)(((bs->color1 >> 16) & 0xFF) + t * bs->color_g_delta);
-	b_val = (uint8_t)(((bs->color1 >> 8) & 0xFF) + t * bs->color_b_delta);
-	return (pack_rgba(r, g, b_val, 255));
 }
 
 void	apply_current_palette(t_app *fdf)
@@ -94,5 +73,20 @@ void	apply_current_palette(t_app *fdf)
 		else
 			z_norm = 0.5f;
 		fdf->color[i] = get_color_for_height(fdf, z_norm);
+	}
+}
+
+void	apply_palette_to_points(t_app *fdf, t_pivot *color, float range)
+{
+	int		i;
+	float	z;
+	float	t;
+
+	i = -1;
+	while (++i < fdf->width * fdf->height)
+	{
+		z = fdf->points[i];
+		t = (z - fdf->min_z) / range;
+		fdf->color[i] = get_palette_color(color, t);
 	}
 }

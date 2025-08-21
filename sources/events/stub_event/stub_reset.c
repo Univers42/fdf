@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 23:28:01 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 04:48:39 by dlesieur         ###   ########.fr       */
+/*   Created: 2025/08/21 15:31:14 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/21 15:31:16 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,5 @@ void	reset_state(t_app *fdf, int keycode, void *data)
 	particles_cleanup();
 	reset_transformations(fdf);
 	reset_z_perspective(fdf);
-	set_palette_index(0, fdf);
 	ft_printf("All systems reset to default state\n");
 }

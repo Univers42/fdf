@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 02:33:35 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 02:47:19 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 15:15:23 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,4 @@ int	skip_delim(char *buf, int end, int i)
 	while (i < end && is_delim(buf[i]))
 		++i;
 	return (i);
-}
-
-void	apply_palette_to_points(t_app *fdf, t_pivot *color, float range)
-{
-	int		i;
-	float	z;
-	float	t;
-
-	i = -1;
-	while (++i < fdf->width * fdf->height)
-	{
-		z = fdf->points[i];
-		t = (z - fdf->min_z) / range;
-		fdf->color[i] = get_palette_color(color, t);
-	}
 }

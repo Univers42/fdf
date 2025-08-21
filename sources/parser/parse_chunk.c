@@ -6,14 +6,14 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 21:58:07 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/09 02:48:59 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:38:34 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdbool.h>
 #include <unistd.h>
 #include "fdf.h"
-#include "libft/libft.h"
+#include "libft.h"
 
 static bool	advance_line(t_parser *p, t_app *fdf)
 {

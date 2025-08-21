@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:27:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 03:02:29 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:38:29 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include "fdf.h"
-#include "libft/libft.h"
+#include "libft.h"
 
 static inline bool	find_chunk_end(
 	t_parser *p,

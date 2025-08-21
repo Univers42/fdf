@@ -6,11 +6,11 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 02:32:03 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/05 18:28:38 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:38:01 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
+#include "libft.h"
 
 void	matrix4_dot_product(const float *m, float *v, float *out)
 {

@@ -6,13 +6,13 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:43:21 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/07 23:21:24 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:34:29 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "fdf.h"
-#include "libft/libft.h"
+#include "libft.h"
 #include <math.h>
 
 static void			bresenham_draw_loop(t_bresenham_ctx *ctx);

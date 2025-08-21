@@ -6,14 +6,14 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 21:47:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/05 18:27:45 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:38:17 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "libft/libft.h"
+#include "libft.h"
 
 /**
 specific helpers for this project, not truly reusable, it copies `*cap`

@@ -6,14 +6,14 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 02:47:42 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 02:59:55 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:38:24 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "libft/libft.h"
+#include "libft.h"
 #include "fdf.h"
 
 #define CUTOFF 214748364

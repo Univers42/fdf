@@ -6,12 +6,12 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 15:54:47 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/05 18:28:34 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:37:29 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
-#include "libft/libft.h"
+#include "libft.h"
 
 void	identity_matrix4(float *out)
 {

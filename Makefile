@@ -12,7 +12,7 @@ OBJ_DIR = $(PROJECT_DIR)/object
 SRCS = $(shell find $(SRC_DIR) -type f -name '*.c')
 OBJS = $(patsubst $(SRC_DIR)/%, $(OBJ_DIR)/%, $(SRCS:.c=.o))
 
-LIBFT_DIR = $(INCLUDE_DIR)/libft
+LIBFT_DIR = $(INCLUDE_DIR)/lib
 MLX_DIR = $(LIBFT_DIR)/minilibx-linux
 
 LIBFT_A = $(LIBFT_DIR)/libft.a
@@ -42,7 +42,7 @@ clean:
 	rm -rf $(OBJ_DIR)
 
 norminette:
-	find . -path "./include/libft/minilibx-linux" -prune -o -name "*.c" -exec norminette {} +
+	find . -path "./include/ft_lib/minilibx-linux" -prune -o -name "*.c" -exec norminette {} +
 
 fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) fclean

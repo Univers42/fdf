@@ -6,14 +6,14 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:15 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:03:43 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:38:54 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <assert.h>
 #include <stddef.h>
 #include "fdf.h"
-#include "libft/libft.h"
+#include "libft.h"
 
 static inline void	update_rotations(t_trans_stack *t)
 {

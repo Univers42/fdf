@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:29:01 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 19:36:47 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:34:10 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define SWITCH_COLOR_H
 # include <stdint.h>
 # include <stdbool.h>
-# include "libft/math/geometry/draw/pixel.h"
+# include "pixel.h"
 
 /* Forward declaration */
 typedef struct s_app	t_app;

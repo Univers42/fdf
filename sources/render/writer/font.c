@@ -6,13 +6,13 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:27:07 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/08 21:15:56 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:38:44 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "libft/libft.h"
+#include "libft.h"
 #include "fdf.h"
 
 static inline uint8_t	*get_char(char c)

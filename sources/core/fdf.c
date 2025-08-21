@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 01:42:54 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/09 21:22:38 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:38:10 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <time.h>
 #include "mlx.h"
 #include <X11/X.h>
-#include "libft/libft.h"
+#include "libft.h"
 
 static inline void	init_trans_stack(t_app *fdf)
 {

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:53:43 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 21:37:22 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 16:08:15 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,8 @@ typedef struct s_app
 	int						stars_enabled;
 	float					*noise_offsets; // was: float noise_offsets
 	int						noise_size;
+	uint32_t				*snapshot;
+	int						color_count;
 }							t_app;
 
 struct s_pdraw

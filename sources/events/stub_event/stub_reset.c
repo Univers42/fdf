@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 15:31:14 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/21 15:31:16 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 16:03:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <stdio.h>
 #include "mlx.h"
 #include "theme.h"
+
+void	color_snapshot_restore(t_app *fdf);
 
 static void	reset_transformations(t_app *fdf)
 {
@@ -44,6 +46,13 @@ void	reset_state(t_app *fdf, int keycode, void *data)
 	(void)data;
 	transition_cleanup(fdf);
 	particles_cleanup();
+	dance_system_cleanup();
+	object_effects_cleanup(fdf);
+	texture_system_cleanup();
+	dynamic_background_cleanup();
+	fdf->auto_rotate = false;
+	fdf->palette_state.current = 0;
+	color_snapshot_restore(fdf);
 	reset_transformations(fdf);
 	reset_z_perspective(fdf);
 	ft_printf("All systems reset to default state\n");

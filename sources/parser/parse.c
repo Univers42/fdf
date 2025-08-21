@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:27:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/21 14:38:29 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 16:04:22 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 #include <stdio.h>
 #include "fdf.h"
 #include "libft.h"
+
+void	color_snapshot_restore(t_app *fdf);
+void	color_snapshot_capture(t_app *fdf);
 
 static inline bool	find_chunk_end(
 	t_parser *p,
@@ -81,6 +84,7 @@ bool	parse_buffered(t_parser *p, t_app *fdf, int fd)
 	}
 	fdf->min_z = p->min_z;
 	fdf->max_z = p->max_z;
+	color_snapshot_capture(fdf);
 	return (true);
 }
 

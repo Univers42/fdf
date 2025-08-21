@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 02:47:42 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/21 14:38:24 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/21 15:02:36 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ bool	parse_file(t_app *fdf, char *filename)
 	else
 		perror("open: ");
 	free(parser.buf);
-	if (ok)
-		apply_default_height_palette(fdf);
 	return (ok);
 }
 

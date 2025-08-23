@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:36:07 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/23 13:57:00 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 14:30:14 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void					clear_screen_with_palette_bg(t_app *fdf);
 /* Palette singleton access */
 const t_theme_palette	*get_theme_palette(int idx);
 int						get_theme_palette_count(void);
-void					ds_apply_current_move(t_app *fdf, const t_dance_system *d);
+void					ds_apply_current_move(t_app *fdf,
+							const t_dance_system *d);
 void					ds_handle_transition(t_dance_system *d);
 int						ds_skip_disabled_moves(int start);
 int						ds_find_next_move_basic(int current);

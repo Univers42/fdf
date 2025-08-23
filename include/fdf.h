@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/09 21:41:31 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 14:30:42 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -434,7 +434,8 @@ void						transition_start_object_effects(
 								t_app *fdf, bool to_effects);
 void						object_effects_cleanup(t_app *fdf);
 void						object_effects_update(t_app *fdf);
-void						texture_toggle_handler(t_app *fdf, int keycode, void *data);
+void						texture_toggle_handler(t_app *fdf,
+								int keycode, void *data);
 /*
  * PARTICLES
  */

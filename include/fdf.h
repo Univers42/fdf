@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 15:51:48 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/23 14:30:42 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:53:59 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ bool						parse_file(t_app *fdf, char *filename);
 
 /* Background functions */
 uint32_t					get_background_color(t_app *fdf);
-void						set_background_theme(int theme);
 void						generate_background(t_app *fdf, int theme_index);
 
 /* Color palette functions (from switch_color.h) */
@@ -198,9 +197,6 @@ void						transition_start_shape_cycle(t_app *fdf);
  */
 void						toggle_parallax_effect(void);
 void						render_parallax_effect(t_app *fdf);
-void						animate_parallax_grid(void);
-bool						is_parallax_active(void);
-void						init_parallax_system(void);
 void						check_projection(t_projection_ctl *p);
 /*
  * BACKGROUND AND EFFECTS
@@ -743,7 +739,6 @@ void						heart_upper_lobes(float s,
 float						orig_z(t_app *f, t_point2 *p);
 void						set_idx(t_app *fdf, int idx);
 void						store_original_object_points(t_app *fdf);
-void						set_background_theme(int theme);
 void						cleanup_vertex_scatter_effect(t_app *fdf);
 void						texture_system_cleanup(void);
 #endif

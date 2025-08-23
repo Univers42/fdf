@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "fdf.h": "c"
+        "fdf.h": "c",
+        "libft.h": "c",
+        "time.h": "c"
     }
 }

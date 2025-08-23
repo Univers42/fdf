@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:53:43 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/21 16:08:15 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:42:41 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,13 @@ typedef void			(*t_palette_func)(int *, int, int);
 typedef struct s_app	t_app;
 // Handler type for composite key events with keycode context
 typedef void			(*t_event_fn)(t_app*, int keycode, void*);
+
+enum
+{
+	RNG_LCG = 0,
+	RNG_XORSHIFT = 1,
+	RNG_MIDDLE_SQUARE = 2
+};
 
 typedef struct s_palette_state
 {

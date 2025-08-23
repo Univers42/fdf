@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:58 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/23 16:15:54 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:50:27 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,6 @@ void	transform_points(t_app *f)
 			++i[1];
 		}
 		++i[0];
-	}
-}
-
-void	clear_screen(t_app *f)
-{
-	size_t		i;
-	uint32_t	value;
-
-	i = 0;
-	value = get_background_color(f);
-	while (i < WIN_WIDTH * WIN_HEIGHT)
-	{
-		((uint32_t *)f->renderer.data)[i] = value;
-		++i;
 	}
 }
 

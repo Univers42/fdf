@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 17:01:12 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 17:04:08 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:01:25 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_particle_transition	*gparticles(t_particle_transition *set)
 		.max_frames = PARTICLE_TRANSITION_FRAMES,
 		.active = false,
 		.current_type = PARTICLE_NONE,
-		.target_type = PARTICLE_NONE,
+		.target_type = PARTICLE_NONE,		// PAFJKSAFJDSAL
 		// particles array zero-initialized
 		.initialized = false,
 		.time_accumulator = 0.0f

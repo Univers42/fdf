@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:36:07 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/23 14:30:14 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:49:55 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ uint32_t				color_apply_depth_shadow(uint32_t color,
 uint32_t				color_apply_ambient_shadow(uint32_t color,
 							float intensity);
 
-/* Background integration */
-void					update_background_from_palette(t_app *fdf);
 void					clear_screen_with_palette_bg(t_app *fdf);
 
 /* Palette singleton access */

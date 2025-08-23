@@ -6,15 +6,14 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:06:32 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/23 17:57:58 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:38:33 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <stdlib.h>
 
-// custom RNG API
-int  ft_rand(void);
+int	ft_rand(void);
 
 void	particle_rain(t_particle *p)
 {

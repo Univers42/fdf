@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 14:10:40 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 21:33:12 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 13:29:51 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@ void	fdf_destroy_contents(t_app *fdf)
 	dance_system_cleanup();
 	object_effects_cleanup(fdf);
 	texture_system_cleanup();
+	if (fdf->snapshot)
+	{
+		free(fdf->snapshot);
+		fdf->snapshot = NULL;
+		fdf->color_count = 0;
+	}
 	free(fdf->points);
 	free(fdf->color);
 	free(fdf->transformed_points);

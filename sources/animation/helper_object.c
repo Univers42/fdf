@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 12:41:36 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 13:17:06 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 13:38:33 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,33 @@ void	(**dance_move_fn(void))(t_app *fdf)
 		apply_dance_bounce,
 		apply_dance_wave_motion,
 		apply_dance_twist,
-		apply_dance_expand_contract,
+		NULL, /* temporarily disabled: apply_dance_expand_contract (OOB bug) */
 		apply_dance_figure_eight,
 		apply_dance_wobble
 	};
 
 	return (table);
+}
+
+/* short names for debug/print (singleton-style accessor) */
+const char	**tex_name_tbl(void)
+{
+	static const char	*names[TEXTURE_COUNT] = {
+		"None",
+		"Checkerboard",
+		"Stripes",
+		"Wood",
+		"Metal",
+		"Carbon",
+		"Marble",
+		"Brick",
+		"Circuit",
+		"Scales",
+		"Hexagon",
+		"Plasma"
+	};
+
+	return (names);
 }
 
 bool	object_effects_is_active(void)

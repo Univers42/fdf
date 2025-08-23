@@ -6,36 +6,30 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 12:27:52 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 12:34:28 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 13:57:18 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include "theme.h"
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-static void	ds_update_timing_and_sequence(t_dance_system *d)
+/* Skip disabled moves (NULL entries in the table) */
+void	ds_update_timing_and_sequence(t_dance_system *d)
 {
 	int	next_move;
 
-	d->time_accumulator += 0.15f;
-	d->move_frame++;
-	if (!d->auto_sequence || d->transitioning)
+	ds_advance_counters(d);
+	if (!ds_should_start_transition(d))
 		return ;
-	d->hold_frame++;
-	if (d->hold_frame < DANCE_HOLD_FRAMES)
-		return ;
-	d->transitioning = true;
-	d->hold_frame = 0;
-	d->move_frame = 0;
-	next_move = (d->current_move + 1) % DANCE_MOVE_COUNT;
-	if (next_move == DANCE_NONE)
-		next_move = DANCE_SPIN;
+	next_move = ds_find_next_move_basic(d->current_move);
+	next_move = ds_skip_disabled_moves(next_move);
 	d->next_move = (t_dance_move)next_move;
 }
 
-static void	ds_handle_transition(t_dance_system *d)
+void	ds_handle_transition(t_dance_system *d)
 {
 	float	progress;
 
@@ -55,7 +49,7 @@ static void	ds_handle_transition(t_dance_system *d)
 		d->move_intensity = sinf(progress * M_PI) * 0.5f + 0.5f;
 }
 
-static void	ds_apply_current_move(t_app *fdf, const t_dance_system *d)
+void	ds_apply_current_move(t_app *fdf, const t_dance_system *d)
 {
 	int		idx;
 	void	(**fn_table)(t_app *fdf);

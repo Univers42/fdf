@@ -6,12 +6,13 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 13:20:42 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 15:19:01 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 13:38:22 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
+#include <stdlib.h> /* atexit, free */
 
 /* apply-table wrapped in a singleton-style accessor */
 static void	(**tex_apply_tbl(void))(t_app *fdf)
@@ -32,27 +33,6 @@ static void	(**tex_apply_tbl(void))(t_app *fdf)
 	};
 
 	return (tbl);
-}
-
-/* short names for debug/print (singleton-style accessor) */
-const char	**tex_name_tbl(void)
-{
-	static const char	*names[TEXTURE_COUNT] = {
-		"None",
-		"Checkerboard",
-		"Stripes",
-		"Wood",
-		"Metal",
-		"Carbon",
-		"Marble",
-		"Brick",
-		"Circuit",
-		"Scales",
-		"Hexagon",
-		"Plasma"
-	};
-
-	return (names);
 }
 
 static void	tex_apply_current(t_app *fdf, t_texture_system *t)
@@ -82,16 +62,39 @@ static void	tex_debug(const t_texture_system *t)
 		names[idx], t->scale_factor, t->animation_speed);
 }
 
-void	texture_system_update(t_app *fdf)
+/* one-time cleanup registered at process exit to release snapshot */
+static void	tex_cleanup_on_exit(void)
 {
 	t_texture_system	*t;
 
 	t = gtexture(NULL);
+	if (t && t->original_colors)
+	{
+		free(t->original_colors);
+		t->original_colors = NULL;
+	}
+}
+
+/* capture the original colors only once to avoid repeated allocations */
+void	texture_system_update(t_app *fdf)
+{
+	t_texture_system	*t;
+	static int			cleanup_registered = 0;
+
+	t = gtexture(NULL);
 	if (t->current_texture == TEXTURE_NONE)
 		return ;
-	store_original_texture_colors(fdf);
 	if (!t->original_colors)
-		return ;
+	{
+		store_original_texture_colors(fdf);
+		if (!t->original_colors)
+			return ;
+		if (!cleanup_registered)
+		{
+			atexit(tex_cleanup_on_exit);
+			cleanup_registered = 1;
+		}
+	}
 	t->time_accumulator += 0.05f * t->animation_speed;
 	tex_apply_current(fdf, t);
 	tex_debug(t);

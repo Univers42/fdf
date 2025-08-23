@@ -6,11 +6,15 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 05:03:41 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 05:05:25 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:57:52 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include "time.h" /* custom entropy for seeding */
+// forward decls for our RNG API (kept local to avoid adding headers here)
+void ft_srand(unsigned int new_seed, int select);
+enum { RNG_LCG = 0, RNG_XORSHIFT = 1, RNG_MIDDLE_SQUARE = 2 };
 
 static void	seed_rng_once(void)
 {
@@ -18,7 +22,8 @@ static void	seed_rng_once(void)
 
 	if (!seeded)
 	{
-		srand((unsigned int)time(NULL));
+		// ft_srand((unsigned int)time(NULL));
+		ft_srand((unsigned int)ft_time(), RNG_XORSHIFT);
 		seeded = 1;
 	}
 }

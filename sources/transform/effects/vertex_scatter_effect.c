@@ -6,14 +6,19 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:54:21 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 21:44:04 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:57:52 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 #include <stdlib.h>
-#include <time.h>
+#include "time.h" /* our custom time entropy */
+
+/* forward decls for RNG API (no public header provided) */
+int  ft_rand(void);
+void ft_srand(unsigned int new_seed, int select);
+enum { RNG_LCG = 0, RNG_XORSHIFT = 1, RNG_MIDDLE_SQUARE = 2 };
 
 static void	vs_seed_once(void)
 {
@@ -21,7 +26,8 @@ static void	vs_seed_once(void)
 
 	if (!seeded)
 	{
-		srand((unsigned int)time(NULL));
+		// srand((unsigned int)time(NULL));
+		ft_srand((unsigned int)ft_time(), RNG_XORSHIFT);
 		seeded = 1;
 	}
 }
@@ -51,7 +57,8 @@ static void	vs_fill_noise(float *buf, int n3)
 	i = 0;
 	while (i < n3)
 	{
-		buf[i] = ((float)rand() / (float)RAND_MAX) * 2.0f - 1.0f;
+		// buf[i] = ((float)rand() / (float)RAND_MAX) * 2.0f - 1.0f;
+		buf[i] = ((float)ft_rand() / (float)RAND_MAX) * 2.0f - 1.0f;
 		++i;
 	}
 }

@@ -43,7 +43,7 @@ clean:
 	rm -rf $(OBJ_DIR)
 
 norminette:
-	find . -path "./include/ft_lib/minilibx-linux" -prune -o -name "*.c" -exec norminette {} +
+	find . -path "./include/lib/minilibx-linux" -prune -o -name "*.c" -exec norminette {} +
 
 fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) fclean

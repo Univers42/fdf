@@ -6,11 +6,16 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 12:57:03 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 13:04:41 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:57:51 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include "time.h" /* our custom time entropy */
+// forward decls for RNG API (no public header provided)
+int  ft_rand(void);
+void ft_srand(unsigned int new_seed, int select);
+enum { RNG_LCG = 0, RNG_XORSHIFT = 1, RNG_MIDDLE_SQUARE = 2 };
 
 /* initializer dispatch table (index must match t_particle_type enum) */
 void	(**ps_init_tbl(void))(t_particle *p)
@@ -55,11 +60,13 @@ void	init_particle(t_particle *p, t_particle_type type, t_app *fdf)
 	(void)fdf;
 	if (!seeded)
 	{
-		srand((unsigned int)time(NULL));
+		// ft_srand((unsigned int)time(NULL));
+		ft_srand((unsigned int)ft_time(), RNG_XORSHIFT);
 		seeded = 1;
 	}
 	p->active = true;
-	p->lifetime = PARTICLE_LIFETIME + (rand() % 100);
+	// p->lifetime = PARTICLE_LIFETIME + (rand() % 100);
+	p->lifetime = PARTICLE_LIFETIME + (ft_rand() % 100);
 	tbl = ps_init_tbl();
 	if (type > PARTICLE_NONE && type < PARTICLE_COUNT && tbl[type] != NULL)
 		tbl[type](p);

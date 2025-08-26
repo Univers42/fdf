@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 00:05:21 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/21 15:15:02 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/26 12:34:22 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 #include <stdio.h>
 #include <math.h>
 #include "theme.h"
+#include <X11/X.h> /* DestroyNotify, StructureNotifyMask */
+
+int	window_close_handler(t_app *fdf);
 
 t_modifier_state	*gmod_state(t_modifier_state *set)
 {
@@ -56,6 +59,8 @@ void	init_mlx_handlers(t_app *f)
 	mlx_hook(f->window, ButtonRelease, ButtonReleaseMask,
 		button_release_handler, f);
 	mlx_hook(f->window, MotionNotify, PointerMotionMask, motion_handler, f);
+	mlx_hook(f->window, DestroyNotify, StructureNotifyMask,
+		window_close_handler, f);
 	ft_printf("DEBUG: Initializing palette system\n");
 	init_palette_system(f);
 	mlx_loop_hook(f->mlx, fdf_render, f);

@@ -6,12 +6,12 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 05:03:41 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/23 18:43:09 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/26 12:33:46 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include "time.h" /* custom entropy for seeding */
+#include "time.h"
 
 // forward decls for our RNG API (kept local to avoid adding headers here)
 void	ft_srand(unsigned int new_seed, int select);

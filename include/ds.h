@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:53:43 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/23 18:42:41 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/26 13:36:05 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,9 @@ typedef struct s_trans_stack
 	float				oz;
 }						t_trans_stack;
 
+/**
+ * 
+ */
 typedef struct s_bresenham_state
 {
 	int				delta[3];

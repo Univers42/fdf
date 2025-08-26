@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:33:56 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 18:23:05 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/26 15:45:06 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,13 @@ Can adapt the all the macro using this command when compiling in terminal
 /**
 	* ENUMS
  */
+enum
+{
+	RNG_LCG = 0,
+	RNG_XORSHIFT = 1,
+	RNG_MIDDLE_SQUARE = 2
+};
+
 typedef enum e_texture_type
 {
 	TEXTURE_NONE =			0,

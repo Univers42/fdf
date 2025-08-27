@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 23:27:01 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/07 23:35:14 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/27 20:54:23 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,14 @@ void	zoom_out(t_app *fdf, int keycode, void *data)
 	trans_stack_zoom(&fdf->trans_stack, +1);
 }
 
+/**
+ * @brief projection_iso
+ * 
+ * @param fdf
+ * @param keycode
+ * @param data
+ * @return void
+*/
 void	projection_iso(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode;
@@ -41,6 +49,7 @@ void	projection_iso(t_app *fdf, int keycode, void *data)
 		(float)fdf->height, (float)(fdf->max_z - fdf->min_z));
 }
 
+// stub of stub for legacy code compatibility
 void	project_iso(t_app *fdf, int keycode, void *data)
 {
 	projection_iso(fdf, keycode, data);

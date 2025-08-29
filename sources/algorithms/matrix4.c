@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/15 15:54:47 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/29 22:12:17 by dlesieur         ###   ########.fr       */
+/*   Created: 2025/08/29 22:52:41 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/29 22:52:45 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "libft.h"
- 
+
 /**
  * The identity matrix is a fundamental concept in linear algebra and computer
  * graphics:

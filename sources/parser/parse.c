@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:27:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/21 16:04:22 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:35:00 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,27 @@
 void	color_snapshot_restore(t_app *fdf);
 void	color_snapshot_capture(t_app *fdf);
 
+/**
+ * @brief Finds the end fo teh parseable chunk in the buffer by locating a
+ * delimiter.
+ * 
+ * This function determines the end of the current parseable chunk in th
+ * buffer. If it's the first read.
+ * (bytes_read == 0), it sets the ened to the leftover size. Otherwise it
+ * starts
+ * from the total buffer size.
+ * (leftover + bytes_read) and searches backwards for a delimiter character.
+ * if no delimiter is found,
+ * it reports an error for overly long input values and return false. The found
+ * end index is stored in *chunk_end.
+ * @param p Pointer to the parser structure containing read state
+ * @param buf The buffer array being parsed
+ * @param leftover the number of leftover bytes from previous reads
+ * @param chunk_end Pointer to a size_t where the chunk end index will be
+ * stored
+ * @return true if a valid chunk end is found; false if no delimiter is
+ * found (error case)
+ */
 static inline bool	find_chunk_end(
 	t_parser *p,
 	char *buf,
@@ -88,11 +109,37 @@ bool	parse_buffered(t_parser *p, t_app *fdf, int fd)
 	return (true);
 }
 
+/**
+ * @brief blends two RGB colors using linear interpolation
+ * 
+ * This function performs linear interpolation between two 32-bit
+ * RGB colors, delegating the actual computation to the lerp_color
+ * function. The interpolation factor t ranges from 0.0
+ * (fully color a) to 1.0 (fully color b).
+ * @param a The first RGB color as 32-bit unsigned integer
+ * @param b The second RGB color as 32-bit unsigned integer
+ * @param t The interpolation factor, typically between 0.0 and 1.0
+ * @return the blended RGB color as 32-bit unsigned integer
+ */
 static inline uint32_t	blend_rgb(uint32_t a, uint32_t b, float t)
 {
 	return (lerp_color(a, b, t));
 }
 
+/**
+ * @brief initializes the pivot colors for the height-based
+ * palette
+ * 
+ * This function sets the low, mid, and high pivot colors to
+ * predefined RGB values:
+ * low (blue:0x0000ff)
+ * high (red:0xff0000)
+ * mid (green:0x00ff00)
+ * These pivots are used in color interpolationo for height
+ * based coloring for the map
+ * @param color Pointer to the t_pivot structure where the
+ * colors will be stored
+ */
 void	init_pivot_colors(t_pivot *color)
 {
 	color->low = (void *)(uintptr_t)0x0000FF;
@@ -100,6 +147,25 @@ void	init_pivot_colors(t_pivot *color)
 	color->high = (void *)(uintptr_t)0xFF0000;
 }
 
+/**
+ * @brief retrieves a color from the height based paletter using
+ * pivot colors.
+ * 
+ * This function  interpolates the pivot colors (low, mig, high)
+ * based on the normalized height factor t (ranging from 0.0 to
+ * 1.0). If it is less than 0.5, it blends between low and mid
+ * colors: otherwise, it blends between mid, and high colors.
+ * The blending is performed using linear interpolation
+ * via teh blend rgb function
+ * 
+ * @param color Pointer to the t_pivot structure containing
+ * the low, mid, and high pivot colors.
+ * @param t the normalized height factor, tipically between 0.0
+ * (low) and 1.0 (high)
+ * @return The interpolated RGB color as a 32-bit unsigned integer
+ * @note see the obsidian section type of variables for details on
+ * color representation
+ */
 uint32_t	get_palette_color(t_pivot *color, float t)
 {
 	if (t < 0.5f)

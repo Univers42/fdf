@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:33:56 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/26 15:45:06 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/29 12:59:34 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ Can adapt the all the macro using this command when compiling in terminal
 # define FONT_CHAR_S      			"\x00\x00\x3E\x03\x1E\x30\x1F\x00"
 # define FONT_CHAR_COLON  			"\x00\x0C\x0C\x00\x00\x0C\x0C\x00"
 # define FONT_CHAR_PERIOD 			"\x00\x00\x00\x00\x00\x0C\x0C\x00"
-
+# define COLOR_DEFAULT 0xffffff
+# define ATT_DELIMITER ','
 /**
 	* ENUMS
  */

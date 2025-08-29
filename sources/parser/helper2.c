@@ -6,12 +6,13 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 02:50:58 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 03:02:41 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:46:41 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+// Verify the pattern of hexdigit encountered into the scope
 int	hex_digit(char c)
 {
 	if (c >= '0' && c <= '9')
@@ -23,7 +24,24 @@ int	hex_digit(char c)
 	return (-1);
 }
 
-/* Return number of consumed characters; updates *acc and *digits */
+/**
+ * This function while using all the pointert o update their current
+ * positions will accumulate the value and digits
+ * The purpose of this function is to parse up to 8 hexadecimal digits
+ * from a character buffer (`curr` to `end`), accumulate
+ * their value into `*acc` count how many digits were processed in *digits, 
+ * and return the nu ber of characters consumed.
+ * @param acc pointer to acc
+ * @param cur pointer to current character
+ * @param end pointer to end character to end of chunk
+ * @param digits pointer to digits
+ * @return number of consumed characters; updates *acc and *digits
+ * it reads each character, checks if it's a valid hex digit.
+ * if valid, it shifts the accumulator left by 4 bits and adds the digit value
+ * stops after 8 digits or an invalid character
+ * update both the accumulator and digit count via pointers
+ * return how many characters were processed
+ */
 int	accumulate_hex(uint32_t *acc, char *cur, char *end, int *digits)
 {
 	int	val;
@@ -44,6 +62,12 @@ int	accumulate_hex(uint32_t *acc, char *cur, char *end, int *digits)
 	return (len);
 }
 
+/**
+ * @param n
+ * @param str
+ * @param end
+ * 
+ */
 int	strntohex(uint32_t *n, char *str, char *end)
 {
 	uint32_t	acc;

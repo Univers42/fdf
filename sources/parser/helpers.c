@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 02:47:42 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/21 15:02:36 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/29 17:07:27 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,13 @@
 #define CUTOFF 214748364
 #define HEXTABLE "0123456789abcdef"
 
+/**
+ * parse file the fdf
+ * @param fdf
+ * @param filename
+ * @return bool 
+ * 
+ */
 bool	parse_file(t_app *fdf, char *filename)
 {
 	bool		ok;
@@ -41,6 +48,12 @@ bool	parse_file(t_app *fdf, char *filename)
 	return (ok);
 }
 
+/**
+ * s
+ * @param str
+ * @param i
+ * @param max
+ */
 static inline bool	negative(const char *str, size_t *i, size_t max)
 {
 	bool	is_negative;
@@ -54,6 +67,22 @@ static inline bool	negative(const char *str, size_t *i, size_t max)
 	return (is_negative);
 }
 
+/**
+ * @brief Parses an integer from a string with a max length
+ * handling signs and overflow.
+ * This function attempts to convert a substring of the input
+ * string to an integer, starting from the beginning, up to a specified
+ * maximum length. it handles optional leading `+` or `-` signs,
+ * accumulates digits while checking for integer overflow using predefined
+ * cutoffs (CUTOFF == 214748364)
+ * If the number would overflow accumulation stops. The result is stored in
+ * *n, negated if  negative.
+ * @param n Pointer to an integer where the parse value will be stored
+ * @param str the input string to parse
+ * @param max	The maximum number of characters to consider from the string.
+ * @return	the number of characters successfully parsed (including sign if
+ * present); 0 is parsing fails.
+ */
 int	ft_strntoi(int *n, char *str, size_t max)
 {
 	size_t			i;
@@ -83,6 +112,18 @@ int	ft_strntoi(int *n, char *str, size_t max)
 	return ((int)i);
 }
 
+/**
+ * @brief Skips the hexadecimal prefix "0x" or "0X" from
+ * the string pointer
+ * 
+ * This function checks if the current position in the string
+ * starts with "0x" or "0X"
+ * if so, it advances the string pointer by 2 characters to skip
+ * the prefix and returns true.
+ * @param str Pointer to pointer  to the curr pos updated if prexi is skipped
+ * @param end Pointer to the end of string buffer
+ * @return true if the hexadecimal prefix was found and skipped; false otherwise
+ */
 bool	skip_prefix(char **str, char *end)
 {
 	if (*str + 1 < end && **str == '0' && ((*str)[1] == 'x'

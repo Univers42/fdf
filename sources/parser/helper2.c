@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 02:50:58 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/29 14:46:41 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:48:10 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,21 @@ int	accumulate_hex(uint32_t *acc, char *cur, char *end, int *digits)
 }
 
 /**
- * @param n
- * @param str
- * @param end
+ * @brief Parses a hexadecimal number from a string segment, handling
+ * optional "0x" prefix.
+ * 
+ * This function attempts to convert a substring from `str` or `end`
+ * into a 32-bit unsigned integer, supporting optional "0x" or "0X"
+ * prefixes. it skips teh prefix if present, accumulates up to 8
+ * hexadecinaml digits using `accumulate_hex`, and stores the result in
+ * `*n`. If no valid digits are found. it returns 0. the function
+ * returns the number of characters consumes from the start
+ * @param n Pointer to a uint32_t where the parsed hexadecimal value
+ * will be sorted
+ * @param str Pointer to the start of teh string segment to parse
+ * @param end Pointer to the end of the string  segment (non-inclusive)
+ * @return The number of characters consumed; 0 if parsing fails
+ * (no digits or invalid input)
  * 
  */
 int	strntohex(uint32_t *n, char *str, char *end)

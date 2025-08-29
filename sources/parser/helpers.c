@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 02:47:42 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/29 17:07:27 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:43:15 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,18 @@
 #define HEXTABLE "0123456789abcdef"
 
 /**
- * parse file the fdf
- * @param fdf
- * @param filename
- * @return bool 
+ * @brief Parses an FDF file by reading and processing its contents.
  * 
+ * This function opens the specified file in read-only mode, allocates
+ * a buffer for parsing, initialize a parser structure, and delegates
+ * the actual parsing to parse_buffered.
+ * it handles file opening errors by printing an error message,
+ * ensures proper cleanup of resources (closing file descriptor
+ * and freeing buffer), and return the success status.
+ * @param fdf pointer to the app structure where parsed data will be stored
+ * @param filename The path to the fdf file to be parsed
+ * @return true if the file is parsed succcessfully; false if an error occurs
+ * (file not found or parsing failure)
  */
 bool	parse_file(t_app *fdf, char *filename)
 {
@@ -49,10 +56,19 @@ bool	parse_file(t_app *fdf, char *filename)
 }
 
 /**
- * s
- * @param str
- * @param i
- * @param max
+ * @brief Checks for and consumes an optional sign character in the string
+ * 
+ * This function examines the character at the current index in the 
+ * string. if it is a '+' or '-', it determines if the sign is negative,
+ * advances the idnex to teh next character, and returs the sign status.
+ * if no sign is presnt or the index is out of bounds. it returns false(positive)
+ * 
+ * @param str the input string being parsed.
+ * @param i Pointer to the current index in the string: incremented if a sign
+ * is consumed
+ * @param max The maximum value valid index in the string
+ * @return true if a negative sign '-' is foudn and consumed:
+ * false otherwise
  */
 static inline bool	negative(const char *str, size_t *i, size_t max)
 {

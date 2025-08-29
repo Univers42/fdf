@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:27:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/29 18:35:00 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:53:33 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,28 @@ static inline bool	find_chunk_end(
 }
 
 /**
- * Chunks represent the parseable end of the buffer. Whatever is after chunk end
- * is copied to the front of the buffer.
-*/
+ * @brief parses the file contents i buffered chunks, handling
+ * partial read and leftovers.
+ * 
+ * This function reads the file in chunks into a buffer, ensuring
+ * that parsing occurs only on complete
+ * parseable segments (up to a delimiter). it manages leftover data
+ * from previous reads by prepending it
+ * to new reads. for each chunk, it fins a safe aend point, parses
+ * the chunk, and moves any remaining.
+ * Data to the front of the buffer for the next iteration. Upon
+ * completion, it transfers min/max z values
+ * to the app structure and captures a color snapshot. The loop
+ * continues until the file is fully read.
+ * 
+ * @param p Pointer to the parser structure containing buffer and
+ * state.
+ * @param fdf Pointer to the application structure where parsed data
+ * is stored
+ * @param fd the file descriptor of the open file being parsed
+ * @return true if the buffered parsing completes successfully;
+ * false if an error occurs (e.g., read failure, parsing error)
+ */
 bool	parse_buffered(t_parser *p, t_app *fdf, int fd)
 {
 	size_t			leftover;

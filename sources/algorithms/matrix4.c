@@ -6,13 +6,28 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 15:54:47 by dmontesd          #+#    #+#             */
-/*   Updated: 2025/08/26 17:21:11 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/29 22:12:17 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "libft.h"
  
+/**
+ * The identity matrix is a fundamental concept in linear algebra and computer
+ * graphics:
+ * ir represents a "do nothing" transformation. When a point or vector is
+ * multiplied by the identity matrix, it remaing unchanged (e.g.,)
+ * INITIALIZATION: used to reset or initialize transformation matrices before
+ * applying rotations, translations, or scales. For example, call
+ * `identity_matrix4(m)` before using `matrix4_rotate_x_abs(m,angle)` to 
+ * to ensure a clean starting point
+ * MATRIX-MULTIPLICATION: in chains of transformations (combined = RotationX
+ * * RotationY * identity), it doesn't alter the result. 
+ * OPTIMIZATION:helps avoid unnecessary computation by providing a baseline
+ * matrix
+ */
+
 /**
  * @brief Create a 4x4 identity matrix (row-major).
  * @param[out] out Pointer to at least 16 floats (destination 4x4 matrix).

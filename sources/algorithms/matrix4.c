@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 22:52:41 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/29 22:52:45 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/31 13:18:18 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
  */
 void	identity_matrix4(float *out)
 {
-	ft_memset(out, 0, sizeof(float[16]));
+	ft_memset(out, 0, sizeof(float [16]));
 	out[0] = 1.0f;
 	out[5] = 1.0f;
 	out[10] = 1.0f;

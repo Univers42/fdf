@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:26:07 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/29 22:02:13 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/31 12:16:28 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@
  * The absolute approach ensure consistent orientation without drift.
  */
 
- 
 void	trans_stack_rotate_x(t_trans_stack *t, float dx)
 {
 	t->dirty[M_ROTATION_X] = true;

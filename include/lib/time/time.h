@@ -6,12 +6,13 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 17:40:35 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/23 17:48:09 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/31 12:29:36 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TIME_H
 # define TIME_H
 
-unsigned long ft_time(void);
+unsigned long	ft_time(void);
+
 #endif

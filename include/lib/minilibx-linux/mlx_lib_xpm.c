@@ -1,19 +1,31 @@
-/*
-** mlx_xpm.c for minilibX in 
-** 
-** Made by Charlie Root
-** Login   <ol@epitech.net>
-** 
-** Started on  Fri Dec  8 11:07:24 2000 Charlie Root
-** Last update Thu Oct  4 16:00:22 2001 Charlie Root
-*/
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_lib_xpm.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 15:39:41 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:40:41 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include	"mlx_int.h"
 
-
-
-
+/**
+ * @brief Loads an XPM image using a provided XPM function and returns a MiniLibX image.
+ *
+ * This function uses the given XPM function (such as XpmReadFileToImage or XpmCreateImageFromData)
+ * to load an XPM image, then wraps it in a MiniLibX image structure. It handles shared memory,
+ * pixmap creation, and image data copying as needed.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param width Pointer to store the image width.
+ * @param height Pointer to store the image height.
+ * @param xpm_func Function pointer to the XPM loader function.
+ * @param param Parameter to pass to the XPM loader function (filename or data).
+ * @return Pointer to the created MiniLibX image, or NULL on failure.
+ */
 void		*mlx_int_xpm_f_image(t_xvar *xvar,int *width,int *height,
 				     int (*xpm_func)(),void *param)
 {
@@ -65,7 +77,15 @@ void		*mlx_int_xpm_f_image(t_xvar *xvar,int *width,int *height,
   return (im2);
 }
 
-
+/**
+ * @brief Compares two XImage structures for equality.
+ *
+ * Checks if all relevant fields of two XImage structures match.
+ *
+ * @param img1 Pointer to the first XImage.
+ * @param img2 Pointer to the second XImage.
+ * @return 1 if images are equal, 0 otherwise.
+ */
 int	mlx_int_egal_img(XImage *img1,XImage *img2)
 {
   if (img1->width!=img2->width || img1->height!=img2->height ||
@@ -82,14 +102,30 @@ int	mlx_int_egal_img(XImage *img1,XImage *img2)
   return (1);
 }
 
-
+/**
+ * @brief Loads an XPM image from a file and returns a MiniLibX image.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param filename Path to the XPM file.
+ * @param width Pointer to store the image width.
+ * @param height Pointer to store the image height.
+ * @return Pointer to the created MiniLibX image, or NULL on failure.
+ */
 void	*mlx_xpm_file_to_image(t_xvar *xvar,char *filename,
 			       int *width,int *height)
 {
   return (mlx_int_xpm_f_image(xvar,width,height,XpmReadFileToImage,filename));
 }
 
-
+/**
+ * @brief Loads an XPM image from data and returns a MiniLibX image.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param data Pointer to the XPM data array.
+ * @param width Pointer to store the image width.
+ * @param height Pointer to store the image height.
+ * @return Pointer to the created MiniLibX image, or NULL on failure.
+ */
 void	*mlx_xpm_to_image(t_xvar *xvar,char **data,int *width,int *height)
 {
   return (mlx_int_xpm_f_image(xvar,width,height,XpmCreateImageFromData,(void *)data));

@@ -1,18 +1,27 @@
-/*
-** mlx_loop.c for MiniLibX in 
-** 
-** Made by Charlie Root
-** Login   <ol@epitech.net>
-** 
-** Started on  Wed Aug  2 18:58:11 2000 Charlie Root
-** Last update Fri Sep 30 14:47:41 2005 Olivier Crouzet
-*/
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_loop.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 15:41:14 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:41:49 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include	"mlx_int.h"
 
 extern int	(*(mlx_int_param_event[]))();
 
+/**
+ * @brief Returns the number of active MiniLibX windows.
+ *
+ * Iterates through the window list and counts the windows.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @return Number of windows.
+ */
 static int	win_count(t_xvar *xvar)
 {
 	int			i;
@@ -28,12 +37,29 @@ static int	win_count(t_xvar *xvar)
 	return (i);
 }
 
+/**
+ * @brief Signals the main loop to end.
+ *
+ * Sets the end_loop flag in the display context.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @return Always returns 1.
+ */
 int			mlx_loop_end(t_xvar *xvar)
 {
 	xvar->end_loop = 1;
 	return (1);
 }
 
+/**
+ * @brief Runs the MiniLibX main event loop.
+ *
+ * Processes X11 events for all windows, dispatches event hooks, and calls the loop hook.
+ * The loop continues until there are no windows or end_loop is set.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @return Always returns 0.
+ */
 int			mlx_loop(t_xvar *xvar)
 {
 	XEvent		ev;

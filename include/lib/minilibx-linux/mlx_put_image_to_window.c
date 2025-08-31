@@ -1,18 +1,30 @@
-/*
-** mlx_put_image_to_window.c for MiniLibX in raytraceur
-** 
-** Made by Charlie Root
-** Login   <ol@epitech.net>
-** 
-** Started on  Mon Aug 14 15:55:49 2000 Charlie Root
-** Last update Sun Oct  2 09:53:00 2005 Olivier Crouzet
-*/
-
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_put_image_to_window.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 15:46:13 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:46:23 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include	"mlx_int.h"
 
-
+/**
+ * @brief Puts an image onto a MiniLibX window at the specified coordinates.
+ *
+ * Handles shared memory and standard XImage types, sets the graphics context,
+ * and copies the image to the window. Flushes the display if required.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param win Pointer to the MiniLibX window structure.
+ * @param img Pointer to the image structure.
+ * @param x X coordinate in the window.
+ * @param y Y coordinate in the window.
+ * @return Always returns 0.
+ */
 int	mlx_put_image_to_window(t_xvar *xvar,t_win_list *win,t_img *img,
 				int x,int y)
 {

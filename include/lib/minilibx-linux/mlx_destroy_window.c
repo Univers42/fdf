@@ -1,17 +1,28 @@
-/*
-** mlx_destroy_window.c for MinilibX in 
-** 
-** Made by Charlie Root
-** Login   <ol@epitech.net>
-** 
-** Started on  Tue Mar 12 10:25:15 2002 Charlie Root
-** Last update Tue May 15 16:46:08 2007 Olivier Crouzet
-*/
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_destroy_window.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 14:32:25 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 14:32:26 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include	"mlx_int.h"
 
-
+/**
+ * @brief Destroys a MiniLibX window and frees associated resources.
+ *
+ * This function removes the specified window from the internal window list,
+ * destroys the X11 window and graphics context, frees memory, and flushes
+ * the display if required.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param win Pointer to the window to be destroyed.
+ * @return Always returns 0.
+ */
 int	mlx_destroy_window(t_xvar *xvar,t_win_list *win)
 {
   t_win_list	*w;

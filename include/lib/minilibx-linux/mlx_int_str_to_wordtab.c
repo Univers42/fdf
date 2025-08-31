@@ -1,17 +1,28 @@
-/*
-** mlx_int_str_to_wordtab.c for MinilibX in 
-** 
-** Made by Charlie Root
-** Login   <ol@epitech.net>
-** 
-** Started on  Wed Sep 13 11:36:09 2000 Charlie Root
-** Last update Fri Dec 14 11:02:09 2001 Charlie Root
-*/
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_int_str_to_wordtab.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 15:26:45 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:27:20 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include	"mlx_int.h"
 
-
+/**
+ * @brief Finds the first occurrence of a substring within a string.
+ *
+ * Searches for the substring 'find' in the string 'str' up to 'len' characters.
+ * Returns the position of the first occurrence, or -1 if not found.
+ *
+ * @param str The string to search in.
+ * @param find The substring to search for.
+ * @param len The maximum number of characters to search.
+ * @return The position of the first occurrence, or -1 if not found.
+ */
 int	mlx_int_str_str(char *str,char *find,int len)
 {
   int	len_f;
@@ -36,8 +47,18 @@ int	mlx_int_str_str(char *str,char *find,int len)
   return (-1);
 }
 
-
-
+/**
+ * @brief Finds the first occurrence of a substring outside quotes.
+ *
+ * Searches for the substring 'find' in the string 'str' up to 'len' characters,
+ * but ignores matches that occur inside double quotes. Returns the position of
+ * the first occurrence outside quotes, or -1 if not found.
+ *
+ * @param str The string to search in.
+ * @param find The substring to search for.
+ * @param len The maximum number of characters to search.
+ * @return The position of the first occurrence outside quotes, or -1 if not found.
+ */
 int	mlx_int_str_str_cote(char *str,char *find,int len)
 {
   int	len_f;
@@ -69,7 +90,16 @@ int	mlx_int_str_str_cote(char *str,char *find,int len)
   return (-1);
 }
 
-
+/**
+ * @brief Splits a string into words separated by spaces or tabs.
+ *
+ * This function tokenizes the input string into an array of words, using spaces
+ * and tabs as delimiters. It modifies the input string by inserting null terminators
+ * and returns an array of pointers to the beginning of each word.
+ *
+ * @param str The string to split. This string will be modified.
+ * @return A NULL-terminated array of word pointers, or NULL on allocation failure.
+ */
 char	**mlx_int_str_to_wordtab(char *str)
 {
   char	**tab;

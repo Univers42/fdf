@@ -1,17 +1,29 @@
-/*
-** mlx_init.c for MiniLibX in 
-** 
-** Made by Charlie Root
-** Login   <ol@epitech.net>
-** 
-** Started on  Mon Jul 31 16:52:42 2000 Charlie Root
-** Last update Fri Jan 28 17:05:09 2005 Olivier Crouzet
-*/
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_init.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 15:22:10 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:22:12 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include	"mlx_int.h"
 #include	<stdlib.h>
 
+/**
+ * @brief Initializes the MiniLibX library and returns a display context.
+ *
+ * This function sets up the connection to the X11 display, initializes
+ * screen, root window, colormap, and color depth, and prepares internal
+ * structures for window management and event handling. It also checks
+ * for TrueColor visual support and shared memory capabilities.
+ *
+ * @return Pointer to the initialized MiniLibX display context (t_xvar),
+ *         or NULL on failure.
+ */
 void	*mlx_init()
 {
 	t_xvar	*xvar;
@@ -53,7 +65,17 @@ void	*mlx_init()
 ** alpha libX need a check of the DISPLAY env var, or shm is allowed
 ** in remote Xserver connections.
 */
-
+/**
+ * @brief Checks and configures X11 shared memory support for MiniLibX.
+ *
+ * This function queries the X11 server for shared memory (XShm) support,
+ * determines the appropriate pixmap format, and disables shared memory if
+ * the display is remote or not compatible. It updates the display context
+ * with shared memory usage flags and format information.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @return Always returns 0.
+ */
 int		mlx_int_deal_shm(t_xvar *xvar)
 {
 	int		use_pshm;
@@ -76,10 +98,17 @@ int		mlx_int_deal_shm(t_xvar *xvar)
 	}
 }
 
-/*
-** TrueColor Visual is needed to have *_mask correctly set
-*/
-
+/**
+ * @brief Calculates RGB bit shifts and lengths for TrueColor visuals.
+ *
+ * This function analyzes the red, green, and blue masks of the X11 visual
+ * and determines the number of bits to shift and the length of each color
+ * component. The results are stored in the decrgb array of the display context.
+ * This is required for proper color conversion and pixel value calculation.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @return Always returns 0.
+ */
 int		mlx_int_rgb_conversion(t_xvar *xvar)
 {
 	bzero(xvar->decrgb,sizeof(int)*6);

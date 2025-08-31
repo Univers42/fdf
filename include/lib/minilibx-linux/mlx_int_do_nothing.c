@@ -1,15 +1,24 @@
-/*
-** mlx_int_do_nothing.c for MiniLibX in 
-** 
-** Made by Charlie Root
-** Login   <ol@epitech.net>
-** 
-** Started on  Tue Aug  8 12:58:24 2000 Charlie Root
-** Last update Tue Sep 25 15:56:22 2001 Charlie Root
-*/
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_int_do_nothing.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 15:21:58 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:22:00 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-
-
+/**
+ * @brief Dummy function that does nothing.
+ *
+ * This function is used as a placeholder callback in MiniLibX.
+ * It ignores its parameter and always returns 0.
+ *
+ * @param param Unused parameter.
+ * @return Always returns 0.
+ */
 int	mlx_int_do_nothing(void *param)
 {
   

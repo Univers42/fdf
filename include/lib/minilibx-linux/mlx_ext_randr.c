@@ -1,5 +1,14 @@
-
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_ext_randr.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 14:33:27 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 14:33:44 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include	"mlx_int.h"
 
@@ -10,7 +19,22 @@
 
 RRMode	saved_mode = 0;
 
-
+/**
+ * @file mlx_ext_randr.c
+ * @brief Provides fullscreen mode switching for MiniLibX windows using XRandR.
+ *
+ * This file contains functions to toggle fullscreen mode for a MiniLibX window
+ * by interacting with the XRandR extension. It selects the best available screen
+ * mode for fullscreen, saves the previous mode, and restores it when exiting fullscreen.
+ *
+ * The main function, mlx_ext_fullscreen, changes the window's display mode and
+ * manages keyboard and pointer grabs as needed.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param win Pointer to the window to be toggled.
+ * @param fullscreen Non-zero to enable fullscreen, zero to restore previous mode.
+ * @return Always returns 0.
+ */
 int			mlx_ext_fullscreen(t_xvar *xvar, t_win_list *win, int fullscreen)
 {
   XWindowAttributes	watt;

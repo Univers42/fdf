@@ -1,13 +1,14 @@
-/*
-** mlx_new_window.c for MiniLibX in 
-** 
-** Made by Charlie Root
-** Login   <ol@epitech.net>
-** 
-** Started on  Mon Jul 31 17:29:02 2000 Charlie Root
-** Last update Thu Oct  4 15:44:43 2001 Charlie Root
-*/
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_new_window.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 15:45:17 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:45:31 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 /*
 ** We do not use White/BlackPixel macro, TrueColor Visual make sure
@@ -18,7 +19,18 @@
 
 #include	"mlx_int.h"
 
-
+/**
+ * @brief Creates a new MiniLibX window.
+ *
+ * Allocates and initializes a new window structure, creates the X11 window,
+ * sets window manager protocols, disables resizing, and maps the window.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param size_x Window width in pixels.
+ * @param size_y Window height in pixels.
+ * @param title Window title string.
+ * @return Pointer to the created window structure, or NULL on failure.
+ */
 void	*mlx_new_window(t_xvar *xvar,int size_x,int size_y,char *title)
 {
 	t_win_list				*new_win;

@@ -1,18 +1,30 @@
-/*
- ** mlx_pixel_put.c for MiniLibX in 
- ** 
- ** Made by Charlie Root
- ** Login   <ol@epitech.net>
- ** 
- ** Started on  Mon Jul 31 19:01:33 2000 Charlie Root
-** Last update Tue Sep 25 17:09:49 2001 Charlie Root
- */
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_pixel_put.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 15:45:38 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:46:01 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include	"mlx_int.h"
 
-
-
+/**
+ * @brief Draws a pixel at the specified coordinates in a MiniLibX window.
+ *
+ * Sets the foreground color of the graphics context, draws the point, and flushes
+ * the display if required.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param win Pointer to the MiniLibX window structure.
+ * @param x X coordinate of the pixel.
+ * @param y Y coordinate of the pixel.
+ * @param color Color value of the pixel.
+ * @return Always returns 0.
+ */
 int		mlx_pixel_put(t_xvar *xvar,t_win_list *win,
 			      int x,int y,int color)
 {

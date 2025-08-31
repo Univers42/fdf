@@ -1,19 +1,27 @@
-/*
-** mlx_int_set_win_event_mask.c for MiniLibX in 
-** 
-** Made by Charlie Root
-** Login   <ol@epitech.net>
-** 
-** Started on  Thu Aug  3 11:49:06 2000 Charlie Root
-** Last update Fri Feb 23 17:07:42 2001 Charlie Root
-*/
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_int_set_win_event_mask.c                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 15:25:58 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:26:07 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include	"mlx_int.h"
 
-
-
-
+/**
+ * @brief Sets the event mask for all MiniLibX windows.
+ *
+ * This function iterates through the window list and updates the X11 event mask
+ * for each window based on the registered hooks. It combines all event masks
+ * and applies them using XChangeWindowAttributes.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @return Always returns 0.
+ */
 int	mlx_int_set_win_event_mask(t_xvar *xvar)
 {
   t_win_list	*win;

@@ -1,26 +1,27 @@
-/*
-** mlx_new_image.c for MiniLibX in raytraceur
-** 
-** Made by Charlie Root
-** Login   <ol@epitech.net>
-** 
-** Started on  Mon Aug 14 15:29:14 2000 Charlie Root
-** Last update Wed May 25 16:46:31 2011 Olivier Crouzet
-*/
-
-
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_new_image.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 15:43:39 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:44:57 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include	"mlx_int.h"
 
-/*
-** To handle X errors
-*/
-
 #define	X_ShmAttach	1
 
+//To handle X errors
 int	mlx_X_error;
 
+/**
+ * @brief X error handler for shared memory attach.
+ *
+ * Prints a warning if the X server can't attach shared memory.
+ */
 int	shm_att_pb(Display *d,XErrorEvent *ev)
 {
   if (ev->request_code==146 && ev->minor_code==X_ShmAttach)
@@ -28,12 +29,18 @@ int	shm_att_pb(Display *d,XErrorEvent *ev)
   mlx_X_error = 1;
 }
 
-
-/*
-**  Data malloc :  width+32 ( bitmap_pad=32 ),    *4 = *32 / 8bit
-*/
-
-
+/**
+ * @brief Creates a new shared memory image for MiniLibX.
+ *
+ * Allocates and attaches a shared memory segment, creates an XImage using XShm,
+ * and sets up the image structure. Handles errors and cleans up resources if needed.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param width Image width in pixels.
+ * @param height Image height in pixels.
+ * @param format Image format (e.g., ZPixmap, XYPixmap).
+ * @return Pointer to the created image structure, or NULL on failure.
+ */
 void	*mlx_int_new_xshm_image(t_xvar *xvar,int width,int height,int format)
 {
   t_img	*img;
@@ -103,7 +110,18 @@ void	*mlx_int_new_xshm_image(t_xvar *xvar,int width,int height,int format)
 }
 
 
-
+/**
+ * @brief Creates a new standard image for MiniLibX.
+ *
+ * Allocates memory for image data, creates an XImage, and sets up the image structure.
+ * Handles errors and cleans up resources if needed.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param width Image width in pixels.
+ * @param height Image height in pixels.
+ * @param format Image format (e.g., ZPixmap, XYPixmap).
+ * @return Pointer to the created image structure, or NULL on failure.
+ */
 void	*mlx_int_new_image(t_xvar *xvar,int width, int height,int format)
 {
   t_img	*img;
@@ -137,7 +155,16 @@ void	*mlx_int_new_image(t_xvar *xvar,int width, int height,int format)
   return (img);
 }
 
-
+/**
+ * @brief Creates a new ZPixmap image for MiniLibX.
+ *
+ * Uses shared memory if available, otherwise creates a standard image.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param width Image width in pixels.
+ * @param height Image height in pixels.
+ * @return Pointer to the created image structure, or NULL on failure.
+ */
 void	*mlx_new_image(t_xvar *xvar,int width, int height)
 {
   t_img	*img;
@@ -148,6 +175,16 @@ void	*mlx_new_image(t_xvar *xvar,int width, int height)
   return (mlx_int_new_image(xvar,width,height,ZPixmap));
 }
 
+/**
+ * @brief Creates a new XYPixmap image for MiniLibX.
+ *
+ * Uses shared memory if available, otherwise creates a standard image.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param width Image width in pixels.
+ * @param height Image height in pixels.
+ * @return Pointer to the created image structure, or NULL on failure.
+ */
 void	*mlx_new_image2(t_xvar *xvar,int width, int height)
 {
   t_img	*img;

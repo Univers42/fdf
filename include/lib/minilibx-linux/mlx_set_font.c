@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_set_font.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalliar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/30 13:30:47 by amalliar          #+#    #+#             */
-/*   Updated: 2020/09/30 17:08:36 by amalliar         ###   ########.fr       */
+/*   Created: 2025/08/31 15:47:25 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:47:34 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,16 @@
 ** utility to get valid font names for this function.
 */
 
+/**
+ * @brief Sets the font for text rendering in a MiniLibX window.
+ *
+ * Allows specifying the font to be used by mlx_string_put. Only fixed-width bitmap fonts
+ * are supported by Xlib. Use the xfontsel utility to get valid font names.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @param win Pointer to the MiniLibX window structure.
+ * @param name Name of the font to load.
+ */
 void	mlx_set_font(t_xvar *xvar, t_win_list *win, char *name)
 {
 	static Font		font = 0;

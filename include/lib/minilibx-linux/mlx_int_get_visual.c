@@ -1,14 +1,14 @@
-/*
-** mlx_int_get_visual.c for MinilibX in 
-** 
-** Made by Charlie Root
-** Login   <ol@epitech.net>
-** 
-** Started on  Wed Oct  3 17:01:51 2001 Charlie Root
-** Last update Thu Oct  4 15:00:45 2001 Charlie Root
-*/
-
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_int_get_visual.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/31 15:22:39 by dlesieur          #+#    #+#             */
+/*   Updated: 2025/08/31 15:22:49 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include	"mlx_int.h"
 
@@ -17,7 +17,16 @@
 ** We need a private colormap for non-default Visual.
 */
 
-
+/**
+ * @brief Selects a TrueColor visual for the MiniLibX display context.
+ *
+ * This function checks if the default visual is TrueColor. If not, it searches
+ * for a TrueColor visual with the current depth and sets it in the display context.
+ * If a non-default visual is used, it marks the need for a private colormap.
+ *
+ * @param xvar Pointer to the MiniLibX display context.
+ * @return 0 on success, -1 if no TrueColor visual is found.
+ */
 int		mlx_int_get_visual(t_xvar *xvar)
 {
   XVisualInfo	*vi;

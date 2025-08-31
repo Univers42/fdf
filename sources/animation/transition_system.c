@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:28:19 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 16:46:17 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/31 16:03:24 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,17 @@
 
 /* helpers to keep functions short and declarations at top */
 
+/**
+ * @brief Ensures the original positions buffer is allocated
+ *
+ * Allocates memory for storign the original grid position of not already
+ * done. Frees any existing buffer fefore allocating a new one
+ *
+ * @param fdf Pointer to the main application structure
+ * @param st Pointer to the transition state structure
+ * @return 1 on success, 0 on failure (memory allocation error)
+ *
+ */
 static int	ensure_original_buffer(t_app *fdf, t_transition_state *st)
 {
 	size_t	total;
@@ -30,6 +41,15 @@ static int	ensure_original_buffer(t_app *fdf, t_transition_state *st)
 	return (1);
 }
 
+/**
+ * @brief Fills the original positions buffer with grid data.
+ *
+ * Populates the original_positions array with x, y coordinates and z values
+ * from the initial grid points.
+ *
+ * @param fdf Pointer to the main application structure.
+ * @param st Pointer to the transition state structure.
+ */
 static void	fill_original_positions(t_app *fdf, t_transition_state *st)
 {
 	int	y;
@@ -52,7 +72,14 @@ static void	fill_original_positions(t_app *fdf, t_transition_state *st)
 	}
 }
 
-/* Store original grid positions once */
+/**
+ * @brief Stores the original grid positions once.
+ *
+ * Initializes the original positions buffer if not already done.
+ * This is called once to capture the initial state of the grid.
+ *
+ * @param fdf Pointer to the main application structure.
+ */
 void	store_original_positions(t_app *fdf)
 {
 	t_transition_state	*st;
@@ -66,6 +93,18 @@ void	store_original_positions(t_app *fdf)
 	st->initialized = true;
 }
 
+/**
+ * @brief Applies interpolation for a single row during transition.
+ *
+ * For each point in the row, computes the interpolated position between
+ * the current and target shapes using the progress factor t, then applies
+ * the transformation matrix.
+ *
+ * @param fdf Pointer to the main application structure.
+ * @param st Pointer to the transition state structure.
+ * @param t Interpolation progress factor (0.0 to 1.0).
+ * @param y The row index to process.
+ */
 static void	apply_row(t_app *fdf, t_transition_state *st, float t, int y)
 {
 	t_row_apply	v;
@@ -92,6 +131,16 @@ static void	apply_row(t_app *fdf, t_transition_state *st, float t, int y)
 	}
 }
 
+/**
+ * @brief Applies the interpolated frame for the entire grid.
+ *
+ * Processes each row of the grid, applying the interpolation between
+ * current and target shapes based on the progress factor t.
+ *
+ * @param fdf Pointer to the main application structure.
+ * @param st Pointer to the transition state structure.
+ * @param t Interpolation progress factor (0.0 to 1.0).
+ */
 void	apply_interpolated_frame(t_app *fdf, t_transition_state *st, float t)
 {
 	int	y;

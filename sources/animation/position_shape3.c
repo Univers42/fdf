@@ -6,14 +6,22 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 15:13:25 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 17:51:26 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/31 16:09:31 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
-// Local orig_z used by pos_pyramid
+/**
+ * @brief Retrieves the original Z value for a grid point.
+ *
+ * Gets the original Z coordinate from the stored original positions.
+ *
+ * @param f Pointer to the main application structure.
+ * @param p Pointer to the input grid point.
+ * @return The original Z value, or 0.0f if invalid.
+ */
 float	orig_z(t_app *f, t_point2 *p)
 {
 	t_transition_state	*st;
@@ -40,6 +48,15 @@ void	pos_heart(t_app *f, t_point2 *p, t_fpoint3 *o);
 void	pos_cone(t_app *f, t_point2 *p, t_fpoint3 *o);
 void	pos_tube(t_app *f, t_point2 *p, t_fpoint3 *o);
 
+/**
+ * @brief Computes the pyramid shape position.
+ *
+ * Maps the grid point to a position on a pyramid surface.
+ *
+ * @param f Pointer to the main application structure.
+ * @param p Pointer to the input grid point.
+ * @param o Pointer to the output 3D position.
+ */
 void	pos_pyramid(t_app *f, t_point2 *p, t_fpoint3 *o)
 {
 	float	base;
@@ -59,7 +76,13 @@ void	pos_pyramid(t_app *f, t_point2 *p, t_fpoint3 *o)
 		o->z = orig_z(f, p) * 0.05f;
 }
 
-/* singleton function-pointer table for shape positions */
+/**
+ * @brief Returns the singleton function-pointer table for shape positions.
+ *
+ * Provides a static table of functions to compute positions for each shape.
+ *
+ * @return Pointer to the array of shape position functions.
+ */
 t_shape_pos_fn	*shape_pos_tbl(void)
 {
 	static t_shape_pos_fn	tbl[SHAPE_COUNT] = {

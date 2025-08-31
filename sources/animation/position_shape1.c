@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 15:10:44 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 17:52:19 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/31 16:08:10 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@ void	pos_heart(t_app *f, t_point2 *p, t_fpoint3 *o);
 void	pos_cone(t_app *f, t_point2 *p, t_fpoint3 *o);
 void	pos_tube(t_app *f, t_point2 *p, t_fpoint3 *o);
 
+/**
+ * @brief Computes the original grid position.
+ *
+ * Sets the output position to the grid coordinates with the original Z value.
+ *
+ * @param f Pointer to the main application structure.
+ * @param p Pointer to the input grid point.
+ * @param o Pointer to the output 3D position.
+ */
 void	pos_original(t_app *f, t_point2 *p, t_fpoint3 *o)
 {
 	(void)f;
@@ -29,6 +38,15 @@ void	pos_original(t_app *f, t_point2 *p, t_fpoint3 *o)
 	o->z = orig_z(f, p);
 }
 
+/**
+ * @brief Computes the torus shape position.
+ *
+ * Maps the grid point to a position on a torus surface.
+ *
+ * @param f Pointer to the main application structure.
+ * @param p Pointer to the input grid point.
+ * @param o Pointer to the output 3D position.
+ */
 void	pos_torus(t_app *f, t_point2 *p, t_fpoint3 *o)
 {
 	float	major_r;
@@ -45,6 +63,15 @@ void	pos_torus(t_app *f, t_point2 *p, t_fpoint3 *o)
 	o->z = minor_r * sinf(v) + orig_z(f, p) * 0.05f;
 }
 
+/**
+ * @brief Computes the sphere shape position.
+ *
+ * Maps the grid point to a position on a sphere surface.
+ *
+ * @param f Pointer to the main application structure.
+ * @param p Pointer to the input grid point.
+ * @param o Pointer to the output 3D position.
+ */
 void	pos_sphere(t_app *f, t_point2 *p, t_fpoint3 *o)
 {
 	float	r;
@@ -59,6 +86,15 @@ void	pos_sphere(t_app *f, t_point2 *p, t_fpoint3 *o)
 	o->z = r * cosf(phi) + orig_z(f, p) * 0.05f;
 }
 
+/**
+ * @brief Computes the cube shape position.
+ *
+ * Maps the grid point to a position approximating a cube surface.
+ *
+ * @param f Pointer to the main application structure.
+ * @param p Pointer to the input grid point.
+ * @param o Pointer to the output 3D position.
+ */
 void	pos_cube(t_app *f, t_point2 *p, t_fpoint3 *o)
 {
 	float	cube_sz;

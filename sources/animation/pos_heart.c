@@ -6,13 +6,22 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:47:16 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 17:52:10 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/31 16:11:55 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
+/**
+ * @brief Computes the Z position for the upper lobes of the heart shape.
+ *
+ * Calculates the Z coordinate based on distance to the upper lobes.
+ *
+ * @param s Scale factor for the shape.
+ * @param n Normalized coordinates.
+ * @param o Pointer to the output 3D position.
+ */
 void	heart_upper_lobes(float s, t_fpoint2 n, t_fpoint3 *o)
 {
 	float	dist1;
@@ -28,6 +37,15 @@ void	heart_upper_lobes(float s, t_fpoint2 n, t_fpoint3 *o)
 		o->z = 0.0f;
 }
 
+/**
+ * @brief Computes the Z position for the lower point of the heart shape.
+ *
+ * Calculates the Z coordinate based on the lower point factor.
+ *
+ * @param s Scale factor for the shape.
+ * @param n Normalized coordinates.
+ * @param o Pointer to the output 3D position.
+ */
 void	heart_lower_point(float s, t_fpoint2 n, t_fpoint3 *o)
 {
 	float	point_factor;
@@ -39,6 +57,15 @@ void	heart_lower_point(float s, t_fpoint2 n, t_fpoint3 *o)
 		o->z = 0.0f;
 }
 
+/**
+ * @brief Normalizes the grid point coordinates for heart shape calculation.
+ *
+ * Converts grid coordinates to normalized [-1, 1] range.
+ *
+ * @param f Pointer to the main application structure.
+ * @param p Pointer to the input grid point.
+ * @return Normalized coordinates as t_fpoint2.
+ */
 t_fpoint2	heart_norm(t_app *f, t_point2 *p)
 {
 	t_fpoint2	n;

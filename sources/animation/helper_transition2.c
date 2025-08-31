@@ -6,13 +6,21 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 13:36:02 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 18:38:06 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/31 16:14:39 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-/* generic applicator: compute target shape positions and apply transform */
+/**
+ * @brief Applies a shape transformation to the entire grid.
+ *
+ * Computes the 3D positions for each grid point based on the specified shape
+ * and applies the transformation matrix to update the transformed points.
+ *
+ * @param fdf Pointer to the main application structure.
+ * @param shape The shape type to apply.
+ */
 void	apply_shape_grid(t_app *fdf, t_shape_type shape)
 {
 	t_meta_shape	s;
@@ -39,7 +47,13 @@ void	apply_shape_grid(t_app *fdf, t_shape_type shape)
 	}
 }
 
-/* singleton function-pointer table (exported) */
+/**
+ * @brief Returns the singleton function-pointer table for shape applicators.
+ *
+ * Provides a static table of functions to apply each shape transformation.
+ *
+ * @return Pointer to the array of shape apply functions.
+ */
 t_shape_apply_fn	*shape_apply_tbl(void)
 {
 	static t_shape_apply_fn	tbl[SHAPE_COUNT] = {
@@ -59,7 +73,15 @@ t_shape_apply_fn	*shape_apply_tbl(void)
 	return (tbl);
 }
 
-/* public API used by transition_system.c */
+/**
+ * @brief Applies the transformation for a specific shape
+ * using the function table.
+ *
+ * Validates the shape index and calls the corresponding apply function.
+ *
+ * @param fdf Pointer to the main application structure.
+ * @param shape The shape type to apply.
+ */
 void	apply_shape_with_transform(t_app *fdf, t_shape_type shape)
 {
 	t_shape_apply_fn	*tbl;
@@ -72,6 +94,15 @@ void	apply_shape_with_transform(t_app *fdf, t_shape_type shape)
 	tbl[idx](fdf);
 }
 
+/**
+ * @brief Updates the transition state and applies transformations.
+ *
+ * Handles the transition logic, including interpolation
+ * during active transitions
+ * and applying the current shape when not transitioning.
+ *
+ * @param fdf Pointer to the main application structure.
+ */
 void	transition_update(t_app *fdf)
 {
 	t_transition_state	*st;
@@ -101,6 +132,14 @@ void	transition_update(t_app *fdf)
 		apply_shape_with_transform(fdf, st->current_shape);
 }
 
+/**
+ * @brief Starts a transition to the next shape.
+ *
+ * Sets the transition state to active and prepares for
+ * transitioning to the next shape.
+ *
+ * @param to_torus Unused parameter (legacy).
+ */
 void	transition_start_torus(bool to_torus)
 {
 	t_transition_state	*st;

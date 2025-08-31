@@ -6,13 +6,22 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:48:01 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/09 16:48:03 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/08/31 16:13:16 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
 
+/**
+ * @brief Computes the cone shape position.
+ *
+ * Maps the grid point to a position on a conical surface.
+ *
+ * @param f Pointer to the main application structure.
+ * @param p Pointer to the input grid point.
+ * @param o Pointer to the output 3D position.
+ */
 void	pos_cone(t_app *f, t_point2 *p, t_fpoint3 *o)
 {
 	float	max_r;

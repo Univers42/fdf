@@ -6,11 +6,12 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 08:33:53 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/09/01 08:35:52 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/09/01 08:44:58 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "config.h"
+#include <math.h>
 
 /**
  * @brief Converts NDC X coordinate to screen X pixel.

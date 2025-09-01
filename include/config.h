@@ -6,13 +6,16 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:33:56 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/09/01 08:35:38 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/09/01 08:47:02 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONFIG_H
 # define CONFIG_H
 
+# include <sys/types.h>
+# include <X11/Xlib.h>
+# include <X11/keysym.h>
 /**
 Can adapt the all the macro using this command when compiling in terminal
 -D<MACRO_NAME>=<value>
@@ -86,6 +89,7 @@ Can adapt the all the macro using this command when compiling in terminal
 #define DEPTH_OFFSET    50.0f
 #define DEPTH_MIN       150.0f
 #define DEPTH_MAX       255.0f
+
 /**
 	* ENUMS
  */

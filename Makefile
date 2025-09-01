@@ -6,7 +6,7 @@
 #    By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/29 23:01:30 by dlesieur          #+#    #+#              #
-#    Updated: 2025/08/31 14:19:17 by dlesieur         ###   ########.fr        #
+#    Updated: 2025/09/01 08:44:41 by dlesieur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -230,7 +230,8 @@ SRCS += $(SHAPES_DIR)/helper_cube.c\
 		$(SHAPES_DIR)/transform_wave.c
 
 #COMPLETE
-SRCS += $(UTILS_DIR)/colors.c
+SRCS += $(UTILS_DIR)/colors.c \
+		$(UTILS_DIR)/formula1.c
 
 
 #SRCS = $(shell find $(SRC_DIR) -type f -name '*.c')
@@ -249,6 +250,8 @@ INCLUDE_FLAGS := $(foreach dir,$(HEADER_DIRS),-I$(dir))
 CFLAGS += $(INCLUDE_FLAGS)
 
 all: $(NAME)
+
+bonus: all
 
 $(NAME): $(LIBFT_A) $(MLX_A) $(OBJS) 
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_A) $(MLX_A) -lX11 -lXext -lm

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 16:20:30 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/31 13:10:53 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/09/01 13:17:05 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ int	ft_rand(void)
 	state = get_rng_state();
 	if (state->current_type == RNG_LCG)
 		return (lcg_rand());
-	else if ((state->current_type == RNG_MIDDLE_SQUARE))
+	else if (state->current_type == RNG_MIDDLE_SQUARE)
 		return (middle_square_rand());
-	else if ((state->current_type == RNG_XORSHIFT))
+	else if (state->current_type == RNG_XORSHIFT)
 		return (xorshift_rand());
 	else
 		return (lcg_rand());

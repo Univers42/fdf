@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:33:56 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/31 13:03:18 by dlesieur         ###   ########.fr       */
+/*   Updated: 2025/09/01 08:35:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,13 @@ Can adapt the all the macro using this command when compiling in terminal
 # define FONT_CHAR_PERIOD 			"\x00\x00\x00\x00\x00\x0C\x0C\x00"
 # define COLOR_DEFAULT 0xffffff
 # define ATT_DELIMITER ','
+
+#define NDC_SHIFT       1.0f
+#define NDC_SCALE       2.0f
+#define DEPTH_SCALE     255.0f
+#define DEPTH_OFFSET    50.0f
+#define DEPTH_MIN       150.0f
+#define DEPTH_MAX       255.0f
 /**
 	* ENUMS
  */
@@ -226,4 +233,7 @@ typedef enum e_event
 	V =				XK_v
 }				t_event;
 
+int	ndc_to_screen_x(float ndc_x);
+int	ndc_to_screen_y(float ndc_y);
+int	ndc_to_depth(float ndc_z);
 #endif

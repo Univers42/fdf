@@ -33,8 +33,8 @@ static uint32_t	fire_pixel(int x, int y, float t)
 	t_fpoint3	r;
 	float		intensity;
 
-	n.x = (float)x / WIN_WIDTH;
-	n.y = (float)y / WIN_HEIGHT;
+	n.x = (float)x / BG_W;
+	n.y = (float)y / BG_H;
 	base = 1.0f - n.y;
 	r.x = sinf((n.x * 8.0f + t * 4.0f) * M_PI);
 	r.y = sinf((n.x * 15.0f + t * 6.0f) * M_PI);
@@ -55,12 +55,12 @@ void	apply_fire_plasma_bg(uint32_t *b)
 
 	t = gdynbg(NULL)->time_accumulator;
 	y = 0;
-	while (y < WIN_HEIGHT)
+	while (y < BG_H)
 	{
 		x = 0;
-		while (x < WIN_WIDTH)
+		while (x < BG_W)
 		{
-			b[y * WIN_WIDTH + x] = fire_pixel(x, y, t);
+			b[y * BG_W + x] = fire_pixel(x, y, t);
 			++x;
 		}
 		++y;

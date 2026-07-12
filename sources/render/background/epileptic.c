@@ -39,8 +39,8 @@ static uint32_t	epileptic_pixel(int x, int y, float t)
 	float		p3;
 	float		val;
 
-	n.x = (float)x / WIN_WIDTH;
-	n.y = (float)y / WIN_HEIGHT;
+	n.x = (float)x / BG_W;
+	n.y = (float)y / BG_H;
 	p1 = sinf((n.x * 10.0f + t * 25.0f) * M_PI);
 	p2 = cosf((n.y * 8.0f + t * 30.0f) * M_PI);
 	p3 = sinf(((n.x + n.y) * 15.0f + t * 40.0f) * M_PI);
@@ -57,12 +57,12 @@ void	apply_epileptic_flash_bg(uint32_t *b)
 
 	t = gdynbg(NULL)->time_accumulator;
 	y = 0;
-	while (y < WIN_HEIGHT)
+	while (y < BG_H)
 	{
 		x = 0;
-		while (x < WIN_WIDTH)
+		while (x < BG_W)
 		{
-			b[y * WIN_WIDTH + x] = epileptic_pixel(x, y, t);
+			b[y * BG_W + x] = epileptic_pixel(x, y, t);
 			++x;
 		}
 		++y;

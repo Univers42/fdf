@@ -1,28 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   smoke.c                                            :+:      :+:    :+:   */
+/*   smoke.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 12:57:11 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/23 18:38:31 by dlesieur         ###   ########.fr       */
+/*   Created: 2026/07/12 00:00:00 by dlesieur          #+#    #+#             */
+/*   Updated: 2026/07/12 00:00:00 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdlib.h>
 
 int	ft_rand(void);
 
+/* Soft plumes that swell and thin as they climb. */
 void	particle_smoke(t_particle *p)
 {
-	p->x = (float)(WIN_WIDTH / 2 + ft_rand() % 100 - 50);
-	p->y = (float)(WIN_HEIGHT - 50 + ft_rand() % 50);
-	p->z = (float)(ft_rand() % 100 - 50);
-	p->vx = (ft_rand() % 40 - 20) * 0.2f;
-	p->vy = -(1.0f + (ft_rand() % 20) * 0.1f);
-	p->vz = (ft_rand() % 20 - 10) * 0.1f;
-	p->size = 4.0f + (ft_rand() % 6);
-	p->color = 0x404040;
+	t_viewport	*vp;
+
+	vp = gviewport();
+	p->x = vp->w * 0.5f + (float)(ft_rand() % (vp->w / 4))
+		- vp->w / 8.0f;
+	p->y = (float)vp->h - (float)(ft_rand() % 40);
+	p->vx = 0.0f;
+	p->vy = -(0.7f + 0.1f * (float)(ft_rand() % 10));
+	p->vz = 0.0f;
+	p->size = 6.0f + (float)(ft_rand() % 8);
+	p->color = 0x8A8A96;
 }

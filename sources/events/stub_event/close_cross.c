@@ -19,3 +19,10 @@ int	window_close_handler(t_app *fdf)
 	exit_prog(fdf, 0, NULL);
 	return (0);
 }
+
+// Repaint request from X (window exposed/uncovered): schedule a redraw.
+int	expose_handler(t_app *f)
+{
+	f->needs_redraw = true;
+	return (0);
+}

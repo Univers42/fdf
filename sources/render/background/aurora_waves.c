@@ -30,8 +30,8 @@ static uint32_t	aurora_pixel(int x, int y, float t)
 	t_fpoint3	w;
 	float		i;
 
-	n.x = (float)x / WIN_WIDTH;
-	n.y = (float)y / WIN_HEIGHT;
+	n.x = (float)x / BG_W;
+	n.y = (float)y / BG_H;
 	w.x = sinf((n.y * 8.0f + n.x * 2.0f + t * 2.0f) * M_PI);
 	w.y = sinf((n.y * 12.0f + n.x * 1.5f + t * 1.5f) * M_PI);
 	w.z = sinf((n.y * 6.0f + n.x * 3.0f + t * 3.0f) * M_PI);
@@ -49,12 +49,12 @@ void	apply_aurora_waves_bg(uint32_t *b)
 
 	t = gdynbg(NULL)->time_accumulator;
 	y = 0;
-	while (y < WIN_HEIGHT)
+	while (y < BG_H)
 	{
 		x = 0;
-		while (x < WIN_WIDTH)
+		while (x < BG_W)
 		{
-			b[y * WIN_WIDTH + x] = aurora_pixel(x, y, t);
+			b[y * BG_W + x] = aurora_pixel(x, y, t);
 			++x;
 		}
 		++y;

@@ -42,8 +42,8 @@ static uint32_t	vibrant_pixel(int x, int y, float t)
 	float		w3;
 	float		f;
 
-	n.x = (float)x / WIN_WIDTH;
-	n.y = (float)y / WIN_HEIGHT;
+	n.x = (float)x / BG_W;
+	n.y = (float)y / BG_H;
 	w1 = sinf((n.x * 4.0f + t * 2.0f) * M_PI);
 	w2 = sinf((n.y * 3.0f + t * 1.5f) * M_PI);
 	w3 = sinf(((n.x + n.y) * 2.0f + t * 3.0f) * M_PI);
@@ -60,12 +60,12 @@ void	apply_vibrant_gradient_bg(uint32_t *b)
 
 	t = gdynbg(NULL)->time_accumulator;
 	y = 0;
-	while (y < WIN_HEIGHT)
+	while (y < BG_H)
 	{
 		x = 0;
-		while (x < WIN_WIDTH)
+		while (x < BG_W)
 		{
-			b[y * WIN_WIDTH + x] = vibrant_pixel(x, y, t);
+			b[y * BG_W + x] = vibrant_pixel(x, y, t);
 			++x;
 		}
 		++y;

@@ -41,8 +41,8 @@ static uint32_t	vortex_pixel(int x, int y, float time)
 	uint32_t	col;
 	float		fade;
 
-	n.x = (float)x / WIN_WIDTH - 0.5f;
-	n.y = (float)y / WIN_HEIGHT - 0.5f;
+	n.x = (float)x / BG_W - 0.5f;
+	n.y = (float)y / BG_H - 0.5f;
 	a.x = sqrtf(n.x * n.x + n.y * n.y);
 	a.y = atan2f(n.y, n.x);
 	a.z = fmodf((a.y + a.x * 8.0f - time * 4.0f)
@@ -64,12 +64,12 @@ void	apply_rainbow_vortex_bg(uint32_t *buf)
 
 	time = gdynbg(NULL)->time_accumulator;
 	y = 0;
-	while (y < WIN_HEIGHT)
+	while (y < BG_H)
 	{
 		x = 0;
-		while (x < WIN_WIDTH)
+		while (x < BG_W)
 		{
-			buf[y * WIN_WIDTH + x] = vortex_pixel(x, y, time);
+			buf[y * BG_W + x] = vortex_pixel(x, y, time);
 			++x;
 		}
 		++y;

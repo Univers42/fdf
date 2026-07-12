@@ -42,7 +42,7 @@ static bool	advance_line(t_parser *p, t_app *fdf)
 	}
 	else if (p->values_read > (size_t)p->y * fdf->width)
 	{
-		ft_fprintf(STDERR_FILENO, "Error: Bad map\n");
+		ft_fdprintf(STDERR_FILENO, "Error: Bad map\n");
 		return (false);
 	}
 	else if (p->values_read < (size_t)p->y * fdf->width)

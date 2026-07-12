@@ -19,22 +19,18 @@ void	move_up(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode;
 	(void)data;
-	ft_printf("BEFORE: tx=%.2f, ty=%.2f, tz=%.2f\n",
-		fdf->trans_stack.tx, fdf->trans_stack.ty, fdf->trans_stack.tz);
+	if (gcam()->active)
+		return (camera_move(fdf, 0, 1.0f));
 	move_forward(fdf, 5.0f);
 	trans_stack_update(&fdf->trans_stack);
-	ft_printf("AFTER: tx=%.2f, ty=%.2f, tz=%.2f\n",
-		fdf->trans_stack.tx, fdf->trans_stack.ty, fdf->trans_stack.tz);
-	ft_printf("Matrix [3]=%.2f, [7]=%.2f, [11]=%.2f\n",
-		fdf->trans_stack.matrices[M_TB][3],
-		fdf->trans_stack.matrices[M_TB][7],
-		fdf->trans_stack.matrices[M_TB][11]);
 }
 
 void	move_down(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode;
 	(void)data;
+	if (gcam()->active)
+		return (camera_move(fdf, 0, -1.0f));
 	move_backward(fdf, 5.0f);
 	trans_stack_update(&fdf->trans_stack);
 }
@@ -43,6 +39,8 @@ void	move_left(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode;
 	(void)data;
+	if (gcam()->active)
+		return (camera_move(fdf, 1, -1.0f));
 	move_left_internal(fdf, 5.0f);
 	trans_stack_update(&fdf->trans_stack);
 }
@@ -51,6 +49,8 @@ void	move_right(t_app *fdf, int keycode, void *data)
 {
 	(void)keycode;
 	(void)data;
+	if (gcam()->active)
+		return (camera_move(fdf, 1, 1.0f));
 	move_right_internal(fdf, 5.0f);
 	trans_stack_update(&fdf->trans_stack);
 }

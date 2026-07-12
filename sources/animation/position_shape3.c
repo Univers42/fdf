@@ -24,16 +24,12 @@
  */
 float	orig_z(t_app *f, t_point2 *p)
 {
-	t_transition_state	*st;
-	int					i;
+	int	i;
 
-	st = gtransition(NULL);
-	if (!st || !st->original_positions)
-		return (0.0f);
 	i = p->y * f->width + p->x;
 	if (i < 0 || i >= f->width * f->height)
 		return (0.0f);
-	return (st->original_positions[i * 3 + 2]);
+	return (f->points[i]);
 }
 
 // Prototypes for functions used in shape_pos_tbl
@@ -47,6 +43,12 @@ void	pos_wave(t_app *f, t_point2 *p, t_fpoint3 *o);
 void	pos_heart(t_app *f, t_point2 *p, t_fpoint3 *o);
 void	pos_cone(t_app *f, t_point2 *p, t_fpoint3 *o);
 void	pos_tube(t_app *f, t_point2 *p, t_fpoint3 *o);
+void	pos_mobius(t_app *f, t_point2 *p, t_fpoint3 *o);
+void	pos_knot(t_app *f, t_point2 *p, t_fpoint3 *o);
+void	pos_galaxy(t_app *f, t_point2 *p, t_fpoint3 *o);
+void	pos_helix(t_app *f, t_point2 *p, t_fpoint3 *o);
+void	pos_klein(t_app *f, t_point2 *p, t_fpoint3 *o);
+void	pos_vortex(t_app *f, t_point2 *p, t_fpoint3 *o);
 
 /**
  * @brief Computes the pyramid shape position.
@@ -96,7 +98,13 @@ t_shape_pos_fn	*shape_pos_tbl(void)
 		pos_wave,
 		pos_heart,
 		pos_cone,
-		pos_tube
+		pos_tube,
+		pos_mobius,
+		pos_knot,
+		pos_galaxy,
+		pos_helix,
+		pos_klein,
+		pos_vortex
 	};
 
 	return (tbl);

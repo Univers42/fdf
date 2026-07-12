@@ -23,25 +23,26 @@ int	motion_handler(int x, int y, t_app *fdf)
 	float				ndcx;
 	float				ndcy;
 
-	ndcx = ((float)x - (float)fdf->drag_start[0]) / WIN_WIDTH;
-	ndcy = ((float)fdf->drag_start[1] - (float)y) / WIN_HEIGHT;
+	if (fdf->input_state == INPUT_STATE_IDLE)
+		return (0);
+	ndcx = ((float)x - (float)fdf->drag_start[0]) / gviewport()->w;
+	ndcy = ((float)fdf->drag_start[1] - (float)y) / gviewport()->h;
 	proj = &fdf->trans_stack.projection;
-	if (fdf->input_state == INPUT_STATE_DRAGGING)
-	{
+	if (gcam()->active)
+		camera_look(fdf, ndcx * 3.0f, ndcy * 3.0f);
+	else if (fdf->input_state == INPUT_STATE_DRAGGING)
 		trans_stack_pan(&fdf->trans_stack,
 			ndcx * (proj->l - proj->r), ndcy * (proj->b - proj->t));
-		fdf->drag_start[0] = x;
-		fdf->drag_start[1] = y;
-	}
 	else if (fdf->input_state == INPUT_STATE_ROTATING)
 	{
 		trans_stack_rotate_x(&fdf->trans_stack,
 			ndcy * (proj->b - proj->t) * ROTATE_FACTOR);
 		trans_stack_rotate_y(&fdf->trans_stack,
 			ndcx * (proj->r - proj->l) * ROTATE_FACTOR);
-		fdf->drag_start[0] = x;
-		fdf->drag_start[1] = y;
 	}
+	fdf->drag_start[0] = x;
+	fdf->drag_start[1] = y;
+	fdf->needs_redraw = true;
 	return (0);
 }
 
@@ -49,6 +50,7 @@ int	button_press_handler(int button, int x, int y, t_app *fdf)
 {
 	int	i;
 
+	fdf->needs_redraw = true;
 	i = -1;
 	if (button == Button4)
 		while (++i < (int)gcamera_speed(0))
@@ -57,17 +59,15 @@ int	button_press_handler(int button, int x, int y, t_app *fdf)
 	if (button == Button5)
 		while (++i < (int)gcamera_speed(0))
 			trans_stack_zoom(&fdf->trans_stack, +1);
-	if (button == Button1 && fdf->input_state == INPUT_STATE_IDLE)
+	if ((button == Button1 || button == Button3)
+		&& fdf->input_state == INPUT_STATE_IDLE)
 	{
 		fdf->drag_start[0] = x;
 		fdf->drag_start[1] = y;
-		fdf->input_state = INPUT_STATE_DRAGGING;
-	}
-	if (button == Button3 && fdf->input_state == INPUT_STATE_IDLE)
-	{
-		fdf->drag_start[0] = x;
-		fdf->drag_start[1] = y;
-		fdf->input_state = INPUT_STATE_ROTATING;
+		if (button == Button1)
+			fdf->input_state = INPUT_STATE_DRAGGING;
+		else
+			fdf->input_state = INPUT_STATE_ROTATING;
 	}
 	return (0);
 }

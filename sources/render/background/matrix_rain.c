@@ -18,7 +18,7 @@ static void	matrix_clear(uint32_t *b)
 	int	i;
 
 	i = 0;
-	while (i < WIN_WIDTH * WIN_HEIGHT)
+	while (i < BG_W * BG_H)
 		b[i++] = 0x000000;
 }
 
@@ -30,7 +30,7 @@ static void	matrix_segment(uint32_t *b, int col, int tr, float drop)
 	uint32_t	color;
 
 	p.y = (int)(drop - tr * 25);
-	if (p.y < 0 || p.y >= WIN_HEIGHT)
+	if (p.y < 0 || p.y >= BG_H)
 		return ;
 	fade = 1.0f - tr / 15.0f;
 	if (tr == 0)
@@ -45,8 +45,8 @@ static void	matrix_segment(uint32_t *b, int col, int tr, float drop)
 	while (dx < 15)
 	{
 		p.x = col * 20 + dx + 2;
-		if (p.x >= 0 && p.x < WIN_WIDTH)
-			b[p.y * WIN_WIDTH + p.x] = color;
+		if (p.x >= 0 && p.x < BG_W)
+			b[p.y * BG_W + p.x] = color;
 		++dx;
 	}
 }
@@ -57,7 +57,7 @@ static void	matrix_column(uint32_t *b, int col, float time)
 	int		tr;
 
 	drop = fmodf(time * (8.0f + (col % 3) * 2.0f) + col * 0.7f,
-			WIN_HEIGHT + 200.0f) - 100.0f;
+			BG_H + 200.0f) - 100.0f;
 	tr = 0;
 	while (tr < 15)
 	{
@@ -74,7 +74,7 @@ void	apply_matrix_rain_bg(uint32_t *b)
 
 	time = gdynbg(NULL)->time_accumulator;
 	matrix_clear(b);
-	nc = WIN_WIDTH / 20;
+	nc = BG_W / 20;
 	col = 0;
 	while (col < nc)
 	{

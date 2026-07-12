@@ -68,7 +68,7 @@ static inline bool	find_chunk_end(
 		}
 		if (!delim_found)
 		{
-			ft_fprintf(STDERR_FILENO, "Error: file input value too long");
+			ft_fdprintf(STDERR_FILENO, "Error: file input value too long");
 			return (false);
 		}
 	}

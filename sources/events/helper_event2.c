@@ -21,7 +21,6 @@ void	setup_event_bindings(void)
 	setup_control_bindings();
 	setup_palette_bindings();
 	setup_feature_toggle_bindings();
-	ft_printf("FDF Event System Initialized\n");
 }
 
 void	handle_key_event(int keycode, unsigned int modifiers, t_app *fdf)

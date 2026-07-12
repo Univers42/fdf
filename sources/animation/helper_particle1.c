@@ -38,14 +38,14 @@ const int	*ps_rate_tbl(void)
 {
 	static const int	rate[PARTICLE_COUNT] = {
 		3, /* NONE */
-		4, /* SNOW */
-		8, /* RAIN */
-		6, /* FIRE */
-		5, /* SPARKS */
-		3, /* STARS */
-		3, /* BUBBLES */
-		3, /* DUST */
-		3 /* SMOKE */
+		9, /* SNOW */
+		15, /* RAIN */
+		11, /* FIRE */
+		6, /* SPARKS */
+		5, /* STARS */
+		4, /* BUBBLES */
+		5, /* DUST */
+		5 /* SMOKE */
 	};
 
 	return (rate);
@@ -63,47 +63,13 @@ void	init_particle(t_particle *p, t_particle_type type, t_app *fdf)
 		seeded = 1;
 	}
 	p->active = true;
-	p->lifetime = PARTICLE_LIFETIME + (ft_rand() % 100);
+	p->lifetime = (float)(PARTICLE_LIFETIME + (ft_rand() % 100));
+	p->life0 = p->lifetime;
+	p->phase = 0.01f * (float)(ft_rand() % 628);
+	p->z = 0.4f + 0.01f * (float)(ft_rand() % 60);
 	tbl = ps_init_tbl();
 	if (type > PARTICLE_NONE && type < PARTICLE_COUNT && tbl[type] != NULL)
 		tbl[type](p);
 	else
-		p->active = false;
-}
-
-void	apply_particle_physics(t_particle *p, t_particle_type type)
-{
-	if (type == PARTICLE_FIRE || type == PARTICLE_SMOKE)
-	{
-		p->vy -= 0.1f;
-		p->size *= 0.998f;
-	}
-	else if (type == PARTICLE_SPARKS)
-	{
-		p->vy += 0.2f;
-		p->size *= 0.995f;
-	}
-	else if (type == PARTICLE_BUBBLES)
-		p->vy -= 0.05f;
-	else if (type == PARTICLE_DUST)
-	{
-		p->vx *= 0.999f;
-		p->vy *= 0.999f;
-	}
-}
-
-void	update_particle(t_particle *p, t_particle_type type)
-{
-	if (!p->active)
-		return ;
-	p->x += p->vx;
-	p->y += p->vy;
-	p->z += p->vz;
-	apply_particle_physics(p, type);
-	p->lifetime--;
-	if (p->lifetime <= 0)
-		p->active = false;
-	if (p->x < -50 || p->x > WIN_WIDTH + 50
-		|| p->y < -50 || p->y > WIN_HEIGHT + 50)
 		p->active = false;
 }

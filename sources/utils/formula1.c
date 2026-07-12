@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "config.h"
+#include "fdf.h"
 #include <math.h>
 
 /**
@@ -21,7 +21,7 @@
  */
 int	ndc_to_screen_x(float ndc_x)
 {
-	return ((int)((ndc_x + NDC_SHIFT) / NDC_SCALE * WIN_WIDTH));
+	return ((int)((ndc_x + NDC_SHIFT) / NDC_SCALE * gviewport()->w));
 }
 
 /**
@@ -32,7 +32,7 @@ int	ndc_to_screen_x(float ndc_x)
  */
 int	ndc_to_screen_y(float ndc_y)
 {
-	return ((int)((1 - ndc_y) / NDC_SCALE * WIN_HEIGHT));
+	return ((int)((1 - ndc_y) / NDC_SCALE * gviewport()->h));
 }
 
 /**

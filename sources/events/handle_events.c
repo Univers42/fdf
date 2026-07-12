@@ -81,4 +81,9 @@ void	setup_feature_toggle_bindings(void)
 	register_event_binding(Z_KEY, 0, dance_toggle_handler);
 	register_event_binding(B, 0, dynamic_background_toggle_handler);
 	register_event_binding(V, 0, texture_toggle_handler);
+	register_event_binding(XK_m, 0, viewmode_toggle_handler);
+	register_event_binding(XK_f, 0, camera_toggle_handler);
+	register_event_binding(XK_q, 0, cam_down_handler);
+	register_event_binding(XK_e, 0, cam_up_handler);
+	register_event_binding(XK_F11, 0, viewport_preset_handler);
 }

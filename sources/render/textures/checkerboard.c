@@ -25,8 +25,8 @@ static void	checker_row(t_app *fdf, float size, int y)
 	while (++pos.x < fdf->width)
 	{
 		pos.index = y * fdf->width + pos.x;
-		c.x = (int)(pos.x / size);
-		c.y = (int)(y / size);
+		c.x = (int)((pos.x + t->time_accumulator * 4.0f) / size);
+		c.y = (int)((y + t->time_accumulator * 2.0f) / size);
 		is_white = ((c.x + c.y) % 2) == 0;
 		tc = is_white * 0xFFFFFF;
 		fdf->color[pos.index] = blend_colors(t->original_colors[pos.index],

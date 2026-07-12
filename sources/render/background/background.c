@@ -13,6 +13,7 @@
 #include "fdf.h"
 #include <stdlib.h>
 #include <time.h>
+#include <wchar.h>
 
 //static int	fdf->current_bg_theme = 0;
 //static int	fdf->stars_enabled = 1;
@@ -52,16 +53,13 @@ static uint32_t	get_bg_color_for_theme(int theme_index)
 	return (bg[theme_index % 9]);
 }
 
+/*
+ * wmemset is glibc's SIMD 4-byte pattern fill (wchar_t is int32 on
+ * Linux): fastest way to clear 23MB of framebuffer to one color.
+ */
 static void	fill_background_buffer(uint32_t *buf, uint32_t color, int total)
 {
-	int	i;
-
-	i = 0;
-	while (i < total)
-	{
-		buf[i] = color;
-		++i;
-	}
+	wmemset((wchar_t *)buf, (wchar_t)color, (size_t)total);
 }
 
 void	generate_background(t_app *fdf, int theme_index)

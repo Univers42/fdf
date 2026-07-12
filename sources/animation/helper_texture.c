@@ -22,6 +22,7 @@ void	texture_system_toggle(void)
 	next = (t->current_texture + 1) % TEXTURE_COUNT;
 	t->current_texture = next;
 	t->time_accumulator = 0.0f;
+	t->fade_pending = true;
 	names = tex_name_tbl();
 	ft_printf("Texture -> %s\n", names[next]);
 }

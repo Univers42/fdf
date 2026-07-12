@@ -18,6 +18,7 @@
 #include "mlx.h"
 #include <X11/X.h>
 #include "libft.h"
+#include "bench.h"
 
 static inline void	init_trans_stack(t_app *fdf)
 {
@@ -42,42 +43,31 @@ void	helper_state(t_transition_state *state)
 {
 	*state = (t_transition_state){
 		.frame = 0,
-		.max_frames = 60,
+		.max_frames = TRANSITION_FRAMES,
 		.active = false,
 		.current_shape = SHAPE_ORIGINAL,
 		.target_shape = SHAPE_ORIGINAL,
-		.original_positions = NULL,
-		.initialized = false
+		.cloud_src = NULL,
+		.cloud_dst = NULL
 	};
 }
 
 static inline bool	init_after_parsing(t_app *fdf)
 {
-	bool	ok;
-	size_t	n;
-
 	if (fdf->width <= 0 || fdf->height <= 0)
 		return (printf("Error: Invalid map dimensions (%d x %d)\n",
 				fdf->width, fdf->height), false);
-	ok = false;
 	make_trans_stack(&fdf->trans_stack);
 	init_trans_stack(fdf);
-	fdf->n_edges = (fdf->width - 1) * fdf->height
-		+ (fdf->height - 1) * fdf->width;
-	n = sizeof(int [fdf->n_edges][2]);
-	fdf->edges = malloc(n);
+	fdf->n_edges = (size_t)(fdf->width - 1) * fdf->height
+		+ (size_t)(fdf->height - 1) * fdf->width;
 	fdf->transformed_points = malloc(
-			sizeof(t_point4[fdf->height * fdf->width]));
-	if (fdf->edges != NULL && fdf->transformed_points != NULL)
-	{
-		fdf_init_edges(fdf);
-		init_mlx_handlers(fdf);
-		helper_state(&fdf->transition_state);
-		ok = true;
-	}
-	else
-		ft_printf("Error: Memory allocation failed\n");
-	return (ok);
+			sizeof(t_fpoint4[fdf->height * fdf->width]));
+	if (fdf->transformed_points == NULL)
+		return (ft_printf("Error: Memory allocation failed\n"), false);
+	init_mlx_handlers(fdf);
+	helper_state(&fdf->transition_state);
+	return (true);
 }
 
 static void	init_fdf_struct(t_app *fdf)
@@ -100,7 +90,8 @@ static void	init_fdf_struct(t_app *fdf)
 
 bool	make_fdf(t_app *fdf, char *filename)
 {
-	bool	ok;
+	bool		ok;
+	uint64_t	t0;
 
 	ok = false;
 	init_fdf_struct(fdf);
@@ -113,10 +104,12 @@ bool	make_fdf(t_app *fdf, char *filename)
 			sizeof(fdf->renderer.fps_string));
 		fdf->renderer.data = mlx_get_data_addr(fdf->image, &fdf->renderer.bpp,
 				&fdf->renderer.size_line, &fdf->renderer.is_big_endian);
-		if (parse_file(fdf, filename)
-			&& fdf->window != NULL
-			&& fdf->image != NULL
-			&& fdf->renderer.data != NULL)
+		t0 = bench_now_ns();
+		ok = parse_file(fdf, filename);
+		bench_parse(bench_now_ns() - t0);
+		ok = (ok && fdf->window != NULL && fdf->image != NULL
+				&& fdf->renderer.data != NULL);
+		if (ok)
 			ok = init_after_parsing(fdf);
 	}
 	return (ok);

@@ -57,8 +57,8 @@ static uint32_t	water_pixel(int x, int y, float t)
 	t_fpoint2	c[3];
 	float		h;
 
-	n.x = (float)x / WIN_WIDTH;
-	n.y = (float)y / WIN_HEIGHT;
+	n.x = (float)x / BG_W;
+	n.y = (float)y / BG_H;
 	get_ripple_centers(c, t);
 	h = ripple_sum(n, c, t);
 	h = h * 0.5f + 0.5f;
@@ -75,12 +75,12 @@ void	apply_water_ripples_bg(uint32_t *b)
 
 	t = gdynbg(NULL)->time_accumulator;
 	y = 0;
-	while (y < WIN_HEIGHT)
+	while (y < BG_H)
 	{
 		x = 0;
-		while (x < WIN_WIDTH)
+		while (x < BG_W)
 		{
-			b[y * WIN_WIDTH + x] = water_pixel(x, y, t);
+			b[y * BG_W + x] = water_pixel(x, y, t);
 			++x;
 		}
 		++y;

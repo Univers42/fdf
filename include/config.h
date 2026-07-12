@@ -38,15 +38,32 @@ Can adapt the all the macro using this command when compiling in terminal
 #  define WIN_WIDTH		32
 # endif
 
-# define TRANSITION_FRAMES			60
+# define TRANSITION_FRAMES			18
 # define STAR_COUNT					200
 # define INPUT_BUF_SIZE				4096
 # define PARTICLE_TRANSITION_FRAMES	45
 # define PARTICLE_COUNT				9
-# define MAX_PARTICLES				150
+# define MAX_PARTICLES				2048
 # define PARTICLE_LIFETIME			300
-# define DYNAMIC_BG_COUNT			12
+# define DYNAMIC_BG_COUNT			13
+# define BG_SCALE					4
+
+/* First-person camera (raster/camera.c) */
+# define CAM_NEAR					0.5f
+# define CAM_FOV					1.1f
+# define CAM_STEP					0.035f
+# define CAM_LOOK					0.06f
+# define SKY_HORIZON				0x00C9D4E8
 # define WAVE_FREQUENCY				0.08f
+
+/* Black-hole background (screen-space point-lens, see black_hole_init.c) */
+# define BH_PHOTON_R				0.075f
+# define BH_EINSTEIN_MULT			2.2f
+# define BH_RING_MULT				1.16f
+# define BH_DRIFT_SPEED				14.0f
+# define BH_STAR_COUNT				9000
+# define BH_DUST_COUNT				22000
+# define BH_WARP_STRENGTH			0.35f
 # define OBJECT_EFFECT_COUNT		10
 # define DANCE_MOVE_COUNT			8
 # define DANCE_TRANSITION_FRAMES	120
@@ -83,16 +100,22 @@ Can adapt the all the macro using this command when compiling in terminal
 # define COLOR_DEFAULT 0xffffff
 # define ATT_DELIMITER ','
 
-#define NDC_SHIFT       1.0f
-#define NDC_SCALE       2.0f
-#define DEPTH_SCALE     255.0f
-#define DEPTH_OFFSET    50.0f
-#define DEPTH_MIN       150.0f
-#define DEPTH_MAX       255.0f
+# define NDC_SHIFT       1.0f
+# define NDC_SCALE       2.0f
+# define DEPTH_SCALE     255.0f
+# define DEPTH_OFFSET    50.0f
+# define DEPTH_MIN       150.0f
+# define DEPTH_MAX       255.0f
 
 /**
 	* ENUMS
  */
+enum e_bg_dims
+{
+	BG_W = WIN_WIDTH / BG_SCALE,
+	BG_H = WIN_HEIGHT / BG_SCALE
+};
+
 typedef enum e_texture_type
 {
 	TEXTURE_NONE =			0,
@@ -136,7 +159,8 @@ typedef enum e_dynamic_bg_type
 	DYNAMIC_BG_COSMIC_NEBULA =		8,
 	DYNAMIC_BG_ELECTRIC_STORM =		9,
 	DYNAMIC_BG_LIQUID_METAL =		10,
-	DYNAMIC_BG_RAINBOW_VORTEX =		11
+	DYNAMIC_BG_RAINBOW_VORTEX =		11,
+	DYNAMIC_BG_BLACK_HOLE =			12
 }	t_dynamic_bg_type;
 
 typedef enum e_shape_type
@@ -152,6 +176,12 @@ typedef enum e_shape_type
 	SHAPE_HEART,
 	SHAPE_CONE,
 	SHAPE_TUBE,
+	SHAPE_MOBIUS,
+	SHAPE_KNOT,
+	SHAPE_GALAXY,
+	SHAPE_HELIX,
+	SHAPE_KLEIN,
+	SHAPE_VORTEX,
 	SHAPE_COUNT
 }	t_shape_type;
 

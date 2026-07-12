@@ -43,13 +43,8 @@ float	gcamera_speed(float set)
 
 void	init_mlx_handlers(t_app *f)
 {
-	ft_printf("DEBUG: init_mlx_handlers called\n");
 	if (!f)
-	{
-		ft_printf("DEBUG: ERROR - fdf is NULL in init_mlx_handlers\n");
 		return ;
-	}
-	ft_printf("DEBUG: fdf structure exists, continuing...\n");
 	init_trackball_system();
 	init_z_perspective_control(f);
 	setup_event_bindings();
@@ -61,10 +56,11 @@ void	init_mlx_handlers(t_app *f)
 	mlx_hook(f->window, MotionNotify, PointerMotionMask, motion_handler, f);
 	mlx_hook(f->window, DestroyNotify, StructureNotifyMask,
 		window_close_handler, f);
-	ft_printf("DEBUG: Initializing palette system\n");
+	mlx_hook(f->window, Expose, ExposureMask, expose_handler, f);
 	init_palette_system(f);
+	viewport_init(f);
 	mlx_loop_hook(f->mlx, fdf_render, f);
-	ft_printf("Centralized event system initialized with O(1) access\n");
+	f->needs_redraw = true;
 }
 
 int	key_press_handler(const int keycode, t_app *fdf)
@@ -72,6 +68,7 @@ int	key_press_handler(const int keycode, t_app *fdf)
 	unsigned int		modifiers;
 	t_modifier_state	*mod_state;
 
+	fdf->needs_redraw = true;
 	mod_state = gmod_state(NULL);
 	if (keycode == XK_Control_L || keycode == XK_Control_R)
 		mod_state->ctrl_pressed = true;

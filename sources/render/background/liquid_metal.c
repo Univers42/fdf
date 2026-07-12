@@ -32,8 +32,8 @@ static uint32_t	metal_pixel(int x, int y, float t)
 	float		f3;
 	float		r;
 
-	n.x = (float)x / WIN_WIDTH;
-	n.y = (float)y / WIN_HEIGHT;
+	n.x = (float)x / BG_W;
+	n.y = (float)y / BG_H;
 	f1 = sinf((n.x * 6.0f + n.y * 2.0f + t * 2.0f) * M_PI);
 	f2 = sinf((n.x * 8.0f - n.y * 3.0f + t * 1.5f) * M_PI);
 	f3 = sinf((n.x * 4.0f + n.y * 4.0f + t * 3.0f) * M_PI);
@@ -50,12 +50,12 @@ void	apply_liquid_metal_bg(uint32_t *b)
 
 	t = gdynbg(NULL)->time_accumulator;
 	y = 0;
-	while (y < WIN_HEIGHT)
+	while (y < BG_H)
 	{
 		x = 0;
-		while (x < WIN_WIDTH)
+		while (x < BG_W)
 		{
-			b[y * WIN_WIDTH + x] = metal_pixel(x, y, t);
+			b[y * BG_W + x] = metal_pixel(x, y, t);
 			++x;
 		}
 		++y;

@@ -34,8 +34,8 @@ static uint32_t	nebula_pixel(int x, int y, float t)
 	float		n3;
 	float		d;
 
-	n.x = (float)x / WIN_WIDTH;
-	n.y = (float)y / WIN_HEIGHT;
+	n.x = (float)x / BG_W;
+	n.y = (float)y / BG_H;
 	n1 = sinf((n.x * 4.0f + t * 0.3f) * M_PI)
 		* cosf((n.y * 3.0f + t * 0.2f) * M_PI);
 	n2 = sinf((n.x * 8.0f + t * 0.5f) * M_PI)
@@ -55,12 +55,12 @@ void	apply_cosmic_nebula_bg(uint32_t *b)
 
 	t = gdynbg(NULL)->time_accumulator;
 	y = 0;
-	while (y < WIN_HEIGHT)
+	while (y < BG_H)
 	{
 		x = 0;
-		while (x < WIN_WIDTH)
+		while (x < BG_W)
 		{
-			b[y * WIN_WIDTH + x] = nebula_pixel(x, y, t);
+			b[y * BG_W + x] = nebula_pixel(x, y, t);
 			++x;
 		}
 		++y;

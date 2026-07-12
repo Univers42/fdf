@@ -19,6 +19,9 @@ void	fdf_destroy_contents(t_app *fdf)
 	transition_cleanup(fdf);
 	cleanup_z_perspective_control();
 	dynamic_background_cleanup();
+	zbuf_free();
+	shade_free();
+	sky_free();
 	dance_system_cleanup();
 	object_effects_cleanup(fdf);
 	texture_system_cleanup();
@@ -31,7 +34,6 @@ void	fdf_destroy_contents(t_app *fdf)
 	free(fdf->points);
 	free(fdf->color);
 	free(fdf->transformed_points);
-	free(fdf->edges);
 	mlx_destroy_image(fdf->mlx, fdf->image);
 	mlx_destroy_window(fdf->mlx, fdf->window);
 	mlx_destroy_display(fdf->mlx);

@@ -14,6 +14,8 @@
 #include <math.h>
 #include <stdlib.h> /* atexit, free */
 
+static void	tex_fade(t_app *fdf, t_texture_system *t);
+
 /* apply-table wrapped in a singleton-style accessor */
 static void	(**tex_apply_tbl(void))(t_app *fdf)
 {
@@ -45,21 +47,7 @@ static void	tex_apply_current(t_app *fdf, t_texture_system *t)
 	if (idx > (int)TEXTURE_NONE && idx < (int)TEXTURE_COUNT
 		&& tbl[idx] != NULL)
 		tbl[idx](fdf);
-}
-
-static void	tex_debug(const t_texture_system *t)
-{
-	static int		counter = 0;
-	const char		**names;
-	int				idx;
-
-	counter++;
-	if (counter % 300 != 0)
-		return ;
-	names = tex_name_tbl();
-	idx = (int)t->current_texture;
-	ft_printf("Texture %s (sc %.1f sp %.1f)\n",
-		names[idx], t->scale_factor, t->animation_speed);
+	tex_fade(fdf, t);
 }
 
 /* one-time cleanup registered at process exit to release snapshot */
@@ -68,11 +56,37 @@ static void	tex_cleanup_on_exit(void)
 	t_texture_system	*t;
 
 	t = gtexture(NULL);
-	if (t && t->original_colors)
+	free(t->original_colors);
+	t->original_colors = NULL;
+	free(t->fade_from);
+	t->fade_from = NULL;
+}
+
+/*
+ * Crossfade: on texture switch the previous frame's colors are frozen
+ * in fade_from, then blended over the incoming texture for ~24 frames.
+ */
+static void	tex_fade(t_app *fdf, t_texture_system *t)
+{
+	int	i;
+
+	if (!t->fade_from)
+		t->fade_from = (uint32_t *)malloc(sizeof(uint32_t)
+				* fdf->width * fdf->height);
+	if (t->fade_pending && t->fade_from)
 	{
-		free(t->original_colors);
-		t->original_colors = NULL;
+		ft_memcpy(t->fade_from, fdf->color,
+			sizeof(uint32_t) * fdf->width * fdf->height);
+		t->fade_left = 24;
+		t->fade_pending = false;
 	}
+	if (t->fade_left <= 0)
+		return ;
+	i = fdf->width * fdf->height;
+	while (i-- > 0)
+		fdf->color[i] = lerp_color(fdf->color[i], t->fade_from[i],
+				(float)t->fade_left / 24.0f);
+	t->fade_left--;
 }
 
 /* capture the original colors only once to avoid repeated allocations */
@@ -95,7 +109,9 @@ void	texture_system_update(t_app *fdf)
 			cleanup_registered = 1;
 		}
 	}
+	t->frame++;
+	if (fdf->width * fdf->height > 400000 && (t->frame & 1))
+		return ;
 	t->time_accumulator += 0.05f * t->animation_speed;
 	tex_apply_current(fdf, t);
-	tex_debug(t);
 }

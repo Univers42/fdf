@@ -51,8 +51,8 @@ t_transition_state	*gtransition(t_transition_state *set)
 		instance.active = false;
 		instance.current_shape = SHAPE_ORIGINAL;
 		instance.target_shape = SHAPE_ORIGINAL;
-		instance.original_positions = NULL;
-		instance.initialized = false;
+		instance.cloud_src = NULL;
+		instance.cloud_dst = NULL;
 		initialized = true;
 	}
 	return (&instance);
@@ -100,12 +100,10 @@ void	transition_cleanup(t_app *fdf)
 
 	(void)fdf;
 	st = gtransition(NULL);
-	if (st->original_positions)
-	{
-		free(st->original_positions);
-		st->original_positions = NULL;
-	}
-	st->initialized = false;
+	free(st->cloud_src);
+	free(st->cloud_dst);
+	st->cloud_src = NULL;
+	st->cloud_dst = NULL;
 	st->active = false;
 	st->frame = 0;
 	st->current_shape = SHAPE_ORIGINAL;

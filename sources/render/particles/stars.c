@@ -1,29 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   stars.c                                            :+:      :+:    :+:   */
+/*   stars.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 13:09:30 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/23 18:38:14 by dlesieur         ###   ########.fr       */
+/*   Created: 2026/07/12 00:00:00 by dlesieur          #+#    #+#             */
+/*   Updated: 2026/07/12 00:00:00 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdlib.h>
 
 int	ft_rand(void);
 
+/* Static twinkling stars, denser toward the top of the frame. */
 void	particle_stars(t_particle *p)
 {
-	p->x = (float)(ft_rand() % WIN_WIDTH);
-	p->y = (float)(ft_rand() % WIN_HEIGHT);
-	p->z = (float)(ft_rand() % 200 - 100);
-	p->vx = (ft_rand() % 10 - 5) * 0.1f;
-	p->vy = (ft_rand() % 10 - 5) * 0.1f;
+	t_viewport	*vp;
+
+	vp = gviewport();
+	p->x = (float)(ft_rand() % vp->w);
+	p->y = (float)(ft_rand() % vp->h);
+	if (ft_rand() % 3)
+		p->y *= 0.6f;
+	p->vx = 0.0f;
+	p->vy = 0.0f;
 	p->vz = 0.0f;
-	p->size = 2.0f + (ft_rand() % 3);
+	p->size = 1.0f + (float)(ft_rand() % 2);
 	p->color = 0xFFFFFF;
-	p->lifetime = 400 + (ft_rand() % 200);
+	if (ft_rand() % 4 == 0)
+		p->color = 0xAFC8FF;
+	else if (ft_rand() % 5 == 0)
+		p->color = 0xFFE2B0;
 }

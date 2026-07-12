@@ -13,6 +13,7 @@
 #ifndef FDF_H
 # define FDF_H
 
+# include <math.h>
 # include <stdbool.h>
 # include <stddef.h>
 # include <stdint.h>
@@ -23,14 +24,13 @@
 # include <X11/Xlib.h>
 # include <X11/keysym.h>
 # include "config.h"
-# include "ds.h"
+# include "fdf_ds.h"
 # include "libft.h"
 # include "switch_color.h"
 
 bool						make_fdf(t_app *fdf, char *filename);
 void						fdf_destroy_contents(t_app *fdf);
 int							fdf_render(t_app *f);
-void						fdf_init_edges(t_app *fdf);
 void						fdf_draw_lines(t_app *fdf);
 bool						parse_file(t_app *fdf, char *filename);
 
@@ -135,19 +135,64 @@ void						projection_reset_params(t_projection_ctl *p);
  * BRESENHAM
  */
 void						bresenham_init(t_bresenham_state *b,
-								t_app *fdf, int i);
+								t_fpoint4 *p1, t_fpoint4 *p2);
 void						draw_line_y_major(t_bresenham_state *bresenham,
 								unsigned int *screen);
 void						draw_line_x_major(t_bresenham_state *bresenham,
 								unsigned int *screen);
+void						draw_line_bresenham(t_bresenham_state *b,
+								unsigned int *screen, int major_axis);
+void						line_fast_solid(t_bresenham_ctx *ctx);
+void						line_fast(t_bresenham_ctx *ctx);
+void						line_guarded(t_bresenham_ctx *ctx);
+void						draw_edge(t_app *f, int i0, int i1);
+int							expose_handler(t_app *f);
+void						bg_upscale(const uint32_t *lo, uint32_t *hi);
+int							imin2(int a, int b);
+int							imax2(int a, int b);
+int							imin3(int a, int b, int c);
+int							imax3(int a, int b, int c);
+int							fdf_grid_stride(t_app *f);
+int							fdf_row_stride(t_app *f, int y,
+								float target, int axis);
+void						raster_triangle(t_app *f, t_tri *t);
+void						fdf_draw_surface(t_app *f);
+float						*gzbuf(void);
+void						zbuf_clear(void);
+void						zbuf_free(void);
+float						*gshade(t_app *f);
+void						shade_free(void);
+int							*gviewmode(void);
+void						viewmode_toggle_handler(t_app *fdf,
+								int keycode, void *data);
+t_camera					*gcam(void);
+void						camera_reset(t_app *f);
+void						camera_matrix(t_app *f, float *o);
+void						camera_toggle_handler(t_app *fdf,
+								int keycode, void *data);
+void						camera_move(t_app *f, int axis, float sign);
+void						camera_look(t_app *f, float dyaw, float dpitch);
+void						cam_up_handler(t_app *fdf, int keycode,
+								void *data);
+void						cam_down_handler(t_app *fdf, int keycode,
+								void *data);
+void						point_project(t_fpoint4 *p);
+bool						edge_project(t_fpoint4 *a, t_fpoint4 *b);
+uint32_t					fog_color(uint32_t c, float dist, float extent);
+void						sky_render(t_app *f);
+void						sky_free(void);
+t_viewport					*gviewport(void);
+void						viewport_init(t_app *f);
+int							viewport_query(t_app *f, t_win_attr *a);
+void						viewport_poll(t_app *f);
+void						viewport_preset_handler(t_app *f,
+								int keycode, void *data);
 
 /*
  * UTIL
  */
 int							ft_strntoi(int *n, char *str, size_t max);
 int							strntohex(uint32_t *n, char *str, char *end);
-bool						ft_realloc(void **ptr, size_t *cap, size_t start);
-uint32_t					pack_color(t_bresenham_state *b, int step);
 uint8_t						*get_glyph(char c);
 int							ft_abs(int n);
 void						init_mlx_handlers(t_app *f);
@@ -167,31 +212,13 @@ extern void					set_palette_index(int idx, t_app *fdf);
 /*
  * TRANSFORMATION FUNCTIONS
  */
-void						apply_torus_transformation(t_app *fdf,
-								float major_radius, float minor_radius);
-void						apply_cube_transformation(t_app *fdf);
-void						apply_pyramid_transformation(t_app *fdf);
-void						apply_dna_transformation(t_app *fdf);
-void						apply_chips_transformation(t_app *fdf);
-void						apply_wave_transformation(t_app *fdf);
-void						apply_heart_transformation(t_app *fdf);
-void						apply_cone_transformation(t_app *fdf);
-void						apply_tube_transformation(t_app *fdf);
 void						transition_update(t_app *fdf);
 void						transition_start_torus(bool to_torus);
 bool						transition_is_active(void);
-void						apply_cube_face_0_1(t_meta_shape *s, t_app *fdf);
-void						apply_cube_face_2_3(t_meta_shape *s, t_app *fdf);
-void						apply_cube_face_4_5(t_meta_shape *s, t_app *fdf);
-float						get_dna_norm_y(t_app *fdf, t_meta_shape *s);
-int							get_dna_index(t_app *fdf, t_meta_shape *s);
-float						calc_heart_upper_lobes(float norm_x, float norm_y);
-float						get_tube_angle(int x, int width);
 void						transition_cleanup(t_app *fdf);
 bool						transition_app_is_active(t_app *fdf);
-float						get_tube_radius(t_app *fdf,
-								t_meta_shape *s, float max_radius);
 void						transition_start_shape_cycle(t_app *fdf);
+void						store_original_object_points(t_app *fdf);
 /*
  * ANIMATION EFFECTS
  */
@@ -458,6 +485,11 @@ void						apply_electric_storm_bg(uint32_t *buffer);
 void						apply_liquid_metal_bg(uint32_t *buffer);
 void						apply_rainbow_vortex_bg(uint32_t *buffer);
 void						apply_dramatic_clouds_bg(uint32_t *buffer);
+void						apply_black_hole_bg(uint32_t *buffer);
+t_black_hole				*gblackhole(void);
+void						black_hole_build(t_black_hole *bh);
+void						black_hole_free(void);
+void						black_hole_warp_points(t_app *f);
 uint32_t					lerp_color(uint32_t c1, uint32_t c2, float t);
 
 /**
@@ -650,18 +682,26 @@ const int					*ps_rate_tbl(void);
 void						init_particle(t_particle *p,
 								t_particle_type type, t_app *fdf);
 void						apply_particle_physics(t_particle *p,
-								t_particle_type type);
+								t_particle_type type, float dt);
 void						update_particle(t_particle *p,
-								t_particle_type type);
-void						draw_particle_square(uint32_t *screen,
-								struct s_pdraw *d);
+								t_particle_type type, float dt);
+
 void						render_particles(t_app *fdf);
+void						draw_particle_soft(uint32_t *screen,
+								struct s_pdraw *d);
+void						draw_particle_streak(uint32_t *screen,
+								struct s_pdraw *d, float vx, float vy);
+uint32_t					fire_ramp(float t);
 void						spawn_one_of_type(t_particle_transition *ps,
 								t_particle_type type, t_app *fdf);
 void						spawn_particles(t_particle_type type, t_app *fdf);
 void						ps_init_if_needed(t_particle_transition *ps);
-void						ps_update_all(t_particle_transition *ps);
+void						ps_update_all(t_particle_transition *ps, float dt);
 void						ps_transition_step(t_particle_transition *ps);
+float						ps_delta(void);
+int							particle_env_forces(t_particle *p, float dt);
+int							weather_recycle(t_particle *p,
+								t_particle_type type, int force);
 
 /**
 bakcground system */
@@ -685,48 +725,21 @@ typedef void		(*t_shape_pos_fn)(t_app *fdf, t_point2 *p, t_fpoint3 *o);
 typedef void		(*t_shape_apply_fn)(t_app *fdf);
 
 t_shape_pos_fn				*shape_pos_tbl(void);
-t_shape_apply_fn			*shape_apply_tbl(void);
 void						get_shape_position(t_shape_type shape, t_app *fdf,
 								t_point2 *p, t_fpoint3 *out);
 void						get_shape_position_coords(t_shape_type shape,
 								t_app *fdf, t_point2 coord, t_fpoint3 *out);
+bool						transition_prepare(t_app *f);
+void						transition_transform(t_app *f, const float *a,
+								const float *b, float t);
 
 /* Transition state singleton */
 t_transition_state			*gtransition(t_transition_state *set);
-void						apply_shape_with_transform(t_app *fdf,
-								t_shape_type shape);
 
-/* pack row vars to keep var count low per function */
-typedef struct s_row_apply
-{
-	int			x;
-	int			index;
-	t_fpoint3	c;
-	t_fpoint3	d;
-	t_fpoint3	o;
-	float		sp[4];
-	float		*dp;
-}	t_row_apply;
-
-void						apply_shape_grid(t_app *fdf, t_shape_type shape);
-void						apply_original_noop(t_app *fdf);
-void						apply_torus_persistent(t_app *fdf);
-void						apply_sphere_persistent(t_app *fdf);
-void						apply_cube_persistent(t_app *fdf);
-void						apply_pyramid_persistent(t_app *fdf);
-void						apply_dna_persistent(t_app *fdf);
-void						apply_chips_persistent(t_app *fdf);
-void						apply_wave_persistent(t_app *fdf);
-void						apply_heart_persistent(t_app *fdf);
-void						apply_cone_persistent(t_app *fdf);
-void						apply_tube_persistent(t_app *fdf);
 void						pos_pyramid(t_app *f, t_point2 *p, t_fpoint3 *o);
 t_shape_pos_fn				*shape_pos_tbl(void);
 void						transition_update(t_app *fdf);
 void						transition_start_torus(bool to_torus);
-void						apply_interpolated_frame(t_app *fdf,
-								t_transition_state *st, float t);
-void						store_original_positions(t_app *fdf);
 float						heart_scale(t_app *f);
 void						heart_set_xy(t_fpoint3 *o,
 								t_fpoint2 n, float s);
@@ -738,7 +751,6 @@ void						heart_upper_lobes(float s,
 								t_fpoint2 n, t_fpoint3 *o);
 float						orig_z(t_app *f, t_point2 *p);
 void						set_idx(t_app *fdf, int idx);
-void						store_original_object_points(t_app *fdf);
 void						cleanup_vertex_scatter_effect(t_app *fdf);
 void						texture_system_cleanup(void);
 #endif

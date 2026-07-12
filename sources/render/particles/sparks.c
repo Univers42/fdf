@@ -1,29 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sparks.c                                           :+:      :+:    :+:   */
+/*   sparks.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 13:08:07 by dlesieur          #+#    #+#             */
-/*   Updated: 2025/08/23 18:38:25 by dlesieur         ###   ########.fr       */
+/*   Created: 2026/07/12 00:00:00 by dlesieur          #+#    #+#             */
+/*   Updated: 2026/07/12 00:00:00 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdlib.h>
 
 int	ft_rand(void);
 
+/* Ballistic embers bursting up in a cone; they bounce on the ground. */
 void	particle_sparks(t_particle *p)
 {
-	p->x = (float)(WIN_WIDTH / 2 + ft_rand() % 100 - 50);
-	p->y = (float)(WIN_HEIGHT / 2 + ft_rand() % 100 - 50);
-	p->z = (float)(ft_rand() % 100 - 50);
-	p->vx = (ft_rand() % 100 - 50) * 0.6f;
-	p->vy = (ft_rand() % 100 - 50) * 0.6f;
-	p->vz = (ft_rand() % 40 - 20) * 0.2f;
-	p->size = 2.0f + (ft_rand() % 3);
-	p->color = 0xFFFF00;
-	p->lifetime = 80 + (ft_rand() % 40);
+	t_viewport	*vp;
+
+	vp = gviewport();
+	p->x = vp->w * 0.5f + (float)(ft_rand() % 200) - 100.0f;
+	p->y = (float)vp->h - 30.0f;
+	p->vx = 0.1f * (float)(ft_rand() % 140 - 70);
+	p->vy = -(6.0f + 0.1f * (float)(ft_rand() % 90));
+	p->vz = 0.0f;
+	p->size = 1.0f + (float)(ft_rand() % 2);
+	p->color = 0xFFD27A;
+	p->lifetime = (float)(120 + ft_rand() % 90);
+	p->life0 = p->lifetime;
 }

@@ -45,9 +45,6 @@ void	init_z_perspective_control(t_app *fdf)
 		return ;
 	ctrl.initialized = true;
 	gzperspective(&ctrl);
-	ft_printf("Z-Perspective Control initialized"
-		"(original range: %.1f to %.1f)\n",
-		ctrl.original_min_z, ctrl.original_max_z);
 }
 
 void	reduce_z_perspective(t_app *fdf)
